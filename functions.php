@@ -70,6 +70,105 @@ function starter_theme_scripts() {
 add_action('wp_enqueue_scripts', 'starter_theme_scripts');
 
 /**
+ * Register Custom Post Types
+ */
+function starter_theme_register_post_types() {
+    // Services CPT
+    register_post_type('services', array(
+        'labels' => array(
+            'name'                  => __('Services', 'starter-wp-theme'),
+            'singular_name'         => __('Service', 'starter-wp-theme'),
+            'menu_name'             => __('Services', 'starter-wp-theme'),
+            'add_new'               => __('Add New', 'starter-wp-theme'),
+            'add_new_item'          => __('Add New Service', 'starter-wp-theme'),
+            'edit_item'             => __('Edit Service', 'starter-wp-theme'),
+            'new_item'              => __('New Service', 'starter-wp-theme'),
+            'view_item'             => __('View Service', 'starter-wp-theme'),
+            'view_items'            => __('View Services', 'starter-wp-theme'),
+            'search_items'          => __('Search Services', 'starter-wp-theme'),
+            'not_found'             => __('No services found', 'starter-wp-theme'),
+            'not_found_in_trash'    => __('No services found in Trash', 'starter-wp-theme'),
+            'all_items'             => __('All Services', 'starter-wp-theme'),
+            'archives'              => __('Service Archives', 'starter-wp-theme'),
+            'attributes'            => __('Service Attributes', 'starter-wp-theme'),
+            'insert_into_item'      => __('Insert into service', 'starter-wp-theme'),
+            'uploaded_to_this_item' => __('Uploaded to this service', 'starter-wp-theme'),
+            'featured_image'        => __('Service Image', 'starter-wp-theme'),
+            'set_featured_image'    => __('Set service image', 'starter-wp-theme'),
+            'remove_featured_image' => __('Remove service image', 'starter-wp-theme'),
+            'use_featured_image'    => __('Use as service image', 'starter-wp-theme'),
+        ),
+        'public'              => true,
+        'publicly_queryable'  => true,
+        'show_ui'             => true,
+        'show_in_menu'        => true,
+        'show_in_nav_menus'   => true,
+        'show_in_rest'        => true,
+        'rest_base'           => 'services',
+        'query_var'           => true,
+        'rewrite'             => array('slug' => 'services', 'with_front' => false),
+        'capability_type'     => 'post',
+        'has_archive'         => true,
+        'hierarchical'        => false,
+        'menu_position'       => 5,
+        'menu_icon'           => 'dashicons-portfolio',
+        'supports'            => array('title', 'editor', 'thumbnail', 'excerpt', 'revisions'),
+    ));
+
+    // Testimonials CPT
+    register_post_type('testimonials', array(
+        'labels' => array(
+            'name'                  => __('Testimonials', 'starter-wp-theme'),
+            'singular_name'         => __('Testimonial', 'starter-wp-theme'),
+            'menu_name'             => __('Testimonials', 'starter-wp-theme'),
+            'add_new'               => __('Add New', 'starter-wp-theme'),
+            'add_new_item'          => __('Add New Testimonial', 'starter-wp-theme'),
+            'edit_item'             => __('Edit Testimonial', 'starter-wp-theme'),
+            'new_item'              => __('New Testimonial', 'starter-wp-theme'),
+            'view_item'             => __('View Testimonial', 'starter-wp-theme'),
+            'view_items'            => __('View Testimonials', 'starter-wp-theme'),
+            'search_items'          => __('Search Testimonials', 'starter-wp-theme'),
+            'not_found'             => __('No testimonials found', 'starter-wp-theme'),
+            'not_found_in_trash'    => __('No testimonials found in Trash', 'starter-wp-theme'),
+            'all_items'             => __('All Testimonials', 'starter-wp-theme'),
+            'archives'              => __('Testimonial Archives', 'starter-wp-theme'),
+            'attributes'            => __('Testimonial Attributes', 'starter-wp-theme'),
+            'insert_into_item'      => __('Insert into testimonial', 'starter-wp-theme'),
+            'uploaded_to_this_item' => __('Uploaded to this testimonial', 'starter-wp-theme'),
+            'featured_image'        => __('Client Photo', 'starter-wp-theme'),
+            'set_featured_image'    => __('Set client photo', 'starter-wp-theme'),
+            'remove_featured_image' => __('Remove client photo', 'starter-wp-theme'),
+            'use_featured_image'    => __('Use as client photo', 'starter-wp-theme'),
+        ),
+        'public'              => true,
+        'publicly_queryable'  => true,
+        'show_ui'             => true,
+        'show_in_menu'        => true,
+        'show_in_nav_menus'   => false,
+        'show_in_rest'        => true,
+        'rest_base'           => 'testimonials',
+        'query_var'           => true,
+        'rewrite'             => array('slug' => 'testimonials', 'with_front' => false),
+        'capability_type'     => 'post',
+        'has_archive'         => true,
+        'hierarchical'        => false,
+        'menu_position'       => 6,
+        'menu_icon'           => 'dashicons-format-quote',
+        'supports'            => array('title', 'thumbnail', 'revisions'),
+    ));
+}
+add_action('init', 'starter_theme_register_post_types');
+
+/**
+ * Flush rewrite rules on theme activation
+ */
+function starter_theme_rewrite_flush() {
+    starter_theme_register_post_types();
+    flush_rewrite_rules();
+}
+add_action('after_switch_theme', 'starter_theme_rewrite_flush');
+
+/**
  * ACF JSON Save Point
  * Save ACF field groups to theme directory for version control
  */

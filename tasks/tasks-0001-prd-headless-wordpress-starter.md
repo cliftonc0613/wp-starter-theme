@@ -72,21 +72,21 @@
   - [x] 1.9 Enable ACF JSON sync in `functions.php`
 
 - [ ] 2.0 Custom Post Types & ACF Configuration
-  - [ ] 2.1 Register "Services" custom post type via ACF
-  - [ ] 2.2 Create Services field group with fields:
-    - [ ] 2.2.1 `pricing` (text field)
-    - [ ] 2.2.2 `features` (repeater field with text sub-field)
-    - [ ] 2.2.3 `duration` (text field)
-    - [ ] 2.2.4 `cta_text` (text field, default "Get Started")
-    - [ ] 2.2.5 `cta_link` (URL field)
-  - [ ] 2.3 Register "Testimonials" custom post type via ACF
-  - [ ] 2.4 Create Testimonials field group with fields:
-    - [ ] 2.4.1 `client_name` (text field)
-    - [ ] 2.4.2 `company` (text field)
-    - [ ] 2.4.3 `quote` (textarea field)
-    - [ ] 2.4.4 `photo` (image field)
-  - [ ] 2.5 Configure REST API visibility for both CPTs (`show_in_rest => true`)
-  - [ ] 2.6 Add ACF fields to REST API response via `acf/rest_api` or custom filter
+  - [x] 2.1 Register "Services" custom post type via ACF
+  - [x] 2.2 Create Services field group with fields:
+    - [x] 2.2.1 `pricing` (text field)
+    - [x] 2.2.2 `features` (repeater field with text sub-field)
+    - [x] 2.2.3 `duration` (text field)
+    - [x] 2.2.4 `cta_text` (text field, default "Get Started")
+    - [x] 2.2.5 `cta_link` (URL field)
+  - [x] 2.3 Register "Testimonials" custom post type via ACF
+  - [x] 2.4 Create Testimonials field group with fields:
+    - [x] 2.4.1 `client_name` (text field)
+    - [x] 2.4.2 `company` (text field)
+    - [x] 2.4.3 `quote` (textarea field)
+    - [x] 2.4.4 `photo` (image field)
+  - [x] 2.5 Configure REST API visibility for both CPTs (`show_in_rest => true`)
+  - [x] 2.6 Add ACF fields to REST API response via `acf/rest_api` or custom filter
   - [ ] 2.7 Add 3-5 sample Services with complete data
   - [ ] 2.8 Add 3-5 sample Testimonials with complete data
   - [ ] 2.9 Add 2-3 sample Blog Posts
