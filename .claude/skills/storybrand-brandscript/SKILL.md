@@ -65,12 +65,23 @@ Use AskUserQuestion:
   - "Confused to Clear" - From uncertain to confident direction
   - Other (describe their specific transformation)
 
+**Question 3b: Other Decision Makers (Optional)**
+Ask directly: "Does your ideal customer need to convince someone else before acting? (e.g., spouse, business partner, board, committee) If so, who?"
+
+**Question 3c: Potential Objections (Optional)**
+Ask directly: "What are the most common reasons people say 'No' to you? What hesitations or objections do you hear?"
+
 ---
 
 #### Section B: The Problem
 
 **Question 4: External Problem**
 Ask directly: "What's the tangible, external problem your customers face every day? What practical challenge are they dealing with?"
+
+**Question 4b: The Villain**
+Ask directly: "What is the single root cause of all your customer's problems? Think of this as 'the villain' in their story - the enemy you both fight against."
+
+*Example villains: "Outdated technology", "Confusing regulations", "Time scarcity", "Poor communication"*
 
 **Question 5: Internal Problem**
 Use AskUserQuestion:
@@ -115,6 +126,11 @@ Ask directly: "What happens NEXT? What do you do for them after they take that f
 
 **Question 12: Step 3**
 Ask directly: "What's the final RESULT or VICTORY? What success do they achieve? Give me a short title and brief description."
+
+**Question 12b: Agreement Plan (Optional)**
+Ask directly: "What guarantees or commitments can you make to alleviate fears about working with you? List 2-3 promises that address common objections."
+
+*Example agreements: "Same-day response guarantee", "No hidden fees", "100% satisfaction or money back", "Clear communication at every step"*
 
 ---
 
@@ -162,19 +178,55 @@ Ask directly: "What happens if your ideal customer DOESN'T take action? What opp
 
 ---
 
+#### Section H: Elevator Pitch Workflow
+
+After collecting all the core answers, guide the user through creating their elevator pitch progression:
+
+**Step H1: Generate Long Elevator Pitch**
+Combine all elements into a comprehensive narrative paragraph. Include:
+- After Transformation (goals/desires)
+- Character Needs (what they need from you)
+- External, Internal, Philosophical Problems
+- Empathy + Authority Statements
+- Process Plan (3 steps)
+- Agreement Plan (if provided)
+- Direct + Transitional CTAs
+- Avoids Failure (stakes)
+- Ends in Success (benefits)
+
+Present the generated long pitch and ask: "Here's your complete elevator pitch. Does this capture your value proposition accurately?"
+
+**Step H2: Condense to 3-4 Sentences**
+Help condense to the formula: **Problem → Solution → Results**
+
+Ask: "Now let's condense this. Can you summarize in 3-4 sentences following this structure:
+- **The Main Problem:** What's the core pain point?
+- **Your Solution:** How do you solve it?
+- **The Awesome Results:** What outcome do they get?"
+
+**Step H3: Create Main Headline**
+Ask: "Finally, let's distill this to a headline of 6 words or less. What's the single most powerful promise you make?"
+
+**Step H4: Company Tagline (Optional)**
+Ask: "Would you like to create a company tagline for your About page? This should be memorable and capture your brand essence."
+
+---
+
 ### Step 3: Generate Copy
 
 After collecting all answers, generate website copy for each section:
 
 1. **Headline** - Aspirational, customer-focused (what they become/achieve)
 2. **Subheadline** - How you help them get there
-3. **Problem Section** - Titles and descriptions for external, internal, philosophical
+3. **Problem Section** - Titles and descriptions for external, internal, philosophical + The Villain
 4. **Value Stack** - 3 benefit cards with titles and descriptions
 5. **Guide Section** - Empathy statement + authority statement
 6. **Plan Section** - Heading + 3 steps with titles and descriptions
-7. **Explanatory Paragraph** - Problem → Solution → Success in one paragraph
-8. **Stakes Section** - Heading + 3 stakes with titles and descriptions
-9. **Final CTA** - Closing headline and subheading
+7. **Agreement Section** (if provided) - Heading + 3 guarantees/commitments
+8. **Explanatory Paragraph** - Problem → Solution → Success in one paragraph
+9. **Stakes Section** - Heading + 3 stakes with titles and descriptions
+10. **Elevator Pitch** - Long version, condensed version, headline, and tagline
+11. **Final CTA** - Closing headline and subheading
 
 ### Step 4: Present and Refine
 
@@ -211,6 +263,7 @@ Display confirmation: "Your StoryBrand BrandScript has been saved to `context/co
 - `references/storybrand-framework.md` - Complete StoryBrand framework documentation
 - `references/storybrand-output-schema.json` - JSON schema for output file
 - `assets/templates/brandscript-template.md` - Template for displaying results
+- `assets/templates/Brand Story - [TEMPLATE].pdf` - Professional worksheet from Web Design Shop Inc. with enhanced 5-step methodology
 
 ## Related Files
 

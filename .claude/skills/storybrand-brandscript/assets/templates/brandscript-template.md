@@ -42,6 +42,11 @@
 **Title:** [PHILOSOPHICAL_TITLE]
 **Description:** [PHILOSOPHICAL_DESCRIPTION]
 
+### The Villain
+> [VILLAIN]
+
+*The single root cause behind all the customer's problems.*
+
 ### Empathy Statement
 > [EMPATHY_STATEMENT]
 
@@ -97,6 +102,26 @@
 
 ### CTA
 **Button Text:** [PLAN_CTA_TEXT]
+
+---
+
+## Agreement Plan (Optional)
+
+*Guarantees and commitments that alleviate fears about working with you.*
+
+### Heading
+> [AGREEMENT_HEADING]
+
+### Statement
+> [AGREEMENT_STATEMENT]
+
+### Our Promises
+
+| # | Agreement |
+|---|-----------|
+| 1 | [AGREEMENT_1] |
+| 2 | [AGREEMENT_2] |
+| 3 | [AGREEMENT_3] |
 
 ---
 
@@ -193,9 +218,34 @@
 
 ---
 
+## Elevator Pitch Progression
+
+### Long Version
+> [LONG_ELEVATOR_PITCH]
+
+*Complete narrative combining all StoryBrand elements.*
+
+### Condensed Version (3-4 sentences)
+
+| Element | Content |
+|---------|---------|
+| **The Main Problem:** | [CONDENSED_PROBLEM] |
+| **Your Solution:** | [CONDENSED_SOLUTION] |
+| **The Awesome Results:** | [CONDENSED_RESULTS] |
+
+### Main Headline (6 words or less)
+> [MAIN_HEADLINE]
+
+### Company Tagline
+> [TAGLINE]
+
+---
+
 ## One-Liner
 
 > [ONE_LINER]
+
+*Formula: [Problem] + [Solution] + [Result]*
 
 ---
 

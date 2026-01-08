@@ -49,6 +49,23 @@ Why this situation is fundamentally WRONG. This connects to a larger sense of ju
 
 *Example: "Great businesses shouldn't struggle to be found online."*
 
+#### The Villain (Root Cause)
+Behind every problem is a villain - the single root cause that creates all the symptoms. Naming the villain:
+- Creates a common enemy between you and the customer
+- Focuses the narrative on defeating something specific
+- Makes your solution the "weapon" against the villain
+- Gives the customer someone/something to blame (that isn't themselves)
+
+*Example: "Outdated technology" is the villain causing slow processes, frustrated teams, and lost opportunities.*
+
+*More villain examples:*
+- "Information overload" - causing confusion and paralysis
+- "Time scarcity" - forcing rushed decisions and missed opportunities
+- "Confusing regulations" - creating compliance anxiety and wasted resources
+- "Poor communication" - leading to misunderstandings and failed projects
+
+**Copy Principle:** Name the villain explicitly. Position your solution as the weapon that defeats it.
+
 **Copy Principle:** Address all three problem levels. The internal problem is often the most powerful motivator.
 
 ---
@@ -96,6 +113,29 @@ Even if your process is complex, distill it to 3 steps:
 3. Watch Your Business Grow
 
 **Copy Principle:** Use verbs. Make each step feel achievable. Always end with success.
+
+#### The Agreement Plan (Alternative)
+If your 3-step process doesn't naturally fit, or you want to build additional trust, use an Agreement Plan instead (or in addition). This addresses objections directly:
+
+- List 3-5 guarantees or commitments
+- Address specific fears and objections raised by prospects
+- Build trust through promises you can keep
+- Alleviate the risk of working with you
+
+*Example agreements:*
+- "Same-day response guarantee"
+- "No hidden fees - ever"
+- "100% satisfaction or your money back"
+- "Clear communication at every step"
+- "No long-term contracts required"
+
+**When to use Agreement Plan:**
+- When prospects have strong objections or fears
+- When trust is a major barrier to conversion
+- When your process is complex and a 3-step plan oversimplifies
+- When you have strong guarantees that differentiate you
+
+**Copy Principle:** Make bold promises you can actually keep. Specificity builds credibility.
 
 ---
 
@@ -221,3 +261,4 @@ Here's how the StoryBrand elements map to homepage sections:
 - *Marketing Made Simple* by Donald Miller
 - StoryBrand Certified Guide Training Materials
 - [storybrand.com](https://storybrand.com)
+- Brand Story Worksheet by CT Web Design Shop Inc.

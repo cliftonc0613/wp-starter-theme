@@ -48,6 +48,24 @@ Your answer:
 | | |
 | | |
 
+### 1.4 Other Decision Makers (Optional)
+*Does your ideal customer need to convince someone else before acting? (e.g., spouse, business partner, board)*
+
+```
+Your answer:
+
+
+```
+
+### 1.5 Potential Objections
+*What are your most common reasons for getting a "No"? What hesitations do prospects have?*
+
+```
+Your answer:
+
+
+```
+
 ---
 
 ## Section 2: The Problem
@@ -74,6 +92,17 @@ Your answer:
 
 ### 2.3 Philosophical Problem
 *Why is this situation just WRONG? What should be different? (Example: "Everyone deserves..." or "It shouldn't be so hard to...")*
+
+```
+Your answer:
+
+
+```
+
+### 2.4 The Villain
+*What is the single root cause of all their problems? Name the enemy you both fight against.*
+
+*Examples: "Outdated technology", "Confusing regulations", "Time scarcity", "Information overload"*
 
 ```
 Your answer:
@@ -140,6 +169,17 @@ Your answer:
 | Step Title | Description |
 |------------|-------------|
 | | |
+
+### 4.4 Agreement Plan (Alternative to Process Plan)
+*What can you guarantee or commit to alleviate their fears of working with you?*
+
+*Examples: "Same-day response guarantee", "No hidden fees", "100% satisfaction promise", "Clear communication at every step"*
+
+| # | Agreement/Guarantee |
+|---|---------------------|
+| 1 | |
+| 2 | |
+| 3 | |
 
 ---
 
@@ -241,17 +281,50 @@ Your answer:
 
 ---
 
-## Section 8: Your One-Liner
+## Section 8: Elevator Pitch Workflow
 
-*Based on your answers above, try drafting a one-liner that captures your value proposition.*
+*Based on your answers above, work through these three levels of condensation to create your core messaging.*
 
-**Formula:** [Problem] + [Solution] + [Result]
-
-*Example: "Many small businesses struggle to attract leads online. We create websites that convert visitors into customers. The result is a steady stream of qualified leads that grow your business."*
+### 8.1 Long Elevator Pitch
+*Combine all your answers into a comprehensive narrative paragraph. Include transformation, problems, empathy, authority, plan, success, and stakes.*
 
 ```
-Your one-liner:
+Your long elevator pitch:
 
+
+
+
+```
+
+### 8.2 Condensed Elevator Pitch (3-4 Sentences)
+*Condense your long pitch following this formula: Problem → Solution → Results*
+
+| Element | Your Answer |
+|---------|-------------|
+| **The Main Problem:** | |
+| **Your Solution:** | |
+| **The Awesome Results:** | |
+
+```
+Your condensed pitch (combine above into 3-4 sentences):
+
+
+
+```
+
+### 8.3 Main Headline (6 Words or Less)
+*Distill everything to a single powerful headline.*
+
+```
+Your headline:
+
+```
+
+### 8.4 Company Tagline (For About Page)
+*Create a memorable tagline that captures your brand essence.*
+
+```
+Your tagline:
 
 ```
 
@@ -267,4 +340,4 @@ Once you've completed this worksheet:
 
 ---
 
-*This worksheet is based on the StoryBrand framework by Donald Miller. Learn more at [storybrand.com](https://storybrand.com)*
+*This worksheet is based on the StoryBrand framework by Donald Miller and enhanced with concepts from the Brand Story Worksheet by CT Web Design Shop Inc. Learn more at [storybrand.com](https://storybrand.com)*

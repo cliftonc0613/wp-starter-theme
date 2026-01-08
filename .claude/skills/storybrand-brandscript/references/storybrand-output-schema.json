@@ -12,12 +12,15 @@
       "customer_description": "",
       "external_desire": "",
       "transformation_before": "",
-      "transformation_after": ""
+      "transformation_after": "",
+      "other_decision_makers": "",
+      "potential_objections": []
     },
     "problem": {
       "external": "",
       "internal": [],
-      "philosophical": ""
+      "philosophical": "",
+      "villain": ""
     },
     "guide": {
       "empathy_statement": "",
@@ -39,7 +42,8 @@
       "step_3": {
         "title": "",
         "description": ""
-      }
+      },
+      "agreement_plan": []
     },
     "call_to_action": {
       "primary_cta": {
@@ -227,6 +231,18 @@
       "phone": "",
       "email": "",
       "trust_statement": ""
+    },
+    "agreement_section": {
+      "heading": "Our Promise to You",
+      "statement": "",
+      "agreements": []
+    },
+    "villain_statement": "",
+    "elevator_pitch": {
+      "long": "",
+      "condensed": "",
+      "headline": "",
+      "tagline": ""
     },
     "one_liner": ""
   }
