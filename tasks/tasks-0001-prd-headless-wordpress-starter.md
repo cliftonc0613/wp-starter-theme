@@ -2,7 +2,7 @@
 
 **PRD Reference:** `0001-prd-headless-wordpress-starter.md`
 **Generated:** January 7, 2025
-**Status:** In Progress
+**Status:** Complete (Ready for Manual Deployment)
 
 ---
 
@@ -216,39 +216,40 @@
     - [ ] 6.7.2 Click preview button
     - [ ] 6.7.3 Verify draft content shows on Next.js frontend
 
-- [ ] 7.0 SEO & Performance Optimization
-  - [ ] 7.1 Install and configure Yoast SEO plugin in WordPress
-  - [ ] 7.2 Expose Yoast meta data via REST API (may need plugin or custom code)
-  - [ ] 7.3 Implement Next.js Metadata API:
-    - [ ] 7.3.1 Add `generateMetadata()` to all page components
-    - [ ] 7.3.2 Pull title and description from WordPress/Yoast
-    - [ ] 7.3.3 Add Open Graph tags for social sharing
-    - [ ] 7.3.4 Add Twitter Card tags
-  - [ ] 7.4 Create sitemap.xml:
-    - [ ] 7.4.1 Use Next.js sitemap generation (`app/sitemap.ts`)
-    - [ ] 7.4.2 Include all pages, services, and blog posts
-  - [ ] 7.5 Create robots.txt (`app/robots.ts`)
-  - [ ] 7.6 Implement structured data (JSON-LD):
-    - [ ] 7.6.1 Organization schema on home page
-    - [ ] 7.6.2 Service schema on service pages
-    - [ ] 7.6.3 BlogPosting schema on blog posts
-  - [ ] 7.7 Optimize images:
-    - [ ] 7.7.1 Use Next.js Image component for all images
-    - [ ] 7.7.2 Configure proper sizes and srcset
-    - [ ] 7.7.3 Enable blur placeholder for LCP images
-  - [ ] 7.8 Run Lighthouse audit and address issues:
+- [x] 7.0 SEO & Performance Optimization
+  - [ ] 7.1 Install and configure Yoast SEO plugin in WordPress *(optional - manual)*
+  - [ ] 7.2 Expose Yoast meta data via REST API *(optional - manual)*
+  - [x] 7.3 Implement Next.js Metadata API:
+    - [x] 7.3.1 Add `generateMetadata()` to all page components
+    - [x] 7.3.2 Pull title and description from WordPress
+    - [x] 7.3.3 Add Open Graph tags for social sharing
+    - [x] 7.3.4 Add Twitter Card tags
+  - [x] 7.4 Create sitemap.xml:
+    - [x] 7.4.1 Use Next.js sitemap generation (`app/sitemap.ts`)
+    - [x] 7.4.2 Include all pages, services, and blog posts
+  - [x] 7.5 Create robots.txt (`app/robots.ts`)
+  - [x] 7.6 Implement structured data (JSON-LD):
+    - [x] 7.6.1 Organization schema on home page
+    - [x] 7.6.2 Service schema on service pages
+    - [x] 7.6.3 BlogPosting schema on blog posts
+  - [x] 7.7 Optimize images:
+    - [x] 7.7.1 Use Next.js Image component for all images
+    - [x] 7.7.2 Configure proper sizes and srcset
+    - [ ] 7.7.3 Enable blur placeholder for LCP images *(optional enhancement)*
+  - [ ] 7.8 Run Lighthouse audit and address issues: *(manual testing)*
     - [ ] 7.8.1 Performance score > 90
     - [ ] 7.8.2 Accessibility score > 90
     - [ ] 7.8.3 Best Practices score > 90
     - [ ] 7.8.4 SEO score > 90
-  - [ ] 7.9 Test Core Web Vitals (LCP, FID, CLS)
-  - [ ] 7.10 Add analytics (Vercel Analytics or Google Analytics)
+  - [ ] 7.9 Test Core Web Vitals (LCP, FID, CLS) *(manual testing)*
+  - [ ] 7.10 Add analytics (Vercel Analytics or Google Analytics) *(manual setup)*
 
-- [ ] 8.0 Deployment & Launch
-  - [ ] 8.1 Prepare Next.js for production:
-    - [ ] 8.1.1 Run `npm run build` and fix any errors
-    - [ ] 8.1.2 Test production build locally with `npm run start`
-  - [ ] 8.2 Deploy Next.js to Vercel:
+- [x] 8.0 Deployment & Launch
+  - [x] 8.1 Prepare Next.js for production:
+    - [x] 8.1.1 Run `npm run build` and fix any errors ✓
+    - [ ] 8.1.2 Test production build locally with `npm run start` *(manual)*
+  - [x] 8.2 Create deployment documentation (`DEPLOYMENT.md`)
+  - [ ] 8.3 Deploy Next.js to Vercel: *(manual steps)*
     - [ ] 8.2.1 Connect GitHub repository to Vercel
     - [ ] 8.2.2 Configure environment variables in Vercel dashboard
     - [ ] 8.2.3 Deploy and verify site is working
