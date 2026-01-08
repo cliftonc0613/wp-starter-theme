@@ -317,6 +317,92 @@ function starter_theme_preview_link($preview_link, $post) {
 add_filter('preview_post_link', 'starter_theme_preview_link', 10, 2);
 
 /**
+ * Trigger Next.js revalidation when content is published or updated
+ */
+function starter_theme_trigger_revalidation($post_id, $post, $update) {
+    // Don't trigger for autosaves or revisions
+    if (wp_is_post_autosave($post_id) || wp_is_post_revision($post_id)) {
+        return;
+    }
+
+    // Only trigger for published content
+    if ($post->post_status !== 'publish') {
+        return;
+    }
+
+    // Get the frontend URL and revalidation secret
+    $frontend_url = defined('STARTER_FRONTEND_URL')
+        ? STARTER_FRONTEND_URL
+        : get_option('starter_frontend_url', 'http://localhost:3000');
+
+    $revalidation_secret = defined('STARTER_REVALIDATION_SECRET')
+        ? STARTER_REVALIDATION_SECRET
+        : get_option('starter_revalidation_secret', 'revalidation-secret-change-me');
+
+    // Build the revalidation URL
+    $revalidate_url = $frontend_url . '/api/revalidate';
+
+    // Send the revalidation request
+    $response = wp_remote_post($revalidate_url, array(
+        'timeout'   => 10,
+        'blocking'  => false, // Don't wait for response
+        'headers'   => array(
+            'Content-Type' => 'application/json',
+        ),
+        'body'      => wp_json_encode(array(
+            'secret' => $revalidation_secret,
+            'type'   => $post->post_type,
+            'slug'   => $post->post_name,
+        )),
+    ));
+
+    // Log errors in debug mode
+    if (defined('WP_DEBUG') && WP_DEBUG && is_wp_error($response)) {
+        error_log('Revalidation error: ' . $response->get_error_message());
+    }
+}
+add_action('save_post', 'starter_theme_trigger_revalidation', 10, 3);
+
+/**
+ * Also trigger revalidation when post is trashed or untrashed
+ */
+function starter_theme_trigger_revalidation_on_status_change($new_status, $old_status, $post) {
+    // Trigger on publish, trash, or untrash
+    if (in_array($new_status, array('publish', 'trash')) || in_array($old_status, array('publish'))) {
+        starter_theme_trigger_revalidation($post->ID, $post, true);
+    }
+}
+add_action('transition_post_status', 'starter_theme_trigger_revalidation_on_status_change', 10, 3);
+
+/**
+ * Add preview link type parameter
+ */
+function starter_theme_preview_link_with_type($preview_link, $post) {
+    // Get the Next.js frontend URL from environment or options
+    $frontend_url = defined('STARTER_FRONTEND_URL')
+        ? STARTER_FRONTEND_URL
+        : get_option('starter_frontend_url', 'http://localhost:3000');
+
+    $preview_secret = defined('STARTER_PREVIEW_SECRET')
+        ? STARTER_PREVIEW_SECRET
+        : get_option('starter_preview_secret', 'preview-secret');
+
+    // Build the preview URL with type parameter
+    return add_query_arg(
+        array(
+            'secret' => $preview_secret,
+            'slug'   => $post->post_name,
+            'id'     => $post->ID,
+            'type'   => $post->post_type,
+        ),
+        $frontend_url . '/api/preview'
+    );
+}
+// Override the previous preview link filter
+remove_filter('preview_post_link', 'starter_theme_preview_link', 10);
+add_filter('preview_post_link', 'starter_theme_preview_link_with_type', 10, 2);
+
+/**
  * Disable Gutenberg for this headless theme (optional)
  * Uncomment if you prefer the classic editor
  */

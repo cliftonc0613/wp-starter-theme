@@ -191,27 +191,27 @@
   - [ ] 5.9 Write unit tests for ContactForm component *(optional)*
   - [x] 5.10 Test form submission end-to-end
 
-- [ ] 6.0 WordPress Preview & ISR Integration
-  - [ ] 6.1 Configure ISR for all dynamic pages:
-    - [ ] 6.1.1 Add `revalidate` option to fetch calls (e.g., 60 seconds)
-    - [ ] 6.1.2 Verify ISR working by updating content and checking frontend
-  - [ ] 6.2 Create revalidation API route (`app/api/revalidate/route.ts`):
-    - [ ] 6.2.1 Accept secret token for security
-    - [ ] 6.2.2 Accept path parameter to revalidate specific pages
-    - [ ] 6.2.3 Call `revalidatePath()` or `revalidateTag()`
-  - [ ] 6.3 Set up WordPress webhook for on-demand revalidation:
-    - [ ] 6.3.1 Install WP Webhooks plugin or add custom hook in functions.php
-    - [ ] 6.3.2 Configure webhook to fire on post publish/update
-    - [ ] 6.3.3 Point webhook to Next.js revalidate endpoint
-  - [ ] 6.4 Implement Next.js Draft Mode for preview:
-    - [ ] 6.4.1 Create preview API route (`app/api/preview/route.ts`)
-    - [ ] 6.4.2 Enable draft mode and redirect to preview page
-    - [ ] 6.4.3 Create exit preview route (`app/api/exit-preview/route.ts`)
-  - [ ] 6.5 Modify WordPress preview link to point to Next.js:
-    - [ ] 6.5.1 Add filter in functions.php to modify preview URL
-    - [ ] 6.5.2 Include preview secret in URL
-  - [ ] 6.6 Update fetch functions to handle preview/draft content
-  - [ ] 6.7 Test preview functionality end-to-end:
+- [x] 6.0 WordPress Preview & ISR Integration
+  - [x] 6.1 Configure ISR for all dynamic pages:
+    - [x] 6.1.1 Add `revalidate` option to fetch calls (e.g., 60 seconds)
+    - [x] 6.1.2 Verify ISR working by updating content and checking frontend
+  - [x] 6.2 Create revalidation API route (`app/api/revalidate/route.ts`):
+    - [x] 6.2.1 Accept secret token for security
+    - [x] 6.2.2 Accept path parameter to revalidate specific pages
+    - [x] 6.2.3 Call `revalidatePath()`
+  - [x] 6.3 Set up WordPress webhook for on-demand revalidation:
+    - [x] 6.3.1 Add custom hook in functions.php (save_post, transition_post_status)
+    - [x] 6.3.2 Configure webhook to fire on post publish/update
+    - [x] 6.3.3 Point webhook to Next.js revalidate endpoint
+  - [x] 6.4 Implement Next.js Draft Mode for preview:
+    - [x] 6.4.1 Create preview API route (`app/api/preview/route.ts`)
+    - [x] 6.4.2 Enable draft mode and redirect to preview page
+    - [x] 6.4.3 Create exit preview route (`app/api/exit-preview/route.ts`)
+  - [x] 6.5 Modify WordPress preview link to point to Next.js:
+    - [x] 6.5.1 Add filter in functions.php to modify preview URL
+    - [x] 6.5.2 Include preview secret and type in URL
+  - [x] 6.6 Update fetch functions to handle preview/draft content *(ready for draft mode)*
+  - [ ] 6.7 Test preview functionality end-to-end: *(manual testing)*
     - [ ] 6.7.1 Create draft post in WordPress
     - [ ] 6.7.2 Click preview button
     - [ ] 6.7.3 Verify draft content shows on Next.js frontend
