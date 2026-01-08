@@ -5,6 +5,10 @@ import { notFound } from "next/navigation";
 import { getService, getServices, stripHtml, decodeHtmlEntities } from "@/lib/wordpress";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ServiceSchema, BreadcrumbSchema } from "@/components/JsonLd";
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME || "Starter WP Theme";
 
 interface ServicePageProps {
   params: Promise<{ slug: string }>;
@@ -66,8 +70,30 @@ export default async function ServicePage({ params }: ServicePageProps) {
   const ctaText = service.acf?.cta_text || "Get Started";
   const ctaLink = service.acf?.cta_link || "/contact";
 
+  const description = stripHtml(service.excerpt.rendered || service.content.rendered);
+  const serviceUrl = `${SITE_URL}/services/${slug}`;
+
   return (
     <>
+      {/* Structured Data */}
+      <ServiceSchema
+        name={title}
+        description={description}
+        url={serviceUrl}
+        provider={{
+          name: SITE_NAME,
+          url: SITE_URL,
+        }}
+        image={service.featured_image_url || undefined}
+      />
+      <BreadcrumbSchema
+        items={[
+          { name: "Home", url: SITE_URL },
+          { name: "Services", url: `${SITE_URL}/services` },
+          { name: title, url: serviceUrl },
+        ]}
+      />
+
       {/* Hero Section */}
       <section className="py-16 md:py-24">
         <div className="container mx-auto px-4">

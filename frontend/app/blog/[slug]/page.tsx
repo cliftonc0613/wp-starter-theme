@@ -12,6 +12,10 @@ import {
 } from "@/lib/wordpress";
 import { Button } from "@/components/ui/button";
 import { BlogCard } from "@/components/BlogCard";
+import { BlogPostingSchema, BreadcrumbSchema } from "@/components/JsonLd";
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME || "Starter WP Theme";
 
 interface BlogPostPageProps {
   params: Promise<{ slug: string }>;
@@ -84,8 +88,34 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const allPosts = await getPosts({ per_page: 4 });
   const relatedPosts = allPosts.filter((p) => p.id !== post.id).slice(0, 3);
 
+  const description = stripHtml(post.excerpt.rendered);
+  const postUrl = `${SITE_URL}/blog/${slug}`;
+
   return (
     <>
+      {/* Structured Data */}
+      <BlogPostingSchema
+        headline={title}
+        description={description}
+        url={postUrl}
+        image={post.featured_image_url || undefined}
+        datePublished={post.date}
+        dateModified={post.modified}
+        author={{
+          name: authorName,
+        }}
+        publisher={{
+          name: SITE_NAME,
+        }}
+      />
+      <BreadcrumbSchema
+        items={[
+          { name: "Home", url: SITE_URL },
+          { name: "Blog", url: `${SITE_URL}/blog` },
+          { name: title, url: postUrl },
+        ]}
+      />
+
       {/* Article Header */}
       <article className="py-16 md:py-24">
         <div className="container mx-auto px-4">

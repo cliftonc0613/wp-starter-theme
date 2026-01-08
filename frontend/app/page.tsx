@@ -5,6 +5,10 @@ import { ServiceCard } from "@/components/ServiceCard";
 import { TestimonialCard } from "@/components/TestimonialCard";
 import { BlogCard } from "@/components/BlogCard";
 import { Button } from "@/components/ui/button";
+import { OrganizationSchema } from "@/components/JsonLd";
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME || "Starter WP Theme";
 
 // Enable ISR with 60 second revalidation
 export const revalidate = 60;
@@ -19,6 +23,18 @@ export default async function HomePage() {
 
   return (
     <>
+      {/* Organization Schema for SEO */}
+      <OrganizationSchema
+        name={SITE_NAME}
+        url={SITE_URL}
+        description="We help service-based businesses grow with modern, fast, and beautiful websites powered by headless WordPress and Next.js."
+        sameAs={[
+          // Add your social media URLs here
+          // "https://twitter.com/yourcompany",
+          // "https://linkedin.com/company/yourcompany",
+        ]}
+      />
+
       {/* Hero Section */}
       <Hero
         title="Transform Your Business with Expert Services"
