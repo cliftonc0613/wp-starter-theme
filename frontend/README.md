@@ -1,3 +1,22 @@
+# Starter WP Theme
+
+## About
+
+A modern WordPress starter theme with a headless Next.js frontend, featuring StoryBrand framework components, GSAP animations, and Headroom.js navigation.
+
+![Hero Section Preview](docs/hero-preview.png)
+
+### Features
+
+- **StoryBrand Framework** - Pre-built wireframe components following Donald Miller's messaging methodology
+- **Headroom.js Navigation** - Smart header that hides on scroll down, shows on scroll up
+- **GSAP ScrollTrigger** - Smooth scroll-based animations and effects
+- **shadcn/ui Components** - Beautiful, accessible React components
+- **WordPress Integration** - Headless CMS with REST API content fetching
+- **Tailwind CSS 4** - Modern utility-first styling
+
+---
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
