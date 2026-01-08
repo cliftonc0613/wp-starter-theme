@@ -71,7 +71,7 @@
   - [x] 1.8 Create `acf-json/` directory for ACF local JSON sync
   - [x] 1.9 Enable ACF JSON sync in `functions.php`
 
-- [ ] 2.0 Custom Post Types & ACF Configuration
+- [x] 2.0 Custom Post Types & ACF Configuration
   - [x] 2.1 Register "Services" custom post type via ACF
   - [x] 2.2 Create Services field group with fields:
     - [x] 2.2.1 `pricing` (text field)
@@ -87,14 +87,14 @@
     - [x] 2.4.4 `photo` (image field)
   - [x] 2.5 Configure REST API visibility for both CPTs (`show_in_rest => true`)
   - [x] 2.6 Add ACF fields to REST API response via `acf/rest_api` or custom filter
-  - [ ] 2.7 Add 3-5 sample Services with complete data
-  - [ ] 2.8 Add 3-5 sample Testimonials with complete data
-  - [ ] 2.9 Add 2-3 sample Blog Posts
-  - [ ] 2.10 Test REST API endpoints in browser/Postman:
-    - [ ] 2.10.1 `/wp-json/wp/v2/services`
-    - [ ] 2.10.2 `/wp-json/wp/v2/testimonials`
-    - [ ] 2.10.3 `/wp-json/wp/v2/posts`
-    - [ ] 2.10.4 `/wp-json/wp/v2/pages`
+  - [x] 2.7 Add 3-5 sample Services with complete data *(manual)*
+  - [x] 2.8 Add 3-5 sample Testimonials with complete data *(manual)*
+  - [x] 2.9 Add 2-3 sample Blog Posts *(manual)*
+  - [x] 2.10 Test REST API endpoints in browser/Postman:
+    - [x] 2.10.1 `/wp-json/wp/v2/services` ✓
+    - [x] 2.10.2 `/wp-json/wp/v2/testimonials` ✓
+    - [x] 2.10.3 `/wp-json/wp/v2/posts` ✓
+    - [x] 2.10.4 `/wp-json/wp/v2/pages` ✓
 
 - [ ] 3.0 Next.js Frontend Scaffold & Configuration
   - [ ] 3.1 Create frontend directory: `mkdir frontend`
