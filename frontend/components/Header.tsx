@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
-import { Menu, X } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   NavigationMenu,
@@ -18,6 +18,14 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import Headroom from "headroom.js";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+// Register GSAP plugins
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 const navItems = [
   { href: "/", label: "Home" },
@@ -29,10 +37,66 @@ const navItems = [
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
+  const headerRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    if (!headerRef.current) return;
+
+    // Initialize Headroom
+    const headroom = new Headroom(headerRef.current, {
+      offset: 100,
+      tolerance: {
+        up: 10,
+        down: 5,
+      },
+      classes: {
+        initial: "headroom",
+        pinned: "headroom--pinned",
+        unpinned: "headroom--unpinned",
+        top: "headroom--top",
+        notTop: "headroom--not-top",
+        frozen: "headroom--frozen",
+      },
+    });
+    headroom.init();
+
+    // GSAP ScrollTrigger for background effects
+    const scrollTrigger = ScrollTrigger.create({
+      start: "top top",
+      end: "100px top",
+      onUpdate: (self) => {
+        const progress = self.progress;
+        const header = headerRef.current;
+        if (!header) return;
+
+        // Interpolate background opacity and blur based on scroll
+        const bgOpacity = 0.6 + progress * 0.35; // 60% -> 95%
+        const blurAmount = 8 + progress * 4; // 8px -> 12px
+
+        header.style.setProperty(
+          "background-color",
+          `oklch(1 0 0 / ${bgOpacity})`
+        );
+        header.style.setProperty(
+          "backdrop-filter",
+          `blur(${blurAmount}px)`
+        );
+      },
+    });
+
+    // Cleanup
+    return () => {
+      headroom.destroy();
+      scrollTrigger.kill();
+    };
+  }, []);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container mx-auto flex h-16 items-center justify-between px-4">
+    <header
+      ref={headerRef}
+      className="fixed top-0 z-50 w-full border-b bg-background/60 backdrop-blur-[8px]"
+    >
+      <div className="container mx-auto flex h-[var(--header-height,4rem)] items-center justify-between px-4 transition-[height] duration-300">
         {/* Logo */}
         <Link href="/" className="flex items-center space-x-2">
           <span className="text-xl font-bold tracking-tight">Starter WP</span>
