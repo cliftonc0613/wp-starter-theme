@@ -9,6 +9,7 @@ import {
   decodeHtmlEntities,
   formatDate,
   getReadingTime,
+  isWordPressConfigured,
 } from "@/lib/wordpress";
 import { Button } from "@/components/ui/button";
 import { BlogCard } from "@/components/BlogCard";
@@ -23,11 +24,26 @@ interface BlogPostPageProps {
 
 // Generate static paths for all posts
 export async function generateStaticParams() {
-  const posts = await getPosts({ per_page: 100 });
-  return posts.map((post) => ({
-    slug: post.slug,
-  }));
+  // If WordPress isn't configured during build, return empty array
+  // Pages will be generated on-demand with ISR
+  if (!isWordPressConfigured()) {
+    console.warn('WORDPRESS_API_URL not set - skipping static generation for blog posts');
+    return [];
+  }
+
+  try {
+    const posts = await getPosts({ per_page: 100 });
+    return posts.map((post) => ({
+      slug: post.slug,
+    }));
+  } catch (error) {
+    console.error('Failed to fetch posts for static generation:', error);
+    return [];
+  }
 }
+
+// Allow dynamic paths not generated at build time
+export const dynamicParams = true;
 
 // Generate metadata for each post
 export async function generateMetadata({

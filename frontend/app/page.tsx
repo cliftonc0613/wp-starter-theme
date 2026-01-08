@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { getServices, getTestimonials, getPosts } from "@/lib/wordpress";
+import { getServices, getTestimonials, getPosts, isWordPressConfigured } from "@/lib/wordpress";
+import type { WPService, WPTestimonial, WPPost } from "@/lib/wordpress";
 import { Hero } from "@/components/Hero";
 import { ServiceCard } from "@/components/ServiceCard";
 import { TestimonialCard } from "@/components/TestimonialCard";
@@ -14,12 +15,22 @@ const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME || "Starter WP Theme";
 export const revalidate = 60;
 
 export default async function HomePage() {
-  // Fetch data from WordPress
-  const [services, testimonials, posts] = await Promise.all([
-    getServices({ per_page: 3 }),
-    getTestimonials({ per_page: 3 }),
-    getPosts({ per_page: 3 }),
-  ]);
+  // Fetch data from WordPress with graceful fallback
+  let services: WPService[] = [];
+  let testimonials: WPTestimonial[] = [];
+  let posts: WPPost[] = [];
+
+  if (isWordPressConfigured()) {
+    try {
+      [services, testimonials, posts] = await Promise.all([
+        getServices({ per_page: 3 }),
+        getTestimonials({ per_page: 3 }),
+        getPosts({ per_page: 3 }),
+      ]);
+    } catch (error) {
+      console.error('Failed to fetch WordPress content:', error);
+    }
+  }
 
   return (
     <>

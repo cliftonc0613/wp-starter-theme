@@ -1,15 +1,27 @@
 import type { MetadataRoute } from "next";
-import { getPosts, getServices, getPages } from "@/lib/wordpress";
+import { getPosts, getServices, getPages, isWordPressConfigured } from "@/lib/wordpress";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  // Fetch all content from WordPress
-  const [posts, services, pages] = await Promise.all([
-    getPosts({ per_page: 100 }),
-    getServices({ per_page: 100 }),
-    getPages({ per_page: 100 }),
-  ]);
+  // If WordPress isn't configured, return only static pages
+  let posts: Awaited<ReturnType<typeof getPosts>> = [];
+  let services: Awaited<ReturnType<typeof getServices>> = [];
+  let pages: Awaited<ReturnType<typeof getPages>> = [];
+
+  if (isWordPressConfigured()) {
+    try {
+      [posts, services, pages] = await Promise.all([
+        getPosts({ per_page: 100 }),
+        getServices({ per_page: 100 }),
+        getPages({ per_page: 100 }),
+      ]);
+    } catch (error) {
+      console.error('Failed to fetch WordPress content for sitemap:', error);
+    }
+  } else {
+    console.warn('WORDPRESS_API_URL not set - sitemap will only contain static pages');
+  }
 
   // Static pages
   const staticPages: MetadataRoute.Sitemap = [

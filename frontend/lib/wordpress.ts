@@ -5,6 +5,23 @@
 
 const WORDPRESS_API_URL = process.env.WORDPRESS_API_URL;
 
+// Validation helper - throws clear error if API URL is not configured
+function getApiUrl(): string {
+  if (!WORDPRESS_API_URL) {
+    throw new Error(
+      'WORDPRESS_API_URL environment variable is not set. ' +
+      'Please set it in your .env.local file or Vercel environment variables. ' +
+      'Example: https://your-site.com/wp-json/wp/v2'
+    );
+  }
+  return WORDPRESS_API_URL;
+}
+
+// Check if WordPress API is configured (useful for build-time checks)
+export function isWordPressConfigured(): boolean {
+  return !!WORDPRESS_API_URL;
+}
+
 // =============================================================================
 // TypeScript Interfaces
 // =============================================================================
@@ -223,7 +240,8 @@ export interface WPTag {
  * Generic fetch function with error handling
  */
 async function fetchAPI<T>(endpoint: string, options?: RequestInit): Promise<T> {
-  const url = `${WORDPRESS_API_URL}${endpoint}`;
+  const apiUrl = getApiUrl();
+  const url = `${apiUrl}${endpoint}`;
 
   const response = await fetch(url, {
     headers: {

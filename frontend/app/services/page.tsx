@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getServices } from "@/lib/wordpress";
+import { getServices, isWordPressConfigured } from "@/lib/wordpress";
+import type { WPService } from "@/lib/wordpress";
 import { Hero } from "@/components/Hero";
 import { ServiceCard } from "@/components/ServiceCard";
 import { Button } from "@/components/ui/button";
@@ -15,7 +16,15 @@ export const metadata: Metadata = {
 export const revalidate = 60;
 
 export default async function ServicesPage() {
-  const services = await getServices({ per_page: 100 });
+  let services: WPService[] = [];
+
+  if (isWordPressConfigured()) {
+    try {
+      services = await getServices({ per_page: 100 });
+    } catch (error) {
+      console.error('Failed to fetch services:', error);
+    }
+  }
 
   return (
     <>

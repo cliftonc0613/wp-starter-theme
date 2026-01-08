@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getTestimonials } from "@/lib/wordpress";
+import { getTestimonials, isWordPressConfigured } from "@/lib/wordpress";
+import type { WPTestimonial } from "@/lib/wordpress";
 import { Hero } from "@/components/Hero";
 import { TestimonialCard } from "@/components/TestimonialCard";
 import { Button } from "@/components/ui/button";
@@ -15,7 +16,15 @@ export const metadata: Metadata = {
 export const revalidate = 60;
 
 export default async function TestimonialsPage() {
-  const testimonials = await getTestimonials({ per_page: 100 });
+  let testimonials: WPTestimonial[] = [];
+
+  if (isWordPressConfigured()) {
+    try {
+      testimonials = await getTestimonials({ per_page: 100 });
+    } catch (error) {
+      console.error('Failed to fetch testimonials:', error);
+    }
+  }
 
   return (
     <>

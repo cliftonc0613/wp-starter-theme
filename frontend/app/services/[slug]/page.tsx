@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getService, getServices, stripHtml, decodeHtmlEntities } from "@/lib/wordpress";
+import { getService, getServices, stripHtml, decodeHtmlEntities, isWordPressConfigured } from "@/lib/wordpress";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ServiceSchema, BreadcrumbSchema } from "@/components/JsonLd";
@@ -16,11 +16,26 @@ interface ServicePageProps {
 
 // Generate static paths for all services
 export async function generateStaticParams() {
-  const services = await getServices({ per_page: 100 });
-  return services.map((service) => ({
-    slug: service.slug,
-  }));
+  // If WordPress isn't configured during build, return empty array
+  // Pages will be generated on-demand with ISR
+  if (!isWordPressConfigured()) {
+    console.warn('WORDPRESS_API_URL not set - skipping static generation for services');
+    return [];
+  }
+
+  try {
+    const services = await getServices({ per_page: 100 });
+    return services.map((service) => ({
+      slug: service.slug,
+    }));
+  } catch (error) {
+    console.error('Failed to fetch services for static generation:', error);
+    return [];
+  }
 }
+
+// Allow dynamic paths not generated at build time
+export const dynamicParams = true;
 
 // Generate metadata for each service
 export async function generateMetadata({

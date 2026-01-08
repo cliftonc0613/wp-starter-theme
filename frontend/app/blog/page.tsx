@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { getPosts } from "@/lib/wordpress";
+import { getPosts, isWordPressConfigured } from "@/lib/wordpress";
+import type { WPPost } from "@/lib/wordpress";
 import { Hero } from "@/components/Hero";
 import { BlogCard } from "@/components/BlogCard";
 
@@ -13,7 +14,15 @@ export const metadata: Metadata = {
 export const revalidate = 60;
 
 export default async function BlogPage() {
-  const posts = await getPosts({ per_page: 12 });
+  let posts: WPPost[] = [];
+
+  if (isWordPressConfigured()) {
+    try {
+      posts = await getPosts({ per_page: 12 });
+    } catch (error) {
+      console.error('Failed to fetch blog posts:', error);
+    }
+  }
 
   return (
     <>
