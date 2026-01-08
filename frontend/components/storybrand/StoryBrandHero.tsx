@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { User, Star } from "lucide-react";
 
 interface StoryBrandHeroProps {
   headline?: string;
@@ -81,11 +82,38 @@ export function StoryBrandHero({
           </Button>
         </div>
 
-        {/* Optional: Trust indicators */}
-        <div className="mt-12 flex flex-wrap items-center justify-center gap-8 opacity-60">
-          <span className="text-sm text-muted-foreground">
-            [TRUST BADGE: "Trusted by 500+ businesses"]
-          </span>
+        {/* Social Proof - Trust Badge */}
+        <div className="mt-12 flex items-center justify-center gap-4">
+          {/* Overlapping Avatars */}
+          <div className="flex -space-x-2">
+            <div className="relative z-40 flex h-9 w-9 items-center justify-center rounded-full border-2 border-background bg-orange-500">
+              <User className="h-4 w-4 text-white" />
+            </div>
+            <div className="relative z-30 flex h-9 w-9 items-center justify-center rounded-full border-2 border-background bg-slate-600">
+              <User className="h-4 w-4 text-white" />
+            </div>
+            <div className="relative z-20 flex h-9 w-9 items-center justify-center rounded-full border-2 border-background bg-slate-700">
+              <User className="h-4 w-4 text-white" />
+            </div>
+            <div className="relative z-10 flex h-9 w-9 items-center justify-center rounded-full border-2 border-background bg-slate-800">
+              <User className="h-4 w-4 text-white" />
+            </div>
+          </div>
+
+          {/* Rating */}
+          <div className="flex flex-col items-start">
+            <div className="flex gap-0.5">
+              {[...Array(5)].map((_, i) => (
+                <Star
+                  key={i}
+                  className="h-4 w-4 fill-yellow-400 text-yellow-400"
+                />
+              ))}
+            </div>
+            <span className="text-sm font-medium text-muted-foreground">
+              4.9k Reviews
+            </span>
+          </div>
         </div>
       </div>
 
