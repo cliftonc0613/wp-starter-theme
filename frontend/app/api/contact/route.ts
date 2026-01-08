@@ -1,0 +1,84 @@
+import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
+
+// Validation schema (same as client-side)
+const contactFormSchema = z.object({
+  name: z.string().min(2, "Name must be at least 2 characters"),
+  email: z.string().email("Please enter a valid email address"),
+  phone: z.string().min(10, "Please enter a valid phone number"),
+  service: z.string().optional(),
+  budget: z.string().optional(),
+  timeline: z.string().optional(),
+  referral: z.string().optional(),
+  message: z.string().min(10, "Message must be at least 10 characters"),
+});
+
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json();
+
+    // Validate the form data
+    const validatedData = contactFormSchema.parse(body);
+
+    // Log the submission (in production, you would send an email here)
+    console.log("Contact form submission:", validatedData);
+
+    // TODO: Send email notification
+    // You can integrate with:
+    // - Resend (https://resend.com)
+    // - SendGrid (https://sendgrid.com)
+    // - Nodemailer
+    // - AWS SES
+    //
+    // Example with Resend:
+    // const resend = new Resend(process.env.RESEND_API_KEY);
+    // await resend.emails.send({
+    //   from: 'onboarding@yourdomain.com',
+    //   to: 'hello@yourdomain.com',
+    //   subject: `New Contact Form Submission from ${validatedData.name}`,
+    //   html: `
+    //     <h2>New Contact Form Submission</h2>
+    //     <p><strong>Name:</strong> ${validatedData.name}</p>
+    //     <p><strong>Email:</strong> ${validatedData.email}</p>
+    //     <p><strong>Phone:</strong> ${validatedData.phone}</p>
+    //     <p><strong>Service:</strong> ${validatedData.service || 'Not specified'}</p>
+    //     <p><strong>Budget:</strong> ${validatedData.budget || 'Not specified'}</p>
+    //     <p><strong>Timeline:</strong> ${validatedData.timeline || 'Not specified'}</p>
+    //     <p><strong>Referral:</strong> ${validatedData.referral || 'Not specified'}</p>
+    //     <p><strong>Message:</strong></p>
+    //     <p>${validatedData.message}</p>
+    //   `,
+    // });
+
+    // Return success response
+    return NextResponse.json(
+      {
+        success: true,
+        message: "Form submitted successfully",
+      },
+      { status: 200 }
+    );
+  } catch (error) {
+    // Handle validation errors
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Validation failed",
+          details: error.issues,
+        },
+        { status: 400 }
+      );
+    }
+
+    // Handle other errors
+    console.error("Contact form error:", error);
+    return NextResponse.json(
+      {
+        success: false,
+        error: "Failed to process form submission",
+      },
+      { status: 500 }
+    );
+  }
+}
