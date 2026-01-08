@@ -96,32 +96,32 @@
     - [x] 2.10.3 `/wp-json/wp/v2/posts` ✓
     - [x] 2.10.4 `/wp-json/wp/v2/pages` ✓
 
-- [ ] 3.0 Next.js Frontend Scaffold & Configuration
-  - [ ] 3.1 Create frontend directory: `mkdir frontend`
-  - [ ] 3.2 Initialize Next.js project with TypeScript and Tailwind:
+- [x] 3.0 Next.js Frontend Scaffold & Configuration
+  - [x] 3.1 Create frontend directory: `mkdir frontend`
+  - [x] 3.2 Initialize Next.js project with TypeScript and Tailwind:
     ```
     npx create-next-app@latest . --typescript --tailwind --app --src-dir=false
     ```
-  - [ ] 3.3 Initialize shadcn/ui:
+  - [x] 3.3 Initialize shadcn/ui:
     ```
     npx shadcn@latest init
     ```
-  - [ ] 3.4 Install shadcn/ui extended component set:
-    - [ ] 3.4.1 Core: `npx shadcn@latest add button card form input select textarea dialog`
-    - [ ] 3.4.2 Navigation: `npx shadcn@latest add navigation-menu sheet`
-    - [ ] 3.4.3 Extended: `npx shadcn@latest add accordion tabs toast carousel`
-  - [ ] 3.5 Create `.env.local` with WordPress API URL
-  - [ ] 3.6 Create `.env.example` as template for other developers
-  - [ ] 3.7 Create `lib/wordpress.ts` with API fetch functions:
-    - [ ] 3.7.1 `getPosts()` - Fetch all blog posts
-    - [ ] 3.7.2 `getPost(slug)` - Fetch single post by slug
-    - [ ] 3.7.3 `getServices()` - Fetch all services
-    - [ ] 3.7.4 `getService(slug)` - Fetch single service by slug
-    - [ ] 3.7.5 `getTestimonials()` - Fetch all testimonials
-    - [ ] 3.7.6 `getPages()` - Fetch all pages
-  - [ ] 3.8 Add TypeScript interfaces for WordPress data types
-  - [ ] 3.9 Test API connection by logging data in a test page
-  - [ ] 3.10 Configure `next.config.js` for WordPress image domains
+  - [x] 3.4 Install shadcn/ui extended component set:
+    - [x] 3.4.1 Core: `npx shadcn@latest add button card form input select textarea dialog`
+    - [x] 3.4.2 Navigation: `npx shadcn@latest add navigation-menu sheet`
+    - [x] 3.4.3 Extended: `npx shadcn@latest add accordion tabs sonner carousel` *(used sonner instead of deprecated toast)*
+  - [x] 3.5 Create `.env.local` with WordPress API URL
+  - [x] 3.6 Create `.env.example` as template for other developers
+  - [x] 3.7 Create `lib/wordpress.ts` with API fetch functions:
+    - [x] 3.7.1 `getPosts()` - Fetch all blog posts
+    - [x] 3.7.2 `getPost(slug)` - Fetch single post by slug
+    - [x] 3.7.3 `getServices()` - Fetch all services
+    - [x] 3.7.4 `getService(slug)` - Fetch single service by slug
+    - [x] 3.7.5 `getTestimonials()` - Fetch all testimonials
+    - [x] 3.7.6 `getPages()` - Fetch all pages
+  - [x] 3.8 Add TypeScript interfaces for WordPress data types
+  - [x] 3.9 Test API connection by logging data in a test page
+  - [x] 3.10 Configure `next.config.js` for WordPress image domains
 
 - [ ] 4.0 Page Templates & Components Development (using shadcn/ui)
   - [ ] 4.1 Create shared components (built on shadcn/ui primitives):
