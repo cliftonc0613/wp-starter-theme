@@ -3,23 +3,27 @@
  * Fetch functions for interacting with the WordPress REST API
  */
 
-const WORDPRESS_API_URL = process.env.WORDPRESS_API_URL;
+// Read env var dynamically each time (not cached at module load)
+function getWordPressApiUrl(): string | undefined {
+  return process.env.WORDPRESS_API_URL;
+}
 
 // Validation helper - throws clear error if API URL is not configured
 function getApiUrl(): string {
-  if (!WORDPRESS_API_URL) {
+  const url = getWordPressApiUrl();
+  if (!url) {
     throw new Error(
       'WORDPRESS_API_URL environment variable is not set. ' +
       'Please set it in your .env.local file or Vercel environment variables. ' +
       'Example: https://your-site.com/wp-json/wp/v2'
     );
   }
-  return WORDPRESS_API_URL;
+  return url;
 }
 
 // Check if WordPress API is configured (useful for build-time checks)
 export function isWordPressConfigured(): boolean {
-  return !!WORDPRESS_API_URL;
+  return !!getWordPressApiUrl();
 }
 
 // =============================================================================
