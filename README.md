@@ -4,7 +4,7 @@
 
 A modern WordPress starter theme with a headless Next.js frontend, featuring StoryBrand framework components, GSAP animations, and Headroom.js navigation.
 
-![Hero Section Preview](images/hero-preview.png)
+![Hero Section Preview](frontend/public/images/theme-preview.png)
 
 ### Features
 
