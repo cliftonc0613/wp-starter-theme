@@ -87,17 +87,17 @@ export function StoryBrandHero({
           <div className="flex items-center gap-4">
             {/* Overlapping Avatars */}
             <div className="flex -space-x-2">
-              <div className="relative z-40 flex h-9 w-9 items-center justify-center rounded-full border-2 border-background bg-orange-500">
+              <div className="relative z-40 flex h-9 w-9 items-center justify-center rounded-full border-2 border-background bg-neutral-800">
                 <User className="h-4 w-4 text-white" />
               </div>
-              <div className="relative z-30 flex h-9 w-9 items-center justify-center rounded-full border-2 border-background bg-slate-600">
+              <div className="relative z-30 flex h-9 w-9 items-center justify-center rounded-full border-2 border-background bg-neutral-600">
                 <User className="h-4 w-4 text-white" />
               </div>
-              <div className="relative z-20 flex h-9 w-9 items-center justify-center rounded-full border-2 border-background bg-slate-700">
+              <div className="relative z-20 flex h-9 w-9 items-center justify-center rounded-full border-2 border-background bg-neutral-400">
                 <User className="h-4 w-4 text-white" />
               </div>
-              <div className="relative z-10 flex h-9 w-9 items-center justify-center rounded-full border-2 border-background bg-slate-800">
-                <User className="h-4 w-4 text-white" />
+              <div className="relative z-10 flex h-9 w-9 items-center justify-center rounded-full border-2 border-background bg-neutral-300">
+                <User className="h-4 w-4 text-neutral-600" />
               </div>
             </div>
 
