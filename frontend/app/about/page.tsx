@@ -144,10 +144,12 @@ export default async function AboutPage() {
 
       {/* Meet Your Guide Section */}
       <AboutSection
-        badge="Meet Your Guide"
+        heading="Our Story"
         paragraphs={[
           "We understand what it's like to struggle with digital challenges. You shouldn't have to figure this out alone.",
           "With over 10 years of experience and 200+ successful projects, we've helped businesses like yours achieve their digital goals.",
+          "Our approach combines strategic thinking with hands-on expertise to deliver solutions that actually work for your business.",
+          "Whether you're just starting out or looking to scale, we're here to guide you every step of the way.",
         ]}
       />
 
