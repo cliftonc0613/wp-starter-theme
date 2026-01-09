@@ -123,20 +123,10 @@ export function StoryBrandHero({
       </div>
 
       {/* Scroll indicator */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
-        <svg
-          className="h-6 w-6 text-muted-foreground"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M19 14l-7 7m0 0l-7-7m7 7V3"
-          />
-        </svg>
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2">
+        <div className="flex h-14 w-8 items-start justify-center overflow-hidden rounded-full border-2 border-muted-foreground/50 p-2">
+          <div className="h-2 w-2 animate-scroll-down rounded-full bg-muted-foreground/70" />
+        </div>
       </div>
     </section>
   );

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { DM_Sans, Playfair_Display, JetBrains_Mono } from "next/font/google";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { SmoothScroll } from "@/components/SmoothScroll";
 import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 
@@ -56,6 +57,7 @@ export default function RootLayout({
       <body
         className={`${dmSans.variable} ${playfair.variable} ${jetbrains.variable} font-sans antialiased`}
       >
+        <SmoothScroll />
         <div className="flex min-h-screen flex-col">
           <Header />
           <main className="flex-grow">{children}</main>

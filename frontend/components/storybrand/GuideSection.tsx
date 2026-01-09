@@ -69,7 +69,7 @@ export function GuideSection({
               </div>
             ) : (
               <div className="relative aspect-square overflow-hidden rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5">
-                <div className="absolute inset-0 flex items-center justify-center">
+                <div className="absolute inset-0 flex items-center justify-center p-[10px]">
                   <div className="text-center text-muted-foreground">
                     <Users className="mx-auto h-16 w-16 opacity-50" />
                     <p className="mt-4">[GUIDE IMAGE: Team photo or founder headshot]</p>
@@ -79,7 +79,7 @@ export function GuideSection({
             )}
 
             {/* Decorative element */}
-            <div className="absolute -bottom-6 -right-6 -z-10 h-full w-full rounded-2xl bg-primary/10" />
+            <div className="absolute -bottom-[3px] left-0 -z-10 h-full w-full rotate-[7deg] rounded-2xl bg-primary/10" />
           </div>
 
           {/* Content side */}

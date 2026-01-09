@@ -156,3 +156,19 @@
 .headroom--top {
   --header-height: 4rem;
 }
+
+/* Scroll indicator animation */
+@keyframes scroll-down {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+}
+
+.animate-scroll-down {
+  animation: scroll-down 1.5s ease-in-out infinite;
+}
