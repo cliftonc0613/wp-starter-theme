@@ -120,7 +120,7 @@ export default async function PageSingle({ params }: PageProps) {
       />
 
       {/* Page Hero */}
-      <section className={`page-single page-${slug} bg-muted/50 py-16 md:py-24`}>
+      <section className={`page-single page-${slug} bg-muted py-16 md:py-24`}>
         <div className="container mx-auto px-4">
           {/* Title */}
           <div className="mx-auto max-w-3xl text-center">
