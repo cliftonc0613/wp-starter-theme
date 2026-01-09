@@ -89,7 +89,15 @@ export default async function ServicePage({ params }: ServicePageProps) {
   const serviceUrl = `${SITE_URL}/services/${slug}`;
 
   return (
-    <>
+    <main
+      className={`
+        service-single
+        service-${slug}
+        ${service.featured_image_url ? "has-thumbnail" : "no-thumbnail"}
+        ${pricing ? "has-pricing" : "no-pricing"}
+        ${features.length > 0 ? "has-features" : "no-features"}
+      `}
+    >
       {/* Structured Data */}
       <ServiceSchema
         name={title}
@@ -205,6 +213,6 @@ export default async function ServicePage({ params }: ServicePageProps) {
           </Card>
         </div>
       </section>
-    </>
+    </main>
   );
 }

@@ -172,3 +172,16 @@
 .animate-scroll-down {
   animation: scroll-down 1.5s ease-in-out infinite;
 }
+
+/* Blog Single Content Spacing */
+div.prose h2,
+div.prose h3,
+div.prose h4,
+div.prose h5,
+div.prose h6 {
+  @apply mb-4 mt-8;
+}
+
+div.prose p {
+  @apply mb-6;
+}

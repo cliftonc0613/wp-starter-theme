@@ -14,12 +14,12 @@ const nextConfig: NextConfig = {
         hostname: 'websiteplayground.local',
         pathname: '/wp-content/uploads/**',
       },
-      // Add more domains as needed for production
-      // {
-      //   protocol: 'https',
-      //   hostname: 'your-production-domain.com',
-      //   pathname: '/wp-content/uploads/**',
-      // },
+      // Production WordPress domain
+      {
+        protocol: 'https',
+        hostname: 'wpstarter.mysites.io',
+        pathname: '/wp-content/uploads/**',
+      },
     ],
   },
 

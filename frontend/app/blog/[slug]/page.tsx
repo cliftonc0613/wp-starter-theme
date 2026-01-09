@@ -133,7 +133,16 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       />
 
       {/* Article Header */}
-      <article className="py-16 md:py-24">
+      <article
+        className={`
+          post-single
+          post-${slug}
+          author-${authorName.toLowerCase().replace(/\s+/g, "-")}
+          ${post.featured_image_url ? "has-thumbnail" : "no-thumbnail"}
+          ${readingTime <= 5 ? "quick-read" : "long-read"}
+          py-16 md:py-24
+        `}
+      >
         <div className="container mx-auto px-4">
           <div className="mx-auto max-w-3xl">
             {/* Meta */}
