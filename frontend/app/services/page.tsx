@@ -5,6 +5,7 @@ import type { WPService } from "@/lib/wordpress";
 import { Hero } from "@/components/Hero";
 import { ServiceCard } from "@/components/ServiceCard";
 import { Button } from "@/components/ui/button";
+import { BodyClass } from "@/components/BodyClass";
 
 export const metadata: Metadata = {
   title: "Our Services",
@@ -28,6 +29,8 @@ export default async function ServicesPage() {
 
   return (
     <>
+      <BodyClass className="page-services" />
+
       <Hero
         title="Our Services"
         subtitle="Comprehensive solutions tailored to your business needs. We offer a wide range of services to help you succeed."

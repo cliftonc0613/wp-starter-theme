@@ -4,6 +4,7 @@ import type { WPService, WPTestimonial, WPPost } from "@/lib/wordpress";
 import { Button } from "@/components/ui/button";
 import { OrganizationSchema } from "@/components/JsonLd";
 import { BlogCard } from "@/components/BlogCard";
+import { BodyClass } from "@/components/BodyClass";
 
 // StoryBrand Components
 import {
@@ -66,6 +67,8 @@ export default async function HomePage() {
 
   return (
     <>
+      <BodyClass className="page-home" />
+
       {/* Organization Schema for SEO */}
       <OrganizationSchema
         name={SITE_NAME}
@@ -218,7 +221,7 @@ export default async function HomePage() {
       <StakesSection
         heading="What Happens If You Wait?"
         subheading="[The cost of staying where you are]"
-        stakes={[
+        items={[
           {
             title: "[STAKE 1: Lost Opportunity]",
             description: "[What opportunity are they missing by not acting?]",

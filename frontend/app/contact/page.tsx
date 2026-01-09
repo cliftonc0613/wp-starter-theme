@@ -3,6 +3,7 @@ import { Hero } from "@/components/Hero";
 import { ContactForm } from "@/components/ContactForm";
 import { getServices } from "@/lib/wordpress";
 import { Phone, Mail, MapPin } from "lucide-react";
+import { BodyClass } from "@/components/BodyClass";
 
 export const metadata: Metadata = {
   title: "Contact Us",
@@ -19,6 +20,8 @@ export default async function ContactPage() {
 
   return (
     <>
+      <BodyClass className="page-contact" />
+
       <Hero
         title="Contact Us"
         subtitle="Have a question or want to work together? We'd love to hear from you."

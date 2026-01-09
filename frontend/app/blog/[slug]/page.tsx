@@ -16,6 +16,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { BlogCard } from "@/components/BlogCard";
 import { BlogPostingSchema, BreadcrumbSchema } from "@/components/JsonLd";
+import { BodyClass } from "@/components/BodyClass";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME || "Starter WP Theme";
@@ -111,8 +112,19 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const description = stripHtml(post.excerpt.rendered);
   const postUrl = `${SITE_URL}/blog/${slug}`;
 
+  // Dynamic body classes for CSS targeting
+  const bodyClasses = [
+    "post-single",
+    `post-${slug}`,
+    `author-${authorName.toLowerCase().replace(/\s+/g, "-")}`,
+    featuredImageUrl ? "has-thumbnail" : "no-thumbnail",
+    readingTime <= 5 ? "quick-read" : "long-read",
+  ].join(" ");
+
   return (
     <>
+      <BodyClass className={bodyClasses} />
+
       {/* Structured Data */}
       <BlogPostingSchema
         headline={title}
@@ -137,20 +149,11 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       />
 
       {/* Article Header */}
-      <article
-        className={`
-          post-single
-          post-${slug}
-          author-${authorName.toLowerCase().replace(/\s+/g, "-")}
-          ${featuredImageUrl ? "has-thumbnail" : "no-thumbnail"}
-          ${readingTime <= 5 ? "quick-read" : "long-read"}
-          py-16 md:py-24
-        `}
-      >
+      <section className="bg-muted pb-16 pt-32 md:pb-24 md:pt-48">
         <div className="container mx-auto px-4">
-          <div className="mx-auto max-w-3xl">
+          <div className="mx-auto max-w-3xl text-center">
             {/* Meta */}
-            <div className="mb-6 flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
+            <div className="mb-6 flex flex-wrap items-center justify-center gap-4 text-sm text-muted-foreground">
               <span>{date}</span>
               <span>•</span>
               <span>{readingTime} min read</span>
@@ -166,7 +169,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
           {/* Featured Image */}
           {featuredImageUrl && (
-            <div className="mx-auto mt-8 max-w-4xl">
+            <div className="mx-auto mt-12 max-w-4xl">
               <div className="relative aspect-video overflow-hidden rounded-xl">
                 <Image
                   src={featuredImageUrl}
@@ -179,9 +182,13 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               </div>
             </div>
           )}
+        </div>
+      </section>
 
-          {/* Content */}
-          <div className="mx-auto mt-12 max-w-3xl">
+      {/* Article Content */}
+      <article className="py-12 md:py-16">
+        <div className="container mx-auto px-4">
+          <div className="mx-auto max-w-3xl">
             <div
               className="prose prose-lg max-w-none prose-headings:font-bold prose-a:text-primary prose-img:rounded-xl"
               dangerouslySetInnerHTML={{ __html: contentHtml }}
@@ -189,7 +196,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           </div>
 
           {/* Back to Blog */}
-          <div className="mx-auto mt-12 max-w-3xl">
+          <div className="mt-12">
             <Button asChild variant="outline">
               <Link href="/blog">← Back to Blog</Link>
             </Button>
