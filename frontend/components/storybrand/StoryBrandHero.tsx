@@ -36,7 +36,7 @@ export function StoryBrandHero({
 }: StoryBrandHeroProps) {
   return (
     <section
-      className="relative flex min-h-[90vh] items-center justify-center bg-gradient-to-br from-background to-muted"
+      className="relative flex min-h-[90vh] items-center justify-center overflow-hidden bg-gradient-to-br from-background to-muted"
       style={
         backgroundImage
           ? {
