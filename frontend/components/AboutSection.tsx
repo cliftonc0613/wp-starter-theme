@@ -70,7 +70,7 @@ export function AboutSection({
 
   return (
     <section className={cn("py-16 md:py-24", className)}>
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto max-w-6xl px-4">
         <div
           className={cn(
             "grid items-center gap-12 lg:grid-cols-2 lg:gap-16",
