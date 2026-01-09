@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getService, getServices, stripHtml, decodeHtmlEntities, isWordPressConfigured } from "@/lib/wordpress";
+import { getService, getServices, stripHtml, decodeHtmlEntities, isWordPressConfigured, rewriteImageUrl, rewriteContentUrls } from "@/lib/wordpress";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ServiceSchema, BreadcrumbSchema } from "@/components/JsonLd";
@@ -85,6 +85,10 @@ export default async function ServicePage({ params }: ServicePageProps) {
   const ctaText = service.acf?.cta_text || "Get Started";
   const ctaLink = service.acf?.cta_link || "/contact";
 
+  // Rewrite image URLs from local to production
+  const featuredImageUrl = rewriteImageUrl(service.featured_image_url);
+  const contentHtml = rewriteContentUrls(service.content.rendered);
+
   const description = stripHtml(service.excerpt.rendered || service.content.rendered);
   const serviceUrl = `${SITE_URL}/services/${slug}`;
 
@@ -93,7 +97,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
       className={`
         service-single
         service-${slug}
-        ${service.featured_image_url ? "has-thumbnail" : "no-thumbnail"}
+        ${featuredImageUrl ? "has-thumbnail" : "no-thumbnail"}
         ${pricing ? "has-pricing" : "no-pricing"}
         ${features.length > 0 ? "has-features" : "no-features"}
       `}
@@ -107,7 +111,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
           name: SITE_NAME,
           url: SITE_URL,
         }}
-        image={service.featured_image_url || undefined}
+        image={featuredImageUrl || undefined}
       />
       <BreadcrumbSchema
         items={[
@@ -141,7 +145,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
               )}
               <div
                 className="prose prose-lg mt-6 max-w-none text-muted-foreground"
-                dangerouslySetInnerHTML={{ __html: service.content.rendered }}
+                dangerouslySetInnerHTML={{ __html: contentHtml }}
               />
               <div className="mt-8">
                 <Button asChild size="lg">
@@ -149,10 +153,10 @@ export default async function ServicePage({ params }: ServicePageProps) {
                 </Button>
               </div>
             </div>
-            {service.featured_image_url && (
+            {featuredImageUrl && (
               <div className="relative aspect-video overflow-hidden rounded-xl lg:aspect-square">
                 <Image
-                  src={service.featured_image_url}
+                  src={featuredImageUrl}
                   alt={title}
                   fill
                   className="object-cover"

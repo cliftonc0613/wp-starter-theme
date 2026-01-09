@@ -10,6 +10,8 @@ import {
   formatDate,
   getReadingTime,
   isWordPressConfigured,
+  rewriteImageUrl,
+  rewriteContentUrls,
 } from "@/lib/wordpress";
 import { Button } from "@/components/ui/button";
 import { BlogCard } from "@/components/BlogCard";
@@ -100,6 +102,10 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const readingTime = getReadingTime(post.content.rendered);
   const authorName = post.author_name || "Unknown Author";
 
+  // Rewrite image URLs from local to production
+  const featuredImageUrl = rewriteImageUrl(post.featured_image_url);
+  const contentHtml = rewriteContentUrls(post.content.rendered);
+
   // Fetch related posts (latest 3 posts excluding current)
   const allPosts = await getPosts({ per_page: 4 });
   const relatedPosts = allPosts.filter((p) => p.id !== post.id).slice(0, 3);
@@ -114,7 +120,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         headline={title}
         description={description}
         url={postUrl}
-        image={post.featured_image_url || undefined}
+        image={featuredImageUrl || undefined}
         datePublished={post.date}
         dateModified={post.modified}
         author={{
@@ -138,7 +144,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           post-single
           post-${slug}
           author-${authorName.toLowerCase().replace(/\s+/g, "-")}
-          ${post.featured_image_url ? "has-thumbnail" : "no-thumbnail"}
+          ${featuredImageUrl ? "has-thumbnail" : "no-thumbnail"}
           ${readingTime <= 5 ? "quick-read" : "long-read"}
           py-16 md:py-24
         `}
@@ -161,11 +167,11 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           </div>
 
           {/* Featured Image */}
-          {post.featured_image_url && (
+          {featuredImageUrl && (
             <div className="mx-auto mt-8 max-w-4xl">
               <div className="relative aspect-video overflow-hidden rounded-xl">
                 <Image
-                  src={post.featured_image_url}
+                  src={featuredImageUrl}
                   alt={title}
                   fill
                   className="object-cover"
@@ -179,7 +185,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           <div className="mx-auto mt-12 max-w-3xl">
             <div
               className="prose prose-lg max-w-none prose-headings:font-bold prose-a:text-primary prose-img:rounded-xl"
-              dangerouslySetInnerHTML={{ __html: post.content.rendered }}
+              dangerouslySetInnerHTML={{ __html: contentHtml }}
             />
           </div>
 

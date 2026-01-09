@@ -473,6 +473,44 @@ export async function getTags(params?: {
 // =============================================================================
 
 /**
+ * URL mappings for development to production image rewrites
+ * Add local -> production domain mappings here
+ */
+const URL_REWRITES: Record<string, string> = {
+  'http://websiteplayground.local': 'https://wpstarter.mysites.io',
+  'https://websiteplayground.local': 'https://wpstarter.mysites.io',
+};
+
+/**
+ * Rewrite image URLs from local/development domains to production
+ * This handles cases where WordPress stores local URLs in the database
+ */
+export function rewriteImageUrl(url: string | null | undefined): string | null {
+  if (!url) return null;
+
+  for (const [localDomain, productionDomain] of Object.entries(URL_REWRITES)) {
+    if (url.startsWith(localDomain)) {
+      return url.replace(localDomain, productionDomain);
+    }
+  }
+
+  return url;
+}
+
+/**
+ * Rewrite all image URLs in HTML content
+ */
+export function rewriteContentUrls(html: string): string {
+  let result = html;
+
+  for (const [localDomain, productionDomain] of Object.entries(URL_REWRITES)) {
+    result = result.replaceAll(localDomain, productionDomain);
+  }
+
+  return result;
+}
+
+/**
  * Strip HTML tags from string (for excerpts, etc.)
  */
 export function stripHtml(html: string): string {

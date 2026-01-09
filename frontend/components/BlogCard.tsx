@@ -2,7 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Zap, FileText } from "lucide-react";
 import type { WPPost } from "@/lib/wordpress";
-import { stripHtml, decodeHtmlEntities, getReadingTime } from "@/lib/wordpress";
+import { stripHtml, decodeHtmlEntities, getReadingTime, rewriteImageUrl } from "@/lib/wordpress";
 
 interface BlogCardProps {
   post: WPPost;
@@ -21,15 +21,16 @@ export function BlogCard({
   const excerpt = stripHtml(post.excerpt.rendered);
   const readingTime = getReadingTime(post.content.rendered);
   const isQuickRead = readingTime <= 5;
+  const featuredImageUrl = rewriteImageUrl(post.featured_image_url);
 
   return (
     <div className="group flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-sm transition-shadow hover:shadow-md">
       {/* Image Section */}
       <Link href={`/blog/${post.slug}`} className="relative block">
         <div className="relative aspect-[16/9] overflow-hidden rounded-t-2xl bg-neutral-100">
-          {post.featured_image_url ? (
+          {featuredImageUrl ? (
             <Image
-              src={post.featured_image_url}
+              src={featuredImageUrl}
               alt={title}
               fill
               className="object-cover transition-transform duration-300 group-hover:scale-105"
