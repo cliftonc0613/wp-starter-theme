@@ -12,6 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { BreadcrumbSchema } from "@/components/JsonLd";
 import { StakesSection } from "@/components/storybrand/StakesSection";
+import { AboutSection } from "@/components/AboutSection";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME || "Starter WP Theme";
@@ -140,6 +141,22 @@ export default async function AboutPage() {
 
       {/* Stats Section */}
       <StakesSection variant="stats" items={stats} className="py-16 md:py-20" />
+
+      {/* Meet Your Guide Section */}
+      <AboutSection
+        badge="Meet Your Guide"
+        paragraphs={[
+          "We understand what it's like to struggle with digital challenges. You shouldn't have to figure this out alone.",
+          "With over 10 years of experience and 200+ successful projects, we've helped businesses like yours achieve their digital goals.",
+        ]}
+        stats={[
+          { value: "[X]+", label: "Years Experience" },
+          { value: "[X]+", label: "Happy Clients" },
+          { value: "[X]%", label: "Success Rate" },
+        ]}
+        ctaText="Work With Us"
+        ctaHref="/contact"
+      />
 
       {/* Team Section */}
       <section className="py-24 md:py-32">
