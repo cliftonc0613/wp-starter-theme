@@ -62,6 +62,7 @@ export async function generateMetadata({
 
   const title = decodeHtmlEntities(post.title.rendered);
   const description = stripHtml(post.excerpt.rendered);
+  const ogImageUrl = rewriteImageUrl(post.featured_image_url);
 
   return {
     title,
@@ -73,15 +74,13 @@ export async function generateMetadata({
       publishedTime: post.date,
       modifiedTime: post.modified,
       authors: post.author_name ? [post.author_name] : undefined,
-      images: post.featured_image_url
-        ? [{ url: post.featured_image_url }]
-        : [],
+      images: ogImageUrl ? [{ url: ogImageUrl }] : [],
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
-      images: post.featured_image_url ? [post.featured_image_url] : [],
+      images: ogImageUrl ? [ogImageUrl] : [],
     },
   };
 }
@@ -107,8 +106,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const contentHtml = rewriteContentUrls(post.content.rendered);
 
   // Fetch related posts (latest 3 posts excluding current)
-  const allPosts = await getPosts({ per_page: 4 });
-  const relatedPosts = allPosts.filter((p) => p.id !== post.id).slice(0, 3);
+  const relatedPosts = await getPosts({ per_page: 3, exclude: [post.id] });
 
   const description = stripHtml(post.excerpt.rendered);
   const postUrl = `${SITE_URL}/blog/${slug}`;
@@ -174,6 +172,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                   src={featuredImageUrl}
                   alt={title}
                   fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 896px, 896px"
                   className="object-cover"
                   priority
                 />

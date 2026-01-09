@@ -64,6 +64,7 @@ export function TestimonialCard({
                 src={photo.url}
                 alt={clientName}
                 fill
+                sizes="40px"
                 className="object-cover"
               />
             </div>

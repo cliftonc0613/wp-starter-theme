@@ -19,13 +19,6 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import Headroom from "headroom.js";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-// Register GSAP plugins
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
-}
 
 const navItems = [
   { href: "/", label: "Home" },
@@ -42,7 +35,9 @@ export function Header() {
   useEffect(() => {
     if (!headerRef.current) return;
 
-    // Initialize Headroom
+    // Initialize Headroom - handles show/hide on scroll
+    // Background opacity and blur transitions are handled via CSS classes
+    // See globals.css: .headroom--top and .headroom--not-top
     const headroom = new Headroom(headerRef.current, {
       offset: 100,
       tolerance: {
@@ -60,41 +55,15 @@ export function Header() {
     });
     headroom.init();
 
-    // GSAP ScrollTrigger for background effects
-    const scrollTrigger = ScrollTrigger.create({
-      start: "top top",
-      end: "100px top",
-      onUpdate: (self) => {
-        const progress = self.progress;
-        const header = headerRef.current;
-        if (!header) return;
-
-        // Interpolate background opacity and blur based on scroll
-        const bgOpacity = 0.6 + progress * 0.35; // 60% -> 95%
-        const blurAmount = 8 + progress * 4; // 8px -> 12px
-
-        header.style.setProperty(
-          "background-color",
-          `oklch(1 0 0 / ${bgOpacity})`
-        );
-        header.style.setProperty(
-          "backdrop-filter",
-          `blur(${blurAmount}px)`
-        );
-      },
-    });
-
-    // Cleanup
     return () => {
       headroom.destroy();
-      scrollTrigger.kill();
     };
   }, []);
 
   return (
     <header
       ref={headerRef}
-      className="fixed top-0 z-50 w-full border-b bg-background/60 backdrop-blur-[8px]"
+      className="fixed top-0 z-50 w-full border-b"
     >
       <div className="container mx-auto flex h-[var(--header-height,4rem)] items-center justify-between px-4 transition-[height] duration-300">
         {/* Logo */}

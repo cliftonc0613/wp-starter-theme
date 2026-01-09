@@ -6,8 +6,10 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Font variables from layout.tsx: DM Sans, Playfair Display, JetBrains Mono */
+  --font-sans: var(--font-sans);
+  --font-heading: var(--font-heading);
+  --font-mono: var(--font-mono);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -134,6 +136,12 @@
               background-color 300ms ease,
               box-shadow 300ms ease,
               backdrop-filter 300ms ease;
+
+  /* Header scroll state CSS custom properties */
+  --header-bg-opacity: 0.6;
+  --header-blur: 8px;
+  background-color: oklch(1 0 0 / var(--header-bg-opacity));
+  backdrop-filter: blur(var(--header-blur));
 }
 
 /* Hidden state - slide up */
@@ -150,11 +158,15 @@
 .headroom--not-top {
   @apply shadow-sm;
   --header-height: 3.5rem;
+  --header-bg-opacity: 0.95;
+  --header-blur: 12px;
 }
 
 /* At top - full size */
 .headroom--top {
   --header-height: 4rem;
+  --header-bg-opacity: 0.6;
+  --header-blur: 8px;
 }
 
 /* Scroll indicator animation */
@@ -171,6 +183,15 @@
 
 .animate-scroll-down {
   animation: scroll-down 1.5s ease-in-out infinite;
+}
+
+/* StoryBrand Hero Background */
+.storybrand-hero-bg {
+  background-image:
+    linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+    var(--hero-bg-image, none);
+  background-size: cover;
+  background-position: center;
 }
 
 /* Blog Single Content Spacing */
