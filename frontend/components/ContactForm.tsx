@@ -73,6 +73,7 @@ export function ContactForm({ services = [] }: ContactFormProps) {
       timeline: "",
       referral: "",
       message: "",
+      website: "", // Honeypot field
     },
   });
 
@@ -293,6 +294,25 @@ export function ContactForm({ services = [] }: ContactFormProps) {
                 The more details you provide, the better we can help you.
               </FormDescription>
               <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        {/* Honeypot field - hidden from real users, catches bots */}
+        <FormField
+          control={form.control}
+          name="website"
+          render={({ field }) => (
+            <FormItem className="absolute -left-[9999px] h-0 w-0 overflow-hidden opacity-0" aria-hidden="true">
+              <FormLabel>Website</FormLabel>
+              <FormControl>
+                <Input
+                  type="text"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  {...field}
+                />
+              </FormControl>
             </FormItem>
           )}
         />
