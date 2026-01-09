@@ -2,9 +2,9 @@
 
 ## WP Starter Theme - Technical Debt & Enhancement Roadmap
 
-**Document Version:** 1.0
+**Document Version:** 1.1
 **Created:** January 9, 2026
-**Status:** Work in Progress
+**Status:** ✅ Completed
 **Theme Type:** Headless WordPress + Next.js Starter Theme
 
 ---
@@ -46,9 +46,9 @@ header.style.setProperty("backdrop-filter", `blur(${blurAmount}px)`);
 ```
 
 **Requirements:**
-- [ ] Create CSS custom properties for scroll-based header states
-- [ ] Use class toggling instead of inline style manipulation
-- [ ] Maintain the same visual effect (progressive blur/opacity on scroll)
+- [x] Create CSS custom properties for scroll-based header states
+- [x] Use class toggling instead of inline style manipulation
+- [x] Maintain the same visual effect (progressive blur/opacity on scroll)
 
 **Acceptance Criteria:**
 - Zero inline styles in Header.tsx
@@ -84,8 +84,8 @@ style={backgroundImage ? { backgroundImage: `...` } : undefined}
 ```
 
 **Requirements:**
-- [ ] Use CSS custom properties or Next.js Image component for backgrounds
-- [ ] Remove all inline style objects from the component
+- [x] Use CSS custom properties or Next.js Image component for backgrounds
+- [x] Remove all inline style objects from the component
 
 **Acceptance Criteria:**
 - Zero inline styles in StoryBrandHero.tsx
@@ -123,9 +123,9 @@ Dead code and duplication that impacts maintainability.
 The first function is immediately removed and replaced by the second, making it dead code.
 
 **Requirements:**
-- [ ] Delete `starter_theme_preview_link()` function entirely
-- [ ] Rename `starter_theme_preview_link_with_type()` to `starter_theme_preview_link()`
-- [ ] Remove the `remove_filter()` call on line 402
+- [x] Delete `starter_theme_preview_link()` function entirely
+- [x] Rename `starter_theme_preview_link_with_type()` to `starter_theme_preview_link()`
+- [x] Remove the `remove_filter()` call on line 402
 
 **Acceptance Criteria:**
 - Single preview link function exists
@@ -142,9 +142,9 @@ The contact form Zod schema is duplicated in two files:
 - `frontend/app/api/contact/route.ts` (lines 5-14)
 
 **Requirements:**
-- [ ] Create `frontend/lib/schemas/contact.ts`
-- [ ] Export the schema from the new file
-- [ ] Import in both ContactForm.tsx and route.ts
+- [x] Create `frontend/lib/schemas/contact.ts`
+- [x] Export the schema from the new file
+- [x] Import in both ContactForm.tsx and route.ts
 
 **Acceptance Criteria:**
 - Single source of truth for contact form validation
@@ -182,10 +182,10 @@ const URL_REWRITES: Record<string, string> = {
 This breaks when developers clone the starter for their own projects.
 
 **Requirements:**
-- [ ] Move URL rewrites to environment variables
-- [ ] Support JSON format in env var for multiple mappings
-- [ ] Provide sensible default (empty object = no rewrites)
-- [ ] Document in `.env.example`
+- [x] Move URL rewrites to environment variables
+- [x] Support JSON format in env var for multiple mappings
+- [x] Provide sensible default (empty object = no rewrites)
+- [x] Document in `.env.example`
 
 **Acceptance Criteria:**
 - No hardcoded domains in source code
@@ -215,9 +215,9 @@ Two disconnected CSS variable systems exist:
 2. Next.js `globals.css` references `--font-geist-sans` but actual fonts are DM Sans, Playfair, JetBrains Mono
 
 **Requirements:**
-- [ ] Remove unused CSS variables from WordPress style.css (keep only theme metadata)
-- [ ] Ensure globals.css variables match actual font configuration in layout.tsx
-- [ ] Document the design token system
+- [x] Remove unused CSS variables from WordPress style.css (keep only theme metadata)
+- [x] Ensure globals.css variables match actual font configuration in layout.tsx
+- [x] Document the design token system
 
 **Acceptance Criteria:**
 - No orphaned CSS variables
@@ -239,9 +239,9 @@ Security hardening for when the theme is used in production.
 - Secrets can leak via referrer headers
 
 **Requirements:**
-- [ ] Remove the GET handler entirely
-- [ ] Document POST-only usage in code comments
-- [ ] Update any documentation referencing GET usage
+- [x] Remove the GET handler entirely
+- [x] Document POST-only usage in code comments
+- [x] Update any documentation referencing GET usage
 
 **Acceptance Criteria:**
 - Only POST method accepted for revalidation
@@ -262,9 +262,9 @@ phone: z.string().min(10, "Please enter a valid phone number")
 A string like "aaaaaaaaaa" passes validation.
 
 **Requirements:**
-- [ ] Add regex pattern for phone validation
-- [ ] Support international formats (optional + prefix)
-- [ ] Provide clear error message
+- [x] Add regex pattern for phone validation
+- [x] Support international formats (optional + prefix)
+- [x] Provide clear error message
 
 **Acceptance Criteria:**
 - Invalid phone formats rejected
@@ -289,9 +289,9 @@ phone: z.string()
 Contact form API has no rate limiting, making it vulnerable to spam and abuse.
 
 **Requirements:**
-- [ ] Document recommended rate limiting approaches
-- [ ] Add honeypot field to contact form (simple spam prevention)
-- [ ] Create placeholder for production rate limiting
+- [x] Document recommended rate limiting approaches
+- [x] Add honeypot field to contact form (simple spam prevention)
+- [x] Create placeholder for production rate limiting
 
 **Acceptance Criteria:**
 - Honeypot field added (hidden, fails if filled)
@@ -328,8 +328,8 @@ Optimizations for better runtime performance.
 Without `sizes`, Next.js can't optimize image loading for different viewports.
 
 **Requirements:**
-- [ ] Add `sizes` attribute to all `fill` mode Images
-- [ ] Use responsive breakpoints matching the design
+- [x] Add `sizes` attribute to all `fill` mode Images
+- [x] Use responsive breakpoints matching the design
 
 **Acceptance Criteria:**
 - All fill-mode Images have sizes prop
@@ -360,9 +360,9 @@ const relatedPosts = allPosts.filter((p) => p.id !== post.id).slice(0, 3);
 ```
 
 **Requirements:**
-- [ ] Add `exclude` parameter support to `getPosts()`
-- [ ] Fetch exactly 3 posts excluding current
-- [ ] Consider category-based related posts (future enhancement)
+- [x] Add `exclude` parameter support to `getPosts()`
+- [x] Fetch exactly 3 posts excluding current
+- [x] Consider category-based related posts (future enhancement)
 
 **Acceptance Criteria:**
 - Only necessary posts fetched
@@ -397,9 +397,9 @@ Improvements that make the starter theme easier to use and customize.
 Page components fetch data without try/catch. If the WordPress API fails, pages crash without graceful degradation.
 
 **Requirements:**
-- [ ] Create reusable error handling pattern for data fetching
-- [ ] Add try/catch to critical data fetching operations
-- [ ] Provide meaningful error states (not just crashes)
+- [x] Create reusable error handling pattern for data fetching
+- [x] Add try/catch to critical data fetching operations
+- [x] Provide meaningful error states (not just crashes)
 
 **Acceptance Criteria:**
 - API failures don't crash pages
@@ -414,9 +414,9 @@ Page components fetch data without try/catch. If the WordPress API fails, pages 
 Multiple `console.warn` and `console.error` statements throughout codebase will clutter production logs.
 
 **Requirements:**
-- [ ] Create `lib/logger.ts` utility
-- [ ] Support log levels (debug, info, warn, error)
-- [ ] Respect environment (verbose in dev, minimal in prod)
+- [x] Create `lib/logger.ts` utility
+- [x] Support log levels (debug, info, warn, error)
+- [x] Respect environment (verbose in dev, minimal in prod)
 
 **Acceptance Criteria:**
 - Centralized logging utility
@@ -444,9 +444,9 @@ export const logger = {
 The CSS variable system in globals.css is comprehensive but undocumented. New developers won't know what tokens are available.
 
 **Requirements:**
-- [ ] Create design tokens documentation
-- [ ] List all available CSS variables with purposes
-- [ ] Provide usage examples
+- [x] Create design tokens documentation
+- [x] List all available CSS variables with purposes
+- [x] Provide usage examples
 
 **Acceptance Criteria:**
 - Documentation exists in docs/ folder
@@ -481,14 +481,14 @@ The CSS variable system in globals.css is comprehensive but undocumented. New de
 
 ## Success Metrics
 
-| Metric | Current | Target |
-|--------|---------|--------|
-| Inline styles | 2 components | 0 components |
-| Dead code functions | 1 | 0 |
-| Duplicated schemas | 2 | 1 (shared) |
-| Hardcoded configs | 2 | 0 |
-| Images with sizes prop | ~50% | 100% |
-| Documented design tokens | No | Yes |
+| Metric | Before | Target | Final |
+|--------|--------|--------|-------|
+| Inline styles | 2 components | 0 components | ✅ 0 |
+| Dead code functions | 1 | 0 | ✅ 0 |
+| Duplicated schemas | 2 | 1 (shared) | ✅ 1 |
+| Hardcoded configs | 2 | 0 | ✅ 0 |
+| Images with sizes prop | ~50% | 100% | ✅ 100% |
+| Documented design tokens | No | Yes | ✅ Yes |
 
 ---
 
