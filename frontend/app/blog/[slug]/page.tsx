@@ -62,6 +62,7 @@ export async function generateMetadata({
 
   const title = decodeHtmlEntities(post.title.rendered);
   const description = stripHtml(post.excerpt.rendered);
+  const ogImageUrl = rewriteImageUrl(post.featured_image_url);
 
   return {
     title,
@@ -73,15 +74,13 @@ export async function generateMetadata({
       publishedTime: post.date,
       modifiedTime: post.modified,
       authors: post.author_name ? [post.author_name] : undefined,
-      images: post.featured_image_url
-        ? [{ url: post.featured_image_url }]
-        : [],
+      images: ogImageUrl ? [{ url: ogImageUrl }] : [],
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
-      images: post.featured_image_url ? [post.featured_image_url] : [],
+      images: ogImageUrl ? [ogImageUrl] : [],
     },
   };
 }
