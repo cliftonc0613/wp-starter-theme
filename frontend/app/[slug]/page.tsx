@@ -119,8 +119,8 @@ export default async function PageSingle({ params }: PageProps) {
         ]}
       />
 
-      {/* Page Header */}
-      <article className={`page-single page-${slug} py-16 md:py-24`}>
+      {/* Page Hero */}
+      <section className={`page-single page-${slug} bg-muted/50 py-16 md:py-24`}>
         <div className="container mx-auto px-4">
           {/* Title */}
           <div className="mx-auto max-w-3xl text-center">
@@ -144,9 +144,13 @@ export default async function PageSingle({ params }: PageProps) {
               </div>
             </div>
           )}
+        </div>
+      </section>
 
-          {/* Content */}
-          <div className="mx-auto mt-12 max-w-3xl">
+      {/* Page Content */}
+      <article className="py-12 md:py-16">
+        <div className="container mx-auto px-4">
+          <div className="mx-auto max-w-3xl">
             <div
               className="prose prose-lg max-w-none prose-headings:font-bold prose-a:text-primary prose-img:rounded-xl"
               dangerouslySetInnerHTML={{ __html: contentHtml }}
