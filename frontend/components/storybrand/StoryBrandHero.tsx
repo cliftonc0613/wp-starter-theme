@@ -36,16 +36,12 @@ export function StoryBrandHero({
 }: StoryBrandHeroProps) {
   return (
     <section
-      className="relative flex min-h-[90vh] items-center justify-center overflow-hidden bg-gradient-to-br from-background to-muted"
-      style={
-        backgroundImage
-          ? {
-              backgroundImage: `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url(${backgroundImage})`,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-            }
-          : undefined
-      }
+      className={`relative flex min-h-[90vh] items-center justify-center overflow-hidden ${
+        backgroundImage ? "storybrand-hero-bg" : "bg-gradient-to-br from-background to-muted"
+      }`}
+      {...(backgroundImage && {
+        style: { "--hero-bg-image": `url(${backgroundImage})` } as React.CSSProperties,
+      })}
     >
       {/* Decorative elements */}
       <div className="absolute inset-0 overflow-hidden">

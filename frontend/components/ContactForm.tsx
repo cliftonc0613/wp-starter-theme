@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 
@@ -27,20 +26,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import type { WPService } from "@/lib/wordpress";
-
-// Form validation schema
-const contactFormSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters"),
-  email: z.string().email("Please enter a valid email address"),
-  phone: z.string().min(10, "Please enter a valid phone number"),
-  service: z.string().optional(),
-  budget: z.string().optional(),
-  timeline: z.string().optional(),
-  referral: z.string().optional(),
-  message: z.string().min(10, "Message must be at least 10 characters"),
-});
-
-type ContactFormValues = z.infer<typeof contactFormSchema>;
+import { contactFormSchema, type ContactFormValues } from "@/lib/schemas";
 
 const budgetOptions = [
   { value: "under-5k", label: "Under $5,000" },
