@@ -159,6 +159,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
                   src={featuredImageUrl}
                   alt={title}
                   fill
+                  sizes="(max-width: 1024px) 100vw, 50vw"
                   className="object-cover"
                   priority
                 />

@@ -1,8 +1,12 @@
 import type { NextConfig } from "next";
 
+const isDev = process.env.NODE_ENV === 'development';
+
 const nextConfig: NextConfig = {
-  // Enable WordPress image domains
   images: {
+    // Disable optimization in development so images load directly from Local by Flywheel
+    // In production, Next.js will optimize images from the production WordPress domain
+    unoptimized: isDev,
     remotePatterns: [
       {
         protocol: 'http',

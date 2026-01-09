@@ -273,6 +273,7 @@ export async function getPosts(params?: {
   page?: number;
   categories?: number[];
   tags?: number[];
+  exclude?: number[];
   orderby?: string;
   order?: 'asc' | 'desc';
 }): Promise<WPPost[]> {
@@ -282,6 +283,7 @@ export async function getPosts(params?: {
   if (params?.page) queryParams.set('page', params.page.toString());
   if (params?.categories?.length) queryParams.set('categories', params.categories.join(','));
   if (params?.tags?.length) queryParams.set('tags', params.tags.join(','));
+  if (params?.exclude?.length) queryParams.set('exclude', params.exclude.join(','));
   if (params?.orderby) queryParams.set('orderby', params.orderby);
   if (params?.order) queryParams.set('order', params.order);
 
@@ -474,12 +476,21 @@ export async function getTags(params?: {
 
 /**
  * URL mappings for development to production image rewrites
- * Add local -> production domain mappings here
+ * Configure via NEXT_PUBLIC_URL_REWRITES environment variable
+ * Format: JSON object with local->production domain mappings
+ * Example: {"http://local.site":"https://production.site"}
  */
-const URL_REWRITES: Record<string, string> = {
-  'http://websiteplayground.local': 'https://wpstarter.mysites.io',
-  'https://websiteplayground.local': 'https://wpstarter.mysites.io',
-};
+function getUrlRewrites(): Record<string, string> {
+  const envRewrites = process.env.NEXT_PUBLIC_URL_REWRITES;
+  if (!envRewrites) return {};
+
+  try {
+    return JSON.parse(envRewrites);
+  } catch {
+    console.warn('Invalid NEXT_PUBLIC_URL_REWRITES format. Expected JSON object.');
+    return {};
+  }
+}
 
 /**
  * Rewrite image URLs from local/development domains to production
@@ -488,7 +499,8 @@ const URL_REWRITES: Record<string, string> = {
 export function rewriteImageUrl(url: string | null | undefined): string | null {
   if (!url) return null;
 
-  for (const [localDomain, productionDomain] of Object.entries(URL_REWRITES)) {
+  const rewrites = getUrlRewrites();
+  for (const [localDomain, productionDomain] of Object.entries(rewrites)) {
     if (url.startsWith(localDomain)) {
       return url.replace(localDomain, productionDomain);
     }
@@ -503,7 +515,8 @@ export function rewriteImageUrl(url: string | null | undefined): string | null {
 export function rewriteContentUrls(html: string): string {
   let result = html;
 
-  for (const [localDomain, productionDomain] of Object.entries(URL_REWRITES)) {
+  const rewrites = getUrlRewrites();
+  for (const [localDomain, productionDomain] of Object.entries(rewrites)) {
     result = result.replaceAll(localDomain, productionDomain);
   }
 

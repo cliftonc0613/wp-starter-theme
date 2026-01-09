@@ -169,6 +169,7 @@ export function SocialProof({
                     src={logo.src}
                     alt={logo.alt}
                     fill
+                    sizes="96px"
                     className="object-contain"
                   />
                 </div>

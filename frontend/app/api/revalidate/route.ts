@@ -7,12 +7,15 @@ import { revalidatePath } from "next/cache";
  * This endpoint allows WordPress to trigger cache revalidation
  * when content is published or updated.
  *
+ * SECURITY: POST-only endpoint. Secrets in URL query parameters (GET)
+ * are logged in server access logs and can leak via referrer headers.
+ *
  * Usage:
  * POST /api/revalidate
  * Body: { "secret": "your-secret", "path": "/blog/my-post" }
  *
- * Or with tags:
- * Body: { "secret": "your-secret", "tag": "posts" }
+ * Or with type/slug (triggered by WordPress save_post hook):
+ * Body: { "secret": "your-secret", "type": "post", "slug": "my-post" }
  */
 export async function POST(request: NextRequest) {
   try {
@@ -82,34 +85,4 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     );
   }
-}
-
-// Also support GET for simpler testing
-export async function GET(request: NextRequest) {
-  const { searchParams } = new URL(request.url);
-  const secret = searchParams.get("secret");
-  const path = searchParams.get("path");
-
-  // Validate secret
-  const expectedSecret = process.env.REVALIDATION_SECRET;
-  if (!expectedSecret || secret !== expectedSecret) {
-    return NextResponse.json(
-      { error: "Invalid revalidation secret" },
-      { status: 401 }
-    );
-  }
-
-  if (path) {
-    revalidatePath(path);
-    return NextResponse.json({
-      success: true,
-      message: `Revalidated path: ${path}`,
-      timestamp: new Date().toISOString(),
-    });
-  }
-
-  return NextResponse.json(
-    { error: "Missing path parameter" },
-    { status: 400 }
-  );
 }

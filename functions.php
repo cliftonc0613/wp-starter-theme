@@ -290,26 +290,13 @@ function starter_theme_preview_link($preview_link, $post) {
         ? STARTER_PREVIEW_SECRET
         : get_option('starter_preview_secret', 'preview-secret');
 
-    // Build the preview URL
-    $slug = $post->post_name;
-    $post_type = $post->post_type;
-
-    // Map post types to frontend routes
-    $route_map = array(
-        'post'         => 'blog',
-        'page'         => '',
-        'services'     => 'services',
-        'testimonials' => 'testimonials',
-    );
-
-    $route = isset($route_map[$post_type]) ? $route_map[$post_type] : $post_type;
-    $path = $route ? "/{$route}/{$slug}" : "/{$slug}";
-
+    // Build the preview URL with type parameter for proper routing
     return add_query_arg(
         array(
             'secret' => $preview_secret,
-            'slug'   => $slug,
+            'slug'   => $post->post_name,
             'id'     => $post->ID,
+            'type'   => $post->post_type,
         ),
         $frontend_url . '/api/preview'
     );
@@ -373,34 +360,6 @@ function starter_theme_trigger_revalidation_on_status_change($new_status, $old_s
     }
 }
 add_action('transition_post_status', 'starter_theme_trigger_revalidation_on_status_change', 10, 3);
-
-/**
- * Add preview link type parameter
- */
-function starter_theme_preview_link_with_type($preview_link, $post) {
-    // Get the Next.js frontend URL from environment or options
-    $frontend_url = defined('STARTER_FRONTEND_URL')
-        ? STARTER_FRONTEND_URL
-        : get_option('starter_frontend_url', 'http://localhost:3000');
-
-    $preview_secret = defined('STARTER_PREVIEW_SECRET')
-        ? STARTER_PREVIEW_SECRET
-        : get_option('starter_preview_secret', 'preview-secret');
-
-    // Build the preview URL with type parameter
-    return add_query_arg(
-        array(
-            'secret' => $preview_secret,
-            'slug'   => $post->post_name,
-            'id'     => $post->ID,
-            'type'   => $post->post_type,
-        ),
-        $frontend_url . '/api/preview'
-    );
-}
-// Override the previous preview link filter
-remove_filter('preview_post_link', 'starter_theme_preview_link', 10);
-add_filter('preview_post_link', 'starter_theme_preview_link_with_type', 10, 2);
 
 /**
  * Disable Gutenberg for this headless theme (optional)
