@@ -140,7 +140,7 @@ export default async function AboutPage() {
       </section>
 
       {/* Stats Section */}
-      <StakesSection variant="stats" items={stats} className="py-16 md:py-20" />
+      <StakesSection variant="stats" items={stats} className="py-10 md:py-12" />
 
       {/* Meet Your Guide Section */}
       <AboutSection

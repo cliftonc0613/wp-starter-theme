@@ -210,7 +210,7 @@ export function StakesSection({
 
               {/* Value (stats) */}
               {item.value && (
-                <div className="mb-2 text-4xl font-bold tracking-tight text-primary md:text-5xl">
+                <div className="mb-2 text-3xl font-bold tracking-tight text-primary md:text-4xl">
                   {item.value}
                 </div>
               )}
