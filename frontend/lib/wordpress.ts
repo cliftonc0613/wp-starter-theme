@@ -273,6 +273,7 @@ export async function getPosts(params?: {
   page?: number;
   categories?: number[];
   tags?: number[];
+  exclude?: number[];
   orderby?: string;
   order?: 'asc' | 'desc';
 }): Promise<WPPost[]> {
@@ -282,6 +283,7 @@ export async function getPosts(params?: {
   if (params?.page) queryParams.set('page', params.page.toString());
   if (params?.categories?.length) queryParams.set('categories', params.categories.join(','));
   if (params?.tags?.length) queryParams.set('tags', params.tags.join(','));
+  if (params?.exclude?.length) queryParams.set('exclude', params.exclude.join(','));
   if (params?.orderby) queryParams.set('orderby', params.orderby);
   if (params?.order) queryParams.set('order', params.order);
 
