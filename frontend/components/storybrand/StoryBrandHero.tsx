@@ -118,8 +118,8 @@ export function StoryBrandHero({
         </div>
       </div>
 
-      {/* Scroll indicator */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2">
+      {/* Scroll indicator - hidden on mobile */}
+      <div className="absolute bottom-8 left-1/2 hidden -translate-x-1/2 md:block">
         <div className="flex h-14 w-8 items-start justify-center overflow-hidden rounded-full border-2 border-muted-foreground/50 p-2">
           <div className="h-2 w-2 animate-scroll-down rounded-full bg-muted-foreground/70" />
         </div>

@@ -25,9 +25,9 @@ export function Hero({
   size = "default",
 }: HeroProps) {
   const sizeClasses = {
-    small: "py-12 md:py-16",
-    default: "py-16 md:py-24",
-    large: "py-24 md:py-32",
+    small: "pb-12 pt-24 md:pb-16 md:pt-36",
+    default: "pb-16 pt-32 md:pb-24 md:pt-48",
+    large: "pb-24 pt-40 md:pb-32 md:pt-56",
   };
 
   const titleSizes = {
@@ -37,7 +37,7 @@ export function Hero({
   };
 
   return (
-    <section className={`${sizeClasses[size]} ${centered ? "text-center" : ""}`}>
+    <section className={`bg-muted ${sizeClasses[size]} ${centered ? "text-center" : ""}`}>
       <div className="container mx-auto px-4">
         <div className={centered ? "mx-auto max-w-3xl" : ""}>
           <h1

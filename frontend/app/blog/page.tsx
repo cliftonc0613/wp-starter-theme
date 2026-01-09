@@ -3,6 +3,7 @@ import { getPosts, isWordPressConfigured } from "@/lib/wordpress";
 import type { WPPost } from "@/lib/wordpress";
 import { Hero } from "@/components/Hero";
 import { BlogCard } from "@/components/BlogCard";
+import { BodyClass } from "@/components/BodyClass";
 
 export const metadata: Metadata = {
   title: "Blog",
@@ -26,6 +27,8 @@ export default async function BlogPage() {
 
   return (
     <>
+      <BodyClass className="page-blog" />
+
       <Hero
         title="Our Blog"
         subtitle="Insights, updates, and resources to help you stay informed and grow your business."

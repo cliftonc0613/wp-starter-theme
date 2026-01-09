@@ -6,6 +6,7 @@ import { Hero } from "@/components/Hero";
 import { TestimonialCard } from "@/components/TestimonialCard";
 import { Button } from "@/components/ui/button";
 import { Star } from "lucide-react";
+import { BodyClass } from "@/components/BodyClass";
 
 export const metadata: Metadata = {
   title: "Testimonials",
@@ -122,6 +123,8 @@ export default async function TestimonialsPage() {
 
   return (
     <>
+      <BodyClass className="page-testimonials" />
+
       <Hero
         title="Client Testimonials"
         subtitle="Don't just take our word for it. Here's what our clients have to say about their experience working with us."
