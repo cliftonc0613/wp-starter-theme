@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { BreadcrumbSchema } from "@/components/JsonLd";
 import { StakesSection } from "@/components/storybrand/StakesSection";
 import { AboutSection } from "@/components/AboutSection";
+import { BodyClass } from "@/components/BodyClass";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME || "Starter WP Theme";
@@ -91,6 +92,8 @@ export default async function AboutPage() {
 
   return (
     <>
+      <BodyClass className="page-about" />
+
       {/* Structured Data */}
       <BreadcrumbSchema
         items={[
@@ -100,7 +103,7 @@ export default async function AboutPage() {
       />
 
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-muted/50 to-background py-24 md:py-32">
+      <section className="bg-muted pb-16 pt-32 md:pb-24 md:pt-48">
         <div className="container mx-auto px-4">
           <div className="mx-auto max-w-4xl text-center">
             <h1 className="mb-6 text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl">

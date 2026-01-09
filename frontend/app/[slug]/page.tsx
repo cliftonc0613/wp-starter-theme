@@ -11,6 +11,7 @@ import {
   isWordPressConfigured,
 } from "@/lib/wordpress";
 import { BreadcrumbSchema } from "@/components/JsonLd";
+import { BodyClass } from "@/components/BodyClass";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
@@ -109,8 +110,17 @@ export default async function PageSingle({ params }: PageProps) {
   const featuredImageUrl = rewriteImageUrl(page.featured_image_url);
   const contentHtml = rewriteContentUrls(page.content.rendered);
 
+  // Dynamic body classes for CSS targeting
+  const bodyClasses = [
+    "page-single",
+    `page-${slug}`,
+    featuredImageUrl ? "has-thumbnail" : "no-thumbnail",
+  ].join(" ");
+
   return (
     <>
+      <BodyClass className={bodyClasses} />
+
       {/* Structured Data */}
       <BreadcrumbSchema
         items={[
@@ -120,7 +130,7 @@ export default async function PageSingle({ params }: PageProps) {
       />
 
       {/* Page Hero */}
-      <section className={`page-single page-${slug} bg-muted pb-16 pt-32 md:pb-24 md:pt-48`}>
+      <section className="bg-muted pb-16 pt-32 md:pb-24 md:pt-48">
         <div className="container mx-auto px-4">
           {/* Title */}
           <div className="mx-auto max-w-3xl text-center">

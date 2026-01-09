@@ -6,6 +6,7 @@ import { getService, getServices, stripHtml, decodeHtmlEntities, isWordPressConf
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ServiceSchema, BreadcrumbSchema } from "@/components/JsonLd";
+import { BodyClass } from "@/components/BodyClass";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME || "Starter WP Theme";
@@ -92,16 +93,19 @@ export default async function ServicePage({ params }: ServicePageProps) {
   const description = stripHtml(service.excerpt.rendered || service.content.rendered);
   const serviceUrl = `${SITE_URL}/services/${slug}`;
 
+  // Dynamic body classes for CSS targeting
+  const bodyClasses = [
+    "service-single",
+    `service-${slug}`,
+    featuredImageUrl ? "has-thumbnail" : "no-thumbnail",
+    pricing ? "has-pricing" : "no-pricing",
+    features.length > 0 ? "has-features" : "no-features",
+  ].join(" ");
+
   return (
-    <main
-      className={`
-        service-single
-        service-${slug}
-        ${featuredImageUrl ? "has-thumbnail" : "no-thumbnail"}
-        ${pricing ? "has-pricing" : "no-pricing"}
-        ${features.length > 0 ? "has-features" : "no-features"}
-      `}
-    >
+    <>
+      <BodyClass className={bodyClasses} />
+
       {/* Structured Data */}
       <ServiceSchema
         name={title}
@@ -122,7 +126,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
       />
 
       {/* Hero Section */}
-      <section className="py-16 md:py-24">
+      <section className="bg-muted pb-16 pt-32 md:pb-24 md:pt-48">
         <div className="container mx-auto px-4">
           <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
             <div>
@@ -218,6 +222,6 @@ export default async function ServicePage({ params }: ServicePageProps) {
           </Card>
         </div>
       </section>
-    </main>
+    </>
   );
 }
