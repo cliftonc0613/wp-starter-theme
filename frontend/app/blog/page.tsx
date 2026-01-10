@@ -17,19 +17,12 @@ export const dynamic = 'force-dynamic';
 export default async function BlogPage() {
   let posts: WPPost[] = [];
 
-  console.log('[BlogPage] WordPress configured:', isWordPressConfigured());
-  console.log('[BlogPage] WORDPRESS_API_URL:', process.env.WORDPRESS_API_URL);
-
   if (isWordPressConfigured()) {
     try {
       posts = await getPosts({ per_page: 12 });
-      console.log('[BlogPage] Posts received:', posts.length, 'posts');
-      console.log('[BlogPage] Post titles:', posts.map(p => p.title.rendered));
     } catch (error) {
-      console.error('[BlogPage] Failed to fetch blog posts:', error);
+      console.error('Failed to fetch blog posts:', error);
     }
-  } else {
-    console.log('[BlogPage] WordPress not configured, skipping fetch');
   }
 
   return (
