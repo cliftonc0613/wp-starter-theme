@@ -206,3 +206,7 @@ div.prose h6 {
 div.prose p {
   @apply mb-6;
 }
+
+div.prose img {
+  @apply mb-8;
+}
