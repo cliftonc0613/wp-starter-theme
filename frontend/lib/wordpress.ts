@@ -245,7 +245,9 @@ export interface WPTag {
  */
 async function fetchAPI<T>(endpoint: string, options?: RequestInit): Promise<T> {
   const apiUrl = getApiUrl();
-  const url = `${apiUrl}${endpoint}`;
+  // Add cache-busting parameter to bypass Flywheel/Fastly CDN caching
+  const separator = endpoint.includes('?') ? '&' : '?';
+  const url = `${apiUrl}${endpoint}${separator}_t=${Date.now()}`;
 
   const response = await fetch(url, {
     headers: {
