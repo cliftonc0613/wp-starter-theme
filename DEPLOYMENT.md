@@ -24,6 +24,56 @@ This guide covers deploying the headless WordPress + Next.js application to prod
 
 ---
 
+## URL Configuration Reference
+
+When cloning this project to a new WordPress installation, you must update the URLs in the following files to match your new local and production environments.
+
+### Files Requiring URL Updates
+
+#### 1. Environment Files (Primary Configuration)
+
+These are the main files where you define your URLs:
+
+| File | Line | Variable | Replace With |
+|------|------|----------|--------------|
+| `frontend/.env.local` | 2 | `WORDPRESS_API_URL` | Your local WordPress URL + `/wp-json/wp/v2` |
+| `frontend/.env.local` | 11 | `NEXT_PUBLIC_SITE_URL` | Your local Next.js URL (typically `http://localhost:3000`) |
+| `frontend/.env.production` | 10 | `WORDPRESS_API_URL` | Your production WordPress URL + `/wp-json/wp/v2` |
+| `frontend/.env.production` | 26 | `NEXT_PUBLIC_SITE_URL` | Your production Vercel/hosting URL |
+
+#### 2. Next.js Image Configuration
+
+Update `frontend/next.config.ts` to allow images from your WordPress domains:
+
+| Line | Purpose | Replace With |
+|------|---------|--------------|
+| 13, 18 | Local image hostname | Your local WordPress domain (e.g., `mysite.local`) |
+| 24 | Production image hostname | Your production WordPress domain |
+
+#### 3. Application Files (No Changes Needed)
+
+These files read from environment variables automatically. No manual URL changes required:
+
+| File | Line | Variable Used |
+|------|------|---------------|
+| `app/page.tsx` | 23 | `NEXT_PUBLIC_SITE_URL` |
+| `app/about/page.tsx` | 18 | `NEXT_PUBLIC_SITE_URL` |
+| `app/blog/[slug]/page.tsx` | 21 | `NEXT_PUBLIC_SITE_URL` |
+| `app/services/[slug]/page.tsx` | 11 | `NEXT_PUBLIC_SITE_URL` |
+| `app/[slug]/page.tsx` | 16 | `NEXT_PUBLIC_SITE_URL` |
+| `app/sitemap.ts` | 4 | `NEXT_PUBLIC_SITE_URL` |
+| `app/robots.ts` | 3 | `NEXT_PUBLIC_SITE_URL` |
+| `lib/wordpress.ts` | 8 | `WORDPRESS_API_URL` |
+
+### Quick Setup Steps
+
+1. **Copy environment template**: `cp .env.production.example .env.local`
+2. **Update `.env.local`** with your local WordPress URL and Next.js URL
+3. **Update `next.config.ts`** with your WordPress domain in the image patterns
+4. **For production**: Create `.env.production` with live URLs
+
+---
+
 ## Part 1: Deploy Next.js to Vercel
 
 ### Step 1: Push Code to GitHub
