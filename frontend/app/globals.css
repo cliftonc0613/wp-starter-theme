@@ -50,6 +50,15 @@
 
 :root {
   --radius: 0.625rem;
+
+  /* Fluid Typography Scale using calc() */
+  /* Formula: calc(min + (max - min) * ((100vw - 320px) / (1280 - 320))) */
+  --fluid-h1: calc(2.25rem + (4 - 2.25) * ((100vw - 20rem) / (80 - 20)));
+  --fluid-h2: calc(1.875rem + (3 - 1.875) * ((100vw - 20rem) / (80 - 20)));
+  --fluid-h3: calc(1.5rem + (2.25 - 1.5) * ((100vw - 20rem) / (80 - 20)));
+  --fluid-h4: calc(1.25rem + (1.75 - 1.25) * ((100vw - 20rem) / (80 - 20)));
+  --fluid-h5: calc(1.125rem + (1.375 - 1.125) * ((100vw - 20rem) / (80 - 20)));
+  --fluid-h6: calc(1rem + (1.125 - 1) * ((100vw - 20rem) / (80 - 20)));
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
@@ -126,6 +135,38 @@
   }
   body {
     @apply bg-background text-foreground overflow-x-hidden;
+  }
+
+  /* Fluid Typography for Headings */
+  h1 {
+    font-size: var(--fluid-h1);
+    line-height: 1.1;
+    font-weight: 700;
+  }
+  h2 {
+    font-size: var(--fluid-h2);
+    line-height: 1.2;
+    font-weight: 700;
+  }
+  h3 {
+    font-size: var(--fluid-h3);
+    line-height: 1.25;
+    font-weight: 600;
+  }
+  h4 {
+    font-size: var(--fluid-h4);
+    line-height: 1.3;
+    font-weight: 600;
+  }
+  h5 {
+    font-size: var(--fluid-h5);
+    line-height: 1.4;
+    font-weight: 600;
+  }
+  h6 {
+    font-size: var(--fluid-h6);
+    line-height: 1.4;
+    font-weight: 600;
   }
 }
 
