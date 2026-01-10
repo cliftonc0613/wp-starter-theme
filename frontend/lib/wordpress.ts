@@ -251,6 +251,7 @@ async function fetchAPI<T>(endpoint: string, options?: RequestInit): Promise<T> 
     headers: {
       'Content-Type': 'application/json',
     },
+    next: { revalidate: 5 }, // Revalidate data cache every 5 seconds
     ...options,
   });
 
