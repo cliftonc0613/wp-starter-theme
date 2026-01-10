@@ -14,8 +14,8 @@ export const metadata: Metadata = {
     "Read what our clients have to say about working with us. Real stories from real businesses.",
 };
 
-// Enable ISR with 60 second revalidation
-export const revalidate = 60;
+// Enable ISR with 5 second revalidation
+export const revalidate = 5;
 
 // Value Block Component
 function ValueBlock({

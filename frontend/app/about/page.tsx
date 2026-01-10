@@ -80,7 +80,7 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export const revalidate = 60;
+export const revalidate = 5;
 
 export default async function AboutPage() {
   const page = await getPage("about");

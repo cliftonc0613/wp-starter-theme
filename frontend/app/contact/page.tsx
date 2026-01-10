@@ -11,8 +11,8 @@ export const metadata: Metadata = {
     "Get in touch with us. We'd love to hear from you and discuss how we can help your business grow.",
 };
 
-// Revalidate services list every 60 seconds
-export const revalidate = 60;
+// Revalidate services list every 5 seconds
+export const revalidate = 5;
 
 export default async function ContactPage() {
   // Fetch services to populate the dropdown

@@ -23,8 +23,8 @@ import {
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME || "Starter WP Theme";
 
-// Enable ISR with 60 second revalidation
-export const revalidate = 60;
+// Enable ISR with 5 second revalidation
+export const revalidate = 5;
 
 /**
  * StoryBrand Homepage

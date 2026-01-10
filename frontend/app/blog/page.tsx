@@ -11,8 +11,8 @@ export const metadata: Metadata = {
     "Read our latest articles, insights, and updates on industry trends and best practices.",
 };
 
-// Enable ISR with 60 second revalidation
-export const revalidate = 60;
+// Enable ISR with 5 second revalidation
+export const revalidate = 5;
 
 export default async function BlogPage() {
   let posts: WPPost[] = [];
