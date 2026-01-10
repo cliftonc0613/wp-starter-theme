@@ -48,6 +48,9 @@ export async function generateStaticParams() {
 // Allow dynamic paths not generated at build time
 export const dynamicParams = true;
 
+// Force dynamic rendering to always fetch fresh data from WordPress
+export const dynamic = 'force-dynamic';
+
 // Generate metadata for each post
 export async function generateMetadata({
   params,
