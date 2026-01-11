@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import { BlogCard } from "@/components/BlogCard";
 import { BlogPostingSchema, BreadcrumbSchema } from "@/components/JsonLd";
 import { BodyClass } from "@/components/BodyClass";
+import { WordPressContent } from "@/components/WordPressContent";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME || "Starter WP Theme";
@@ -192,9 +193,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       <article className="py-12 md:py-16">
         <div className="container mx-auto px-4">
           <div className="mx-auto max-w-3xl">
-            <div
+            <WordPressContent
+              html={contentHtml}
               className="prose prose-lg max-w-none prose-headings:font-bold prose-a:text-primary prose-img:rounded-xl"
-              dangerouslySetInnerHTML={{ __html: contentHtml }}
             />
           </div>
 

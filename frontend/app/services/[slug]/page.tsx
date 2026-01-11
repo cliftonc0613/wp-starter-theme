@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ServiceSchema, BreadcrumbSchema } from "@/components/JsonLd";
 import { BodyClass } from "@/components/BodyClass";
+import { WordPressContent } from "@/components/WordPressContent";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME || "Starter WP Theme";
@@ -147,9 +148,9 @@ export default async function ServicePage({ params }: ServicePageProps) {
                   )}
                 </div>
               )}
-              <div
+              <WordPressContent
+                html={contentHtml}
                 className="prose prose-lg mt-6 max-w-none text-muted-foreground"
-                dangerouslySetInnerHTML={{ __html: contentHtml }}
               />
               <div className="mt-8">
                 <Button asChild size="lg">
