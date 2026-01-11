@@ -251,3 +251,465 @@ div.prose p {
 div.prose img {
   @apply mb-8;
 }
+
+/* ==========================================================================
+   WordPress Block Editor Classes (Headless Compatible)
+   These classes style content that comes from WordPress REST API content.rendered
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Alignment Classes
+   Applied to images, embeds, and other blocks via the block editor
+   -------------------------------------------------------------------------- */
+.alignnone {
+  @apply my-6;
+}
+
+.alignleft {
+  @apply float-left mr-6 mb-4 max-w-[50%];
+}
+
+.alignright {
+  @apply float-right ml-6 mb-4 max-w-[50%];
+}
+
+.aligncenter {
+  @apply mx-auto my-6 block text-center;
+}
+
+.alignwide {
+  @apply mx-auto my-8 w-full max-w-4xl;
+}
+
+.alignfull {
+  @apply my-8 w-screen relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+}
+
+/* Clear floats after aligned content */
+.alignleft + *,
+.alignright + * {
+  clear: both;
+}
+
+/* --------------------------------------------------------------------------
+   Image Block Classes
+   -------------------------------------------------------------------------- */
+.wp-block-image {
+  @apply my-6;
+}
+
+.wp-block-image img {
+  @apply max-w-full h-auto;
+}
+
+.wp-block-image figcaption,
+.wp-caption-text {
+  @apply text-sm text-muted-foreground mt-2 text-center;
+}
+
+.wp-block-image.is-style-rounded img {
+  @apply rounded-lg;
+}
+
+/* Legacy caption wrapper */
+.wp-caption {
+  @apply my-6 max-w-full;
+}
+
+.wp-caption img {
+  @apply block max-w-full h-auto;
+}
+
+/* --------------------------------------------------------------------------
+   Gallery Block Classes
+   -------------------------------------------------------------------------- */
+.wp-block-gallery {
+  @apply my-6 grid gap-4;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+}
+
+.wp-block-gallery.columns-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.wp-block-gallery.columns-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.wp-block-gallery.columns-4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.wp-block-gallery .wp-block-image {
+  @apply m-0;
+}
+
+.wp-block-gallery .wp-block-image img {
+  @apply w-full h-full object-cover;
+}
+
+.wp-block-gallery figcaption {
+  @apply text-sm text-muted-foreground mt-2 text-center;
+}
+
+/* Legacy gallery classes */
+.gallery {
+  @apply my-6 grid gap-4;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+}
+
+.gallery-item {
+  @apply relative overflow-hidden;
+}
+
+.gallery-item img {
+  @apply w-full h-auto;
+}
+
+.gallery-caption {
+  @apply text-sm text-muted-foreground mt-1;
+}
+
+/* --------------------------------------------------------------------------
+   Quote & Pullquote Blocks
+   -------------------------------------------------------------------------- */
+.wp-block-quote {
+  @apply my-6 pl-6 border-l-4 border-primary italic;
+}
+
+.wp-block-quote p {
+  @apply mb-2;
+}
+
+.wp-block-quote cite {
+  @apply block text-sm text-muted-foreground not-italic mt-2;
+}
+
+.wp-block-quote.is-style-large {
+  @apply pl-0 border-l-0 text-xl;
+}
+
+.wp-block-pullquote {
+  @apply my-8 py-6 border-y-4 border-primary text-center;
+}
+
+.wp-block-pullquote blockquote {
+  @apply border-0 p-0;
+}
+
+.wp-block-pullquote p {
+  @apply text-xl font-medium mb-2;
+}
+
+.wp-block-pullquote cite {
+  @apply block text-sm text-muted-foreground;
+}
+
+/* --------------------------------------------------------------------------
+   Code & Preformatted Blocks
+   -------------------------------------------------------------------------- */
+.wp-block-code {
+  @apply my-6 p-4 bg-muted rounded-lg overflow-x-auto;
+}
+
+.wp-block-code code {
+  @apply font-mono text-sm;
+}
+
+.wp-block-preformatted {
+  @apply my-6 p-4 bg-muted rounded-lg font-mono text-sm whitespace-pre-wrap overflow-x-auto;
+}
+
+.wp-block-verse {
+  @apply my-6 font-serif italic whitespace-pre-wrap;
+}
+
+/* --------------------------------------------------------------------------
+   Separator & Spacer Blocks
+   -------------------------------------------------------------------------- */
+.wp-block-separator {
+  @apply my-8 border-t border-border;
+}
+
+.wp-block-separator.is-style-wide {
+  @apply w-full;
+}
+
+.wp-block-separator.is-style-dots {
+  @apply border-0 text-center;
+}
+
+.wp-block-separator.is-style-dots::before {
+  content: "···";
+  @apply text-2xl tracking-widest text-muted-foreground;
+}
+
+.wp-block-spacer {
+  @apply block;
+}
+
+/* --------------------------------------------------------------------------
+   Layout Blocks: Columns, Group, Cover
+   -------------------------------------------------------------------------- */
+.wp-block-columns {
+  @apply my-6 flex flex-wrap gap-6;
+}
+
+.wp-block-column {
+  @apply flex-1 min-w-0;
+}
+
+@media (max-width: 768px) {
+  .wp-block-columns {
+    @apply flex-col;
+  }
+
+  .wp-block-column {
+    @apply w-full;
+  }
+}
+
+.wp-block-group {
+  @apply my-6;
+}
+
+.wp-block-group.has-background {
+  @apply p-6 rounded-lg;
+}
+
+.wp-block-cover {
+  @apply my-6 relative flex items-center justify-center min-h-[300px] bg-cover bg-center;
+}
+
+.wp-block-cover__inner-container {
+  @apply relative z-10 text-center p-6;
+}
+
+.wp-block-cover.has-background-dim::before {
+  content: "";
+  @apply absolute inset-0 bg-black/50;
+}
+
+/* --------------------------------------------------------------------------
+   Button Blocks
+   -------------------------------------------------------------------------- */
+.wp-block-buttons {
+  @apply my-6 flex flex-wrap gap-3;
+}
+
+.wp-block-button {
+  @apply inline-block;
+}
+
+.wp-block-button__link {
+  @apply inline-flex items-center justify-center px-6 py-3 rounded-lg font-medium transition-colors;
+  @apply bg-primary text-primary-foreground hover:bg-primary/90;
+}
+
+.wp-block-button.is-style-outline .wp-block-button__link {
+  @apply bg-transparent border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground;
+}
+
+/* --------------------------------------------------------------------------
+   Table Block
+   -------------------------------------------------------------------------- */
+.wp-block-table {
+  @apply my-6 w-full overflow-x-auto;
+}
+
+.wp-block-table table {
+  @apply w-full border-collapse;
+}
+
+.wp-block-table th,
+.wp-block-table td {
+  @apply p-3 border border-border text-left;
+}
+
+.wp-block-table th {
+  @apply bg-muted font-semibold;
+}
+
+.wp-block-table.is-style-stripes tbody tr:nth-child(odd) {
+  @apply bg-muted/50;
+}
+
+/* --------------------------------------------------------------------------
+   List Block
+   -------------------------------------------------------------------------- */
+.wp-block-list {
+  @apply my-6 pl-6;
+}
+
+ul.wp-block-list {
+  @apply list-disc;
+}
+
+ol.wp-block-list {
+  @apply list-decimal;
+}
+
+.wp-block-list li {
+  @apply mb-2;
+}
+
+/* --------------------------------------------------------------------------
+   Embed Blocks (YouTube, Twitter, etc.)
+   -------------------------------------------------------------------------- */
+.wp-block-embed {
+  @apply my-6;
+}
+
+.wp-block-embed__wrapper {
+  @apply relative;
+}
+
+/* Responsive embed container */
+.wp-block-embed.wp-embed-aspect-16-9 .wp-block-embed__wrapper {
+  @apply aspect-video;
+}
+
+.wp-block-embed.wp-embed-aspect-16-9 .wp-block-embed__wrapper iframe {
+  @apply absolute inset-0 w-full h-full;
+}
+
+.wp-block-embed.wp-embed-aspect-4-3 .wp-block-embed__wrapper {
+  aspect-ratio: 4/3;
+}
+
+.wp-block-embed.wp-embed-aspect-4-3 .wp-block-embed__wrapper iframe {
+  @apply absolute inset-0 w-full h-full;
+}
+
+.wp-block-embed figcaption {
+  @apply text-sm text-muted-foreground mt-2 text-center;
+}
+
+/* --------------------------------------------------------------------------
+   Media & Text Block
+   -------------------------------------------------------------------------- */
+.wp-block-media-text {
+  @apply my-6 grid gap-6 items-center;
+  grid-template-columns: 1fr 1fr;
+}
+
+.wp-block-media-text.has-media-on-the-right {
+  direction: rtl;
+}
+
+.wp-block-media-text.has-media-on-the-right > * {
+  direction: ltr;
+}
+
+.wp-block-media-text__media img {
+  @apply w-full h-auto;
+}
+
+.wp-block-media-text__content {
+  @apply p-4;
+}
+
+@media (max-width: 768px) {
+  .wp-block-media-text {
+    @apply grid-cols-1;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   File Block (Download links)
+   -------------------------------------------------------------------------- */
+.wp-block-file {
+  @apply my-6 flex items-center gap-4 p-4 bg-muted rounded-lg;
+}
+
+.wp-block-file__content-wrapper {
+  @apply flex-1;
+}
+
+.wp-block-file a:not(.wp-block-file__button) {
+  @apply font-medium text-foreground hover:text-primary;
+}
+
+.wp-block-file__button {
+  @apply px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors;
+}
+
+/* --------------------------------------------------------------------------
+   Audio & Video Blocks
+   -------------------------------------------------------------------------- */
+.wp-block-audio {
+  @apply my-6;
+}
+
+.wp-block-audio audio {
+  @apply w-full;
+}
+
+.wp-block-video {
+  @apply my-6;
+}
+
+.wp-block-video video {
+  @apply w-full h-auto;
+}
+
+.wp-block-audio figcaption,
+.wp-block-video figcaption {
+  @apply text-sm text-muted-foreground mt-2 text-center;
+}
+
+/* --------------------------------------------------------------------------
+   WordPress Color Utility Classes (has-*-background-color, has-*-color)
+   These are dynamically generated by WordPress but we provide sensible defaults
+   -------------------------------------------------------------------------- */
+.has-background {
+  @apply p-4;
+}
+
+.has-text-align-left {
+  @apply text-left;
+}
+
+.has-text-align-center {
+  @apply text-center;
+}
+
+.has-text-align-right {
+  @apply text-right;
+}
+
+.has-small-font-size {
+  @apply text-sm;
+}
+
+.has-normal-font-size {
+  @apply text-base;
+}
+
+.has-medium-font-size {
+  @apply text-lg;
+}
+
+.has-large-font-size {
+  @apply text-xl;
+}
+
+.has-x-large-font-size {
+  @apply text-2xl;
+}
+
+.has-xx-large-font-size {
+  @apply text-3xl;
+}
+
+/* --------------------------------------------------------------------------
+   Accessibility: WordPress standard screen reader class
+   -------------------------------------------------------------------------- */
+.screen-reader-text {
+  @apply absolute w-px h-px p-0 -m-px overflow-hidden whitespace-nowrap border-0;
+  clip: rect(0, 0, 0, 0);
+}
