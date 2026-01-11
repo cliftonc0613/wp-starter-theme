@@ -720,92 +720,36 @@ ol.wp-block-list {
 
 /* Placeholder while video loads */
 .youtube-placeholder {
-  @apply bg-muted rounded-lg;
+  @apply bg-muted;
   min-height: 200px;
 }
 
+/* YouTube player wrapper - ensures controls aren't covered */
+.youtube-player-wrapper,
+.youtube-player-inline {
+  @apply relative;
+  z-index: 1;
+  isolation: isolate;
+}
+
 .video-js {
-  @apply rounded-lg overflow-hidden;
+  @apply relative;
   font-family: var(--font-sans);
+  z-index: 1;
+  border-radius: 0 !important;
 }
 
-.video-js .vjs-big-play-button {
-  @apply border-0 rounded-full;
-  background-color: var(--primary);
-  width: 4rem;
-  height: 4rem;
-  line-height: 4rem;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  transition: transform 0.2s ease, background-color 0.2s ease;
+/* Remove rounded corners from iframe */
+.video-js iframe {
+  border-radius: 0 !important;
 }
 
-.video-js .vjs-big-play-button:hover,
-.video-js .vjs-big-play-button:focus {
-  background-color: var(--primary);
-  transform: translate(-50%, -50%) scale(1.1);
+/* YouTube tech wrapper */
+.video-js .vjs-tech {
+  border-radius: 0 !important;
 }
 
-.video-js .vjs-big-play-button .vjs-icon-placeholder::before {
-  @apply flex items-center justify-center;
-  font-size: 1.75rem;
-}
-
-.video-js .vjs-control-bar {
-  @apply rounded-b-lg;
-  background: linear-gradient(transparent, oklch(0 0 0 / 70%));
-  height: 3.5rem;
-}
-
-.video-js .vjs-play-progress,
-.video-js .vjs-volume-level {
-  background-color: var(--primary);
-}
-
-.video-js .vjs-slider {
-  background-color: oklch(1 0 0 / 20%);
-}
-
-.video-js .vjs-load-progress {
-  background-color: oklch(1 0 0 / 30%);
-}
-
-.video-js .vjs-load-progress div {
-  background-color: oklch(1 0 0 / 40%);
-}
-
-.video-js .vjs-time-tooltip,
-.video-js .vjs-mouse-display::after {
-  @apply rounded-md;
-  background-color: var(--primary);
-  font-family: var(--font-sans);
-}
-
-.video-js .vjs-control:focus,
-.video-js .vjs-control:hover {
-  text-shadow: none;
-}
-
-.video-js .vjs-button > .vjs-icon-placeholder::before {
-  font-size: 1.5rem;
-  line-height: 3.5rem;
-}
-
-.video-js .vjs-time-control {
-  @apply text-sm;
-  font-family: var(--font-mono);
-  line-height: 3.5rem;
-  padding: 0 0.5rem;
-}
-
-.video-js .vjs-duration {
-  @apply text-muted-foreground;
-}
-
-.video-js .vjs-current-time {
-  display: block;
-}
+/* Use default video.js styling for controls */
 
 .video-js .vjs-remaining-time {
   display: none;
@@ -834,18 +778,7 @@ ol.wp-block-list {
   border-top-color: var(--primary);
 }
 
-/* Dark mode adjustments */
-.dark .video-js .vjs-control-bar {
-  background: linear-gradient(transparent, oklch(0 0 0 / 85%));
-}
-
-.dark .video-js .vjs-slider {
-  background-color: oklch(1 0 0 / 15%);
-}
-
-.dark .video-js .vjs-load-progress {
-  background-color: oklch(1 0 0 / 20%);
-}
+/* Dark mode - use default video.js styling */
 
 /* --------------------------------------------------------------------------
    Video.js Captions/Subtitles Styles

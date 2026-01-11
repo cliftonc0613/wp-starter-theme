@@ -72,12 +72,16 @@ export function YouTubePlayer({
       muted,
       fluid: true,
       youtube: {
-        ytControls: ytControls ? 1 : 0,
+        ytControls: ytControls ? 2 : 0,
+        controls: ytControls ? 1 : 0,
         rel: 0,
+        showinfo: 0,
         modestbranding: 1,
         iv_load_policy: 3,
         cc_load_policy: captions ? 1 : 0,
         cc_lang_pref: captionLanguage,
+        playsinline: 1,
+        disablekb: ytControls ? 0 : 1,
       },
     });
 
