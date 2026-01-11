@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { getServices, getTestimonials, getPosts, isWordPressConfigured } from "@/lib/wordpress";
-import type { WPService, WPTestimonial, WPPost } from "@/lib/wordpress";
+import { getTestimonials, getPosts, isWordPressConfigured } from "@/lib/wordpress";
+import type { WPTestimonial, WPPost } from "@/lib/wordpress";
 import { Button } from "@/components/ui/button";
 import { OrganizationSchema } from "@/components/JsonLd";
 import { BlogCard } from "@/components/BlogCard";
@@ -49,14 +49,12 @@ export const revalidate = 5;
  */
 export default async function HomePage() {
   // Fetch data from WordPress with graceful fallback
-  let services: WPService[] = [];
   let testimonials: WPTestimonial[] = [];
   let posts: WPPost[] = [];
 
   if (isWordPressConfigured()) {
     try {
-      [services, testimonials, posts] = await Promise.all([
-        getServices({ per_page: 3 }),
+      [testimonials, posts] = await Promise.all([
         getTestimonials({ per_page: 3 }),
         getPosts({ per_page: 3 }),
       ]);
