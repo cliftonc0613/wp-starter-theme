@@ -713,3 +713,129 @@ ol.wp-block-list {
   @apply absolute w-px h-px p-0 -m-px overflow-hidden whitespace-nowrap border-0;
   clip: rect(0, 0, 0, 0);
 }
+
+/* --------------------------------------------------------------------------
+   Video.js YouTube Player Styles
+   -------------------------------------------------------------------------- */
+.video-js {
+  @apply rounded-lg overflow-hidden;
+  font-family: var(--font-sans);
+}
+
+.video-js .vjs-big-play-button {
+  @apply border-0 rounded-full;
+  background-color: var(--primary);
+  width: 4rem;
+  height: 4rem;
+  line-height: 4rem;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.video-js .vjs-big-play-button:hover,
+.video-js .vjs-big-play-button:focus {
+  background-color: var(--primary);
+  transform: translate(-50%, -50%) scale(1.1);
+}
+
+.video-js .vjs-big-play-button .vjs-icon-placeholder::before {
+  @apply flex items-center justify-center;
+  font-size: 1.75rem;
+}
+
+.video-js .vjs-control-bar {
+  @apply rounded-b-lg;
+  background: linear-gradient(transparent, oklch(0 0 0 / 70%));
+  height: 3.5rem;
+}
+
+.video-js .vjs-play-progress,
+.video-js .vjs-volume-level {
+  background-color: var(--primary);
+}
+
+.video-js .vjs-slider {
+  background-color: oklch(1 0 0 / 20%);
+}
+
+.video-js .vjs-load-progress {
+  background-color: oklch(1 0 0 / 30%);
+}
+
+.video-js .vjs-load-progress div {
+  background-color: oklch(1 0 0 / 40%);
+}
+
+.video-js .vjs-time-tooltip,
+.video-js .vjs-mouse-display::after {
+  @apply rounded-md;
+  background-color: var(--primary);
+  font-family: var(--font-sans);
+}
+
+.video-js .vjs-control:focus,
+.video-js .vjs-control:hover {
+  text-shadow: none;
+}
+
+.video-js .vjs-button > .vjs-icon-placeholder::before {
+  font-size: 1.5rem;
+  line-height: 3.5rem;
+}
+
+.video-js .vjs-time-control {
+  @apply text-sm;
+  font-family: var(--font-mono);
+  line-height: 3.5rem;
+  padding: 0 0.5rem;
+}
+
+.video-js .vjs-duration {
+  @apply text-muted-foreground;
+}
+
+.video-js .vjs-current-time {
+  display: block;
+}
+
+.video-js .vjs-remaining-time {
+  display: none;
+}
+
+/* Responsive sizing */
+.vjs-16-9 {
+  aspect-ratio: 16/9;
+}
+
+.vjs-4-3 {
+  aspect-ratio: 4/3;
+}
+
+.vjs-1-1 {
+  aspect-ratio: 1/1;
+}
+
+/* Loading spinner */
+.video-js .vjs-loading-spinner {
+  border-color: var(--primary);
+}
+
+.video-js .vjs-loading-spinner::before,
+.video-js .vjs-loading-spinner::after {
+  border-top-color: var(--primary);
+}
+
+/* Dark mode adjustments */
+.dark .video-js .vjs-control-bar {
+  background: linear-gradient(transparent, oklch(0 0 0 / 85%));
+}
+
+.dark .video-js .vjs-slider {
+  background-color: oklch(1 0 0 / 15%);
+}
+
+.dark .video-js .vjs-load-progress {
+  background-color: oklch(1 0 0 / 20%);
+}
