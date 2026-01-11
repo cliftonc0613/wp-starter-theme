@@ -717,6 +717,13 @@ ol.wp-block-list {
 /* --------------------------------------------------------------------------
    Video.js YouTube Player Styles
    -------------------------------------------------------------------------- */
+
+/* Placeholder while video loads */
+.youtube-placeholder {
+  @apply bg-muted rounded-lg;
+  min-height: 200px;
+}
+
 .video-js {
   @apply rounded-lg overflow-hidden;
   font-family: var(--font-sans);

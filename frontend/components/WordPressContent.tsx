@@ -41,30 +41,8 @@ function parseYouTubeEmbeds(html: string): { processedHtml: string; embeds: YouT
   let processedHtml = html;
   let embedIndex = 0;
 
-  // Pattern 1: WordPress embed blocks with iframes
-  const iframePattern = /<figure[^>]*class="[^"]*wp-block-embed[^"]*youtube[^"]*"[^>]*>[\s\S]*?<iframe[^>]*src="([^"]+)"[^>]*>[\s\S]*?<\/iframe>[\s\S]*?<\/figure>/gi;
-
-  processedHtml = processedHtml.replace(iframePattern, (match, src) => {
-    const videoId = extractYouTubeId(src);
-    if (videoId) {
-      const id = `yt-embed-${embedIndex++}`;
-      embeds.push({
-        id,
-        videoId,
-        autoplay: false,
-        captions: src.includes("cc_load_policy=1"),
-        captionLanguage: "en",
-        placeholder: match,
-      });
-      return `<div data-youtube-placeholder="${id}"></div>`;
-    }
-    return match;
-  });
-
-  // Pattern 2: Standalone YouTube iframes
-  const standaloneIframePattern = /<iframe[^>]*src="([^"]*(?:youtube|youtu\.be)[^"]*)"[^>]*>[\s\S]*?<\/iframe>/gi;
-
-  processedHtml = processedHtml.replace(standaloneIframePattern, (match, src) => {
+  // Helper to create embed entry
+  const createEmbed = (src: string, match: string) => {
     const videoId = extractYouTubeId(src);
     if (videoId) {
       const id = `yt-embed-${embedIndex++}`;
@@ -76,13 +54,35 @@ function parseYouTubeEmbeds(html: string): { processedHtml: string; embeds: YouT
         captionLanguage: "en",
         placeholder: match,
       });
-      return `<div data-youtube-placeholder="${id}"></div>`;
+      return `<div data-youtube-placeholder="${id}" class="youtube-placeholder aspect-video"></div>`;
     }
-    return match;
+    return null;
+  };
+
+  // Pattern 1: WordPress figure blocks with YouTube embeds (most common)
+  // Matches: <figure class="wp-block-embed is-type-video is-provider-youtube...">
+  const figurePattern = /<figure[^>]*class="[^"]*wp-block-embed[^"]*"[^>]*>[\s\S]*?<iframe[^>]*src="([^"]*(?:youtube|youtu\.be|youtube-nocookie)[^"]*)"[^>]*>[\s\S]*?<\/iframe>[\s\S]*?<\/figure>/gi;
+
+  processedHtml = processedHtml.replace(figurePattern, (match, src) => {
+    return createEmbed(src, match) || match;
   });
 
-  // Pattern 3: Custom shortcode output [youtube_player id="..."]
-  const shortcodePattern = /<div[^>]*data-youtube-player[^>]*data-video-id="([^"]+)"([^>]*)><\/div>/gi;
+  // Pattern 2: WordPress embed wrapper divs
+  const wrapperPattern = /<div[^>]*class="[^"]*wp-block-embed[^"]*"[^>]*>[\s\S]*?<iframe[^>]*src="([^"]*(?:youtube|youtu\.be|youtube-nocookie)[^"]*)"[^>]*>[\s\S]*?<\/iframe>[\s\S]*?<\/div>/gi;
+
+  processedHtml = processedHtml.replace(wrapperPattern, (match, src) => {
+    return createEmbed(src, match) || match;
+  });
+
+  // Pattern 3: Any standalone YouTube iframe (catch-all)
+  const iframePattern = /<iframe[^>]*src="([^"]*(?:youtube\.com\/embed|youtu\.be|youtube-nocookie\.com\/embed)[^"]*)"[^>]*>[\s\S]*?<\/iframe>/gi;
+
+  processedHtml = processedHtml.replace(iframePattern, (match, src) => {
+    return createEmbed(src, match) || match;
+  });
+
+  // Pattern 4: Custom shortcode output [youtube_player id="..."]
+  const shortcodePattern = /<div[^>]*data-youtube-player[^>]*data-video-id="([^"]+)"([^>]*)>[\s\S]*?<\/div>/gi;
 
   processedHtml = processedHtml.replace(shortcodePattern, (match, videoId, attrs) => {
     const id = `yt-embed-${embedIndex++}`;
@@ -98,27 +98,23 @@ function parseYouTubeEmbeds(html: string): { processedHtml: string; embeds: YouT
       captionLanguage: captionLangMatch?.[1] || "en",
       placeholder: match,
     });
-    return `<div data-youtube-placeholder="${id}"></div>`;
+    return `<div data-youtube-placeholder="${id}" class="youtube-placeholder aspect-video"></div>`;
   });
 
-  // Pattern 4: WordPress embed wrapper divs
-  const embedWrapperPattern = /<div[^>]*class="[^"]*wp-block-embed__wrapper[^"]*"[^>]*>[\s\S]*?<iframe[^>]*src="([^"]*(?:youtube|youtu\.be)[^"]*)"[^>]*>[\s\S]*?<\/iframe>[\s\S]*?<\/div>/gi;
+  // Pattern 5: Lite-youtube custom elements
+  const liteYoutubePattern = /<lite-youtube[^>]*videoid="([^"]+)"[^>]*>[\s\S]*?<\/lite-youtube>/gi;
 
-  processedHtml = processedHtml.replace(embedWrapperPattern, (match, src) => {
-    const videoId = extractYouTubeId(src);
-    if (videoId) {
-      const id = `yt-embed-${embedIndex++}`;
-      embeds.push({
-        id,
-        videoId,
-        autoplay: src.includes("autoplay=1"),
-        captions: src.includes("cc_load_policy=1"),
-        captionLanguage: "en",
-        placeholder: match,
-      });
-      return `<div data-youtube-placeholder="${id}"></div>`;
-    }
-    return match;
+  processedHtml = processedHtml.replace(liteYoutubePattern, (match, videoId) => {
+    const id = `yt-embed-${embedIndex++}`;
+    embeds.push({
+      id,
+      videoId,
+      autoplay: false,
+      captions: false,
+      captionLanguage: "en",
+      placeholder: match,
+    });
+    return `<div data-youtube-placeholder="${id}" class="youtube-placeholder aspect-video"></div>`;
   });
 
   return { processedHtml, embeds };
