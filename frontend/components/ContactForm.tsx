@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
+import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -339,9 +340,9 @@ export function ContactForm({ services = [] }: ContactFormProps) {
         {/* Privacy Policy */}
         <p className="text-center text-sm text-muted-foreground">
           By submitting this form, you agree to our{" "}
-          <a href="/privacy-policy" className="text-neutral-900 underline hover:text-neutral-600">
+          <Link href="/privacy-policy" className="text-neutral-900 underline hover:text-neutral-600">
             Privacy Policy
-          </a>
+          </Link>
         </p>
       </form>
     </Form>
