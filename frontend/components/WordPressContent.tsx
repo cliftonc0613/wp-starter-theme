@@ -17,6 +17,8 @@ interface YouTubeEmbed {
   id: string;
   videoId: string;
   autoplay: boolean;
+  captions: boolean;
+  captionLanguage: string;
   placeholder: string;
 }
 
@@ -50,6 +52,8 @@ function parseYouTubeEmbeds(html: string): { processedHtml: string; embeds: YouT
         id,
         videoId,
         autoplay: false,
+        captions: src.includes("cc_load_policy=1"),
+        captionLanguage: "en",
         placeholder: match,
       });
       return `<div data-youtube-placeholder="${id}"></div>`;
@@ -68,6 +72,8 @@ function parseYouTubeEmbeds(html: string): { processedHtml: string; embeds: YouT
         id,
         videoId,
         autoplay: src.includes("autoplay=1"),
+        captions: src.includes("cc_load_policy=1"),
+        captionLanguage: "en",
         placeholder: match,
       });
       return `<div data-youtube-placeholder="${id}"></div>`;
@@ -76,14 +82,20 @@ function parseYouTubeEmbeds(html: string): { processedHtml: string; embeds: YouT
   });
 
   // Pattern 3: Custom shortcode output [youtube_player id="..."]
-  const shortcodePattern = /<div[^>]*data-youtube-player[^>]*data-video-id="([^"]+)"[^>]*(?:data-autoplay="([^"]*)")?[^>]*><\/div>/gi;
+  const shortcodePattern = /<div[^>]*data-youtube-player[^>]*data-video-id="([^"]+)"([^>]*)><\/div>/gi;
 
-  processedHtml = processedHtml.replace(shortcodePattern, (match, videoId, autoplay) => {
+  processedHtml = processedHtml.replace(shortcodePattern, (match, videoId, attrs) => {
     const id = `yt-embed-${embedIndex++}`;
+    const autoplayMatch = attrs.match(/data-autoplay="([^"]*)"/);
+    const captionsMatch = attrs.match(/data-captions="([^"]*)"/);
+    const captionLangMatch = attrs.match(/data-caption-language="([^"]*)"/);
+
     embeds.push({
       id,
       videoId,
-      autoplay: autoplay === "true" || autoplay === "1",
+      autoplay: autoplayMatch?.[1] === "true" || autoplayMatch?.[1] === "1",
+      captions: captionsMatch?.[1] === "true" || captionsMatch?.[1] === "1",
+      captionLanguage: captionLangMatch?.[1] || "en",
       placeholder: match,
     });
     return `<div data-youtube-placeholder="${id}"></div>`;
@@ -100,6 +112,8 @@ function parseYouTubeEmbeds(html: string): { processedHtml: string; embeds: YouT
         id,
         videoId,
         autoplay: src.includes("autoplay=1"),
+        captions: src.includes("cc_load_policy=1"),
+        captionLanguage: "en",
         placeholder: match,
       });
       return `<div data-youtube-placeholder="${id}"></div>`;
@@ -147,6 +161,8 @@ export function WordPressContent({ html, className = "" }: WordPressContentProps
           targetId={embed.id}
           videoId={embed.videoId}
           autoplay={embed.autoplay}
+          captions={embed.captions}
+          captionLanguage={embed.captionLanguage}
           containerRef={containerRef}
         />
       ))}
@@ -158,6 +174,8 @@ interface YouTubePlayerPortalProps {
   targetId: string;
   videoId: string;
   autoplay: boolean;
+  captions: boolean;
+  captionLanguage: string;
   containerRef: React.RefObject<HTMLDivElement | null>;
 }
 
@@ -165,6 +183,8 @@ function YouTubePlayerPortal({
   targetId,
   videoId,
   autoplay,
+  captions,
+  captionLanguage,
   containerRef,
 }: YouTubePlayerPortalProps) {
   const [target, setTarget] = useState<Element | null>(null);
@@ -220,6 +240,8 @@ function YouTubePlayerPortal({
           videoId={videoId}
           autoplay={autoplay}
           muted={autoplay}
+          captions={captions}
+          captionLanguage={captionLanguage}
         />
       </div>
     </div>

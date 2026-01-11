@@ -839,3 +839,164 @@ ol.wp-block-list {
 .dark .video-js .vjs-load-progress {
   background-color: oklch(1 0 0 / 20%);
 }
+
+/* --------------------------------------------------------------------------
+   Video.js Captions/Subtitles Styles
+   -------------------------------------------------------------------------- */
+
+/* Caption display area */
+.video-js .vjs-text-track-display {
+  pointer-events: none;
+}
+
+.video-js .vjs-text-track-display > div {
+  font-family: var(--font-sans);
+  font-size: 1.25rem !important;
+  line-height: 1.4 !important;
+}
+
+/* Caption cue styling */
+.video-js .vjs-text-track-cue {
+  @apply rounded-md;
+  background-color: oklch(0 0 0 / 80%) !important;
+  padding: 0.25rem 0.75rem !important;
+}
+
+.video-js .vjs-text-track-cue > div {
+  @apply rounded-md;
+  background-color: oklch(0 0 0 / 80%) !important;
+  color: oklch(1 0 0) !important;
+  padding: 0.25rem 0.75rem !important;
+}
+
+/* Captions button in control bar */
+.video-js .vjs-subs-caps-button {
+  display: flex;
+}
+
+.video-js .vjs-subs-caps-button .vjs-icon-placeholder::before {
+  content: "\f10c";
+}
+
+/* Captions menu */
+.video-js .vjs-subs-caps-button .vjs-menu {
+  @apply rounded-lg;
+  background-color: oklch(0 0 0 / 90%);
+  border: 1px solid oklch(1 0 0 / 10%);
+  bottom: 3.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.video-js .vjs-subs-caps-button .vjs-menu-content {
+  max-height: 15rem;
+  overflow-y: auto;
+}
+
+.video-js .vjs-subs-caps-button .vjs-menu-item {
+  @apply text-sm;
+  padding: 0.5rem 1rem;
+  text-transform: capitalize;
+  font-family: var(--font-sans);
+}
+
+.video-js .vjs-subs-caps-button .vjs-menu-item:hover,
+.video-js .vjs-subs-caps-button .vjs-menu-item:focus {
+  background-color: oklch(1 0 0 / 15%);
+}
+
+.video-js .vjs-subs-caps-button .vjs-menu-item.vjs-selected {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+}
+
+.video-js .vjs-subs-caps-button .vjs-menu-item.vjs-selected::before {
+  content: "✓ ";
+}
+
+/* Text track settings (accessibility options) */
+.video-js .vjs-texttrack-settings {
+  @apply rounded-lg;
+  background-color: oklch(0.15 0 0 / 95%);
+  padding: 1.5rem;
+  font-family: var(--font-sans);
+}
+
+.video-js .vjs-texttrack-settings fieldset {
+  @apply mb-4;
+  border: 1px solid oklch(1 0 0 / 20%);
+  @apply rounded-md p-4;
+}
+
+.video-js .vjs-texttrack-settings legend {
+  @apply text-sm font-semibold px-2;
+  color: oklch(1 0 0 / 80%);
+}
+
+.video-js .vjs-texttrack-settings select {
+  @apply rounded-md text-sm;
+  background-color: oklch(0.2 0 0);
+  border: 1px solid oklch(1 0 0 / 20%);
+  color: oklch(1 0 0);
+  padding: 0.5rem;
+  font-family: var(--font-sans);
+}
+
+.video-js .vjs-texttrack-settings select:focus {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.video-js .vjs-texttrack-settings .vjs-done-button,
+.video-js .vjs-texttrack-settings .vjs-default-button {
+  @apply rounded-md text-sm font-medium;
+  padding: 0.5rem 1rem;
+  margin-top: 0.5rem;
+  transition: background-color 0.2s ease;
+}
+
+.video-js .vjs-texttrack-settings .vjs-done-button {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+}
+
+.video-js .vjs-texttrack-settings .vjs-done-button:hover {
+  opacity: 0.9;
+}
+
+.video-js .vjs-texttrack-settings .vjs-default-button {
+  background-color: oklch(1 0 0 / 20%);
+  color: oklch(1 0 0);
+}
+
+.video-js .vjs-texttrack-settings .vjs-default-button:hover {
+  background-color: oklch(1 0 0 / 30%);
+}
+
+/* Caption font size variations */
+.video-js .vjs-text-track-display.vjs-tt-font-small > div {
+  font-size: 1rem !important;
+}
+
+.video-js .vjs-text-track-display.vjs-tt-font-medium > div {
+  font-size: 1.25rem !important;
+}
+
+.video-js .vjs-text-track-display.vjs-tt-font-large > div {
+  font-size: 1.5rem !important;
+}
+
+.video-js .vjs-text-track-display.vjs-tt-font-xlarge > div {
+  font-size: 1.75rem !important;
+}
+
+/* Responsive caption sizing */
+@media (max-width: 640px) {
+  .video-js .vjs-text-track-display > div {
+    font-size: 0.875rem !important;
+  }
+
+  .video-js .vjs-text-track-cue > div {
+    padding: 0.125rem 0.5rem !important;
+  }
+}

@@ -370,7 +370,16 @@ add_action('transition_post_status', 'starter_theme_trigger_revalidation_on_stat
 /**
  * YouTube Player Shortcode for Video.js Integration
  *
- * Usage: [youtube_player id="VIDEO_ID" autoplay="false" loop="false" muted="false"]
+ * Usage: [youtube_player id="VIDEO_ID" autoplay="false" loop="false" muted="false" captions="true" caption_language="en"]
+ *
+ * Attributes:
+ * - id: YouTube video ID (required)
+ * - autoplay: Auto-start video (default: false)
+ * - loop: Loop video playback (default: false)
+ * - muted: Start muted (default: false)
+ * - controls: Show player controls (default: true)
+ * - captions: Show captions/subtitles by default (default: false)
+ * - caption_language: Preferred caption language code (default: en)
  *
  * This shortcode outputs a data attribute div that the Next.js frontend
  * will detect and replace with the Video.js YouTube player component.
@@ -381,11 +390,13 @@ add_action('transition_post_status', 'starter_theme_trigger_revalidation_on_stat
 function starter_theme_youtube_player_shortcode($atts) {
     $atts = shortcode_atts(
         array(
-            'id'       => '',
-            'autoplay' => 'false',
-            'loop'     => 'false',
-            'muted'    => 'false',
-            'controls' => 'true',
+            'id'               => '',
+            'autoplay'         => 'false',
+            'loop'             => 'false',
+            'muted'            => 'false',
+            'controls'         => 'true',
+            'captions'         => 'false',
+            'caption_language' => 'en',
         ),
         $atts,
         'youtube_player'
@@ -399,14 +410,19 @@ function starter_theme_youtube_player_shortcode($atts) {
     // Sanitize the video ID (alphanumeric, hyphens, underscores only)
     $video_id = preg_replace('/[^a-zA-Z0-9_-]/', '', $atts['id']);
 
+    // Sanitize caption language (2-letter language code)
+    $caption_lang = preg_replace('/[^a-zA-Z-]/', '', $atts['caption_language']);
+
     // Build data attributes
     $data_attrs = sprintf(
-        'data-youtube-player data-video-id="%s" data-autoplay="%s" data-loop="%s" data-muted="%s" data-controls="%s"',
+        'data-youtube-player data-video-id="%s" data-autoplay="%s" data-loop="%s" data-muted="%s" data-controls="%s" data-captions="%s" data-caption-language="%s"',
         esc_attr($video_id),
         esc_attr($atts['autoplay']),
         esc_attr($atts['loop']),
         esc_attr($atts['muted']),
-        esc_attr($atts['controls'])
+        esc_attr($atts['controls']),
+        esc_attr($atts['captions']),
+        esc_attr($caption_lang)
     );
 
     // Return the placeholder div that will be hydrated by React

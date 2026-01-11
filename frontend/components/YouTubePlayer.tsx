@@ -17,6 +17,8 @@ interface YouTubePlayerProps {
   width?: number | string;
   height?: number | string;
   ytControls?: boolean;
+  captions?: boolean;
+  captionLanguage?: string;
   onReady?: (player: Player) => void;
   onPlay?: () => void;
   onPause?: () => void;
@@ -33,6 +35,8 @@ export function YouTubePlayer({
   width = "100%",
   height = "auto",
   ytControls = false,
+  captions = false,
+  captionLanguage = "en",
   onReady,
   onPlay,
   onPause,
@@ -72,6 +76,8 @@ export function YouTubePlayer({
         rel: 0,
         modestbranding: 1,
         iv_load_policy: 3,
+        cc_load_policy: captions ? 1 : 0,
+        cc_lang_pref: captionLanguage,
       },
     });
 
@@ -99,7 +105,7 @@ export function YouTubePlayer({
         playerRef.current = null;
       }
     };
-  }, [isClient, videoId, autoplay, controls, loop, muted, ytControls, onReady, onPlay, onPause, onEnded]);
+  }, [isClient, videoId, autoplay, controls, loop, muted, ytControls, captions, captionLanguage, onReady, onPlay, onPause, onEnded]);
 
   useEffect(() => {
     if (playerRef.current && !playerRef.current.isDisposed()) {

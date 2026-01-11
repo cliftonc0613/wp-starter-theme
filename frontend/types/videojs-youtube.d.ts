@@ -7,6 +7,8 @@ declare module "videojs-youtube" {
     modestbranding?: 0 | 1;
     iv_load_policy?: 1 | 3;
     showinfo?: 0 | 1;
+    cc_load_policy?: 0 | 1;
+    cc_lang_pref?: string;
     customVars?: Record<string, string | number>;
   }
 
