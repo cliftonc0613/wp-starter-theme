@@ -44,10 +44,13 @@ export function YouTubePlayer({
 }: YouTubePlayerProps) {
   const videoRef = useRef<HTMLDivElement>(null);
   const playerRef = useRef<Player | null>(null);
+  // Track client-side mounting - Video.js requires DOM and cannot run on server
+  // This pattern is required since this component may be imported directly (not just via dynamic import)
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
+    // No cleanup needed - this only runs once on mount
   }, []);
 
   useEffect(() => {
