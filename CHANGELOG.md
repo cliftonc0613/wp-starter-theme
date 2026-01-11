@@ -5,6 +5,34 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2026-01-11
+
+### Added
+- YouTube video player integration with videojs-youtube library
+- YouTube video caption/subtitle support for accessibility
+- WordPress content integration for YouTube video embedding
+- WordPress block editor classes for headless content rendering
+- Enhanced header and page templates with dynamic body classes
+- URL configuration reference documentation
+
+### Changed
+- Simplified video.js YouTube player styling to use framework defaults
+- Improved YouTube embed detection patterns for WordPress content
+- Reduced ISR revalidation interval from 60s to 5s for better performance
+- Updated fluid typography for h1-h6 headings using CSS calc()
+
+### Fixed
+- YouTube embed detection patterns for WordPress-generated content
+- Frontend force-dynamic rendering on blog post pages for real-time WordPress sync
+- Cache-busting implementation for WordPress API requests
+- Blog page data revalidation with no-store cache policy
+- Added margin below images in prose/blog content for better spacing
+
+### Chores
+- Removed .DS_Store files from version control
+- Added comprehensive root .gitignore for theme
+- Removed debug logging from blog page components
+
 ## [1.0.0] - 2026-01-09
 
 ### Added
