@@ -12,6 +12,7 @@ import {
 } from "@/lib/wordpress";
 import { BreadcrumbSchema } from "@/components/JsonLd";
 import { BodyClass } from "@/components/BodyClass";
+import { WordPressContent } from "@/components/WordPressContent";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
@@ -161,9 +162,9 @@ export default async function PageSingle({ params }: PageProps) {
       <article className="py-12 md:py-16">
         <div className="container mx-auto px-4">
           <div className="mx-auto max-w-3xl">
-            <div
+            <WordPressContent
+              html={contentHtml}
               className="prose prose-lg max-w-none prose-headings:font-bold prose-a:text-primary prose-img:rounded-xl"
-              dangerouslySetInnerHTML={{ __html: contentHtml }}
             />
           </div>
         </div>

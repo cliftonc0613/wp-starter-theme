@@ -368,6 +368,76 @@ add_action('transition_post_status', 'starter_theme_trigger_revalidation_on_stat
 // add_filter('use_block_editor_for_post', '__return_false');
 
 /**
+ * YouTube Player Shortcode for Video.js Integration
+ *
+ * Usage: [youtube_player id="VIDEO_ID" autoplay="false" loop="false" muted="false"]
+ *
+ * This shortcode outputs a data attribute div that the Next.js frontend
+ * will detect and replace with the Video.js YouTube player component.
+ *
+ * @param array $atts Shortcode attributes
+ * @return string HTML output
+ */
+function starter_theme_youtube_player_shortcode($atts) {
+    $atts = shortcode_atts(
+        array(
+            'id'       => '',
+            'autoplay' => 'false',
+            'loop'     => 'false',
+            'muted'    => 'false',
+            'controls' => 'true',
+        ),
+        $atts,
+        'youtube_player'
+    );
+
+    // Validate video ID
+    if (empty($atts['id'])) {
+        return '<!-- YouTube Player: No video ID provided -->';
+    }
+
+    // Sanitize the video ID (alphanumeric, hyphens, underscores only)
+    $video_id = preg_replace('/[^a-zA-Z0-9_-]/', '', $atts['id']);
+
+    // Build data attributes
+    $data_attrs = sprintf(
+        'data-youtube-player data-video-id="%s" data-autoplay="%s" data-loop="%s" data-muted="%s" data-controls="%s"',
+        esc_attr($video_id),
+        esc_attr($atts['autoplay']),
+        esc_attr($atts['loop']),
+        esc_attr($atts['muted']),
+        esc_attr($atts['controls'])
+    );
+
+    // Return the placeholder div that will be hydrated by React
+    return sprintf(
+        '<div class="youtube-player-shortcode" %s></div>',
+        $data_attrs
+    );
+}
+add_shortcode('youtube_player', 'starter_theme_youtube_player_shortcode');
+
+/**
+ * Add YouTube Player block pattern for Gutenberg
+ */
+function starter_theme_register_youtube_pattern() {
+    if (!function_exists('register_block_pattern')) {
+        return;
+    }
+
+    register_block_pattern(
+        'starter-theme/youtube-player',
+        array(
+            'title'       => __('YouTube Player (Video.js)', 'starter-wp-theme'),
+            'description' => __('Embed a YouTube video using the custom Video.js player', 'starter-wp-theme'),
+            'categories'  => array('media'),
+            'content'     => '<!-- wp:shortcode -->[youtube_player id="YOUR_VIDEO_ID"]<!-- /wp:shortcode -->',
+        )
+    );
+}
+add_action('init', 'starter_theme_register_youtube_pattern');
+
+/**
  * Include additional functionality files
  */
 // Uncomment when files are created:
