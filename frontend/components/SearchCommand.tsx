@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { FileText, File, Briefcase, Search, Loader2 } from "lucide-react";
 import {
   CommandDialog,
@@ -129,11 +130,23 @@ export function SearchCommand({ open: controlledOpen, onOpenChange }: SearchComm
                   onSelect={() => handleSelect(result.url)}
                   className="cursor-pointer"
                 >
-                  <Icon className="mr-2 h-4 w-4 text-muted-foreground" />
-                  <div className="flex flex-col">
-                    <span>{result.title}</span>
+                  {result.image ? (
+                    <div className="relative mr-3 h-10 w-10 shrink-0 overflow-hidden rounded">
+                      <Image
+                        src={result.image.url}
+                        alt={result.image.alt || result.title}
+                        fill
+                        className="object-cover"
+                        sizes="40px"
+                      />
+                    </div>
+                  ) : (
+                    <Icon className="mr-3 h-10 w-10 shrink-0 rounded bg-muted p-2 text-muted-foreground" />
+                  )}
+                  <div className="flex min-w-0 flex-col">
+                    <span className="truncate font-medium">{result.title}</span>
                     {result.excerpt && (
-                      <span className="text-xs text-muted-foreground line-clamp-1">
+                      <span className="truncate text-xs text-muted-foreground">
                         {result.excerpt}
                       </span>
                     )}

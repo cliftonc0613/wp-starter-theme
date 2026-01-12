@@ -487,6 +487,10 @@ export interface SearchResult {
   excerpt: string;
   slug: string;
   url: string;
+  image?: {
+    url: string;
+    alt: string;
+  };
 }
 
 /**
@@ -510,18 +514,41 @@ export async function search(params: {
         slug: string;
         title: { rendered: string };
         excerpt: { rendered: string };
-      }>>(`/${endpoint}?search=${encodeURIComponent(query)}&per_page=${per_page}`);
+        _embedded?: {
+          'wp:featuredmedia'?: Array<{
+            source_url: string;
+            alt_text: string;
+            media_details?: {
+              sizes?: {
+                thumbnail?: { source_url: string };
+                medium?: { source_url: string };
+              };
+            };
+          }>;
+        };
+      }>>(`/${endpoint}?search=${encodeURIComponent(query)}&per_page=${per_page}&_embed=wp:featuredmedia`);
 
-      return items.map(item => ({
-        id: item.id,
-        type,
-        title: decodeHtmlEntities(item.title.rendered),
-        excerpt: stripHtml(item.excerpt.rendered).slice(0, 150),
-        slug: item.slug,
-        url: type === 'post' ? `/blog/${item.slug}`
-           : type === 'page' ? `/${item.slug}`
-           : `/services/${item.slug}`,
-      }));
+      return items.map(item => {
+        const featuredMedia = item._embedded?.['wp:featuredmedia']?.[0];
+        const imageUrl = featuredMedia?.media_details?.sizes?.thumbnail?.source_url
+          || featuredMedia?.media_details?.sizes?.medium?.source_url
+          || featuredMedia?.source_url;
+
+        return {
+          id: item.id,
+          type,
+          title: decodeHtmlEntities(item.title.rendered),
+          excerpt: stripHtml(item.excerpt.rendered).slice(0, 150),
+          slug: item.slug,
+          url: type === 'post' ? `/blog/${item.slug}`
+             : type === 'page' ? `/${item.slug}`
+             : `/services/${item.slug}`,
+          image: imageUrl ? {
+            url: imageUrl,
+            alt: featuredMedia?.alt_text || '',
+          } : undefined,
+        };
+      });
     } catch {
       // If a content type fails (e.g., services CPT not registered), return empty
       return [];
