@@ -940,3 +940,38 @@ ol.wp-block-list {
     padding: 0.125rem 0.5rem !important;
   }
 }
+
+/* --------------------------------------------------------------------------
+   BlurImage Component - Medium-style blur-up loading effect
+   -------------------------------------------------------------------------- */
+.blur-image {
+  filter: blur(20px);
+  transition: filter 0.3s ease-out;
+}
+
+.blur-image--loaded {
+  filter: blur(0);
+}
+
+/* --------------------------------------------------------------------------
+   Search Command Modal Styles
+   -------------------------------------------------------------------------- */
+
+/* Modal overlay */
+[cmdk-dialog] {
+  @apply fixed inset-0 z-50;
+}
+
+[cmdk-overlay] {
+  @apply fixed inset-0 bg-black/50 backdrop-blur-sm;
+}
+
+/* Input height */
+[cmdk-dialog] [cmdk-input] {
+  @apply h-12;
+}
+
+/* Keyboard shortcut indicator */
+.search-shortcut {
+  @apply hidden rounded border bg-muted px-1.5 py-0.5 text-xs font-mono text-muted-foreground md:inline-block;
+}

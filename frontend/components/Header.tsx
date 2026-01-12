@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { useState, useRef, useEffect } from "react";
-import { Menu, Phone, Mail, Calendar, Facebook, Linkedin } from "lucide-react";
+import { Menu, Phone, Mail, Calendar, Facebook, Linkedin, Search } from "lucide-react";
+import { SearchCommand } from "@/components/SearchCommand";
 import { Button } from "@/components/ui/button";
 import {
   NavigationMenu,
@@ -43,6 +44,7 @@ const socialLinks = [
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const headerRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -99,20 +101,37 @@ export function Header() {
           </NavigationMenuList>
         </NavigationMenu>
 
-        {/* Desktop CTA */}
-        <div className="hidden md:flex">
+        {/* Desktop Search & CTA */}
+        <div className="hidden items-center gap-2 md:flex">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setSearchOpen(true)}
+            aria-label="Search"
+          >
+            <Search className="h-5 w-5" />
+          </Button>
           <Button asChild>
             <Link href="/contact">Get in Touch</Link>
           </Button>
         </div>
 
-        {/* Mobile Menu */}
-        <Sheet open={isOpen} onOpenChange={setIsOpen}>
-          <SheetTrigger asChild className="md:hidden">
-            <Button variant="ghost" size="icon" aria-label="Toggle menu">
-              <Menu className="h-6 w-6" />
-            </Button>
-          </SheetTrigger>
+        {/* Mobile Search & Menu */}
+        <div className="flex items-center gap-1 md:hidden">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setSearchOpen(true)}
+            aria-label="Search"
+          >
+            <Search className="h-5 w-5" />
+          </Button>
+          <Sheet open={isOpen} onOpenChange={setIsOpen}>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon" aria-label="Toggle menu">
+                <Menu className="h-6 w-6" />
+              </Button>
+            </SheetTrigger>
           <SheetContent side="right" className="flex w-[320px] flex-col overflow-y-auto sm:w-[400px]">
             <SheetHeader className="border-b pb-4">
               <SheetTitle className="text-left text-xl font-bold">
@@ -195,7 +214,11 @@ export function Header() {
               </div>
             </div>
           </SheetContent>
-        </Sheet>
+          </Sheet>
+        </div>
+
+        {/* Search Command Modal */}
+        <SearchCommand open={searchOpen} onOpenChange={setSearchOpen} />
       </div>
     </header>
   );

@@ -1,7 +1,7 @@
 ---
 name: ultimate-developer
 description: Intelligent developer assistant that analyzes user requests and automatically dispatches to the optimal combination of Design, Developer, and SEO agents based on your specific needs.
-agent: frontend-developer, javascript-pro, premium-ui-designer, meta-seo-agent, content-analyzer, content-researcher, keyword-extractor, seo-auditor
+agent: frontend-developer, javascript-pro, premium-ui-designer, meta-seo-agent, content-analyzer, content-researcher, keyword-extractor, seo-auditor, Explore
 model: sonnet
 tools: Read, Write, Edit, Bash
 color: orange
@@ -46,7 +46,14 @@ These agents handle search optimization and content strategy:
 - **keyword-extractor** - Keyword research, opportunity discovery, SEO targeting
 - **seo-auditor** - Technical SEO, performance, on-page optimization, competitive analysis
 
-**Triggers:** "SEO", "keyword", "content", "blog", "article", "search", "ranking", "optimize", "traffic", "meta", "schema", "audit"
+**Triggers:** "SEO", "keyword", "content", "blog", "article", "search", "ranking", "optimize", "traffic", "meta", "schema"
+
+### 🔍 Debugging & Audit Agents
+These agents handle codebase analysis and error detection:
+
+- **Explore** - Codebase analysis, error detection, debugging, comprehensive audits
+
+**Triggers:** "debug", "error", "fix", "audit", "issues", "problems", "bugs", "review code", "look over", "check for"
 
 ## Smart Routing Examples
 
@@ -80,6 +87,14 @@ These agents handle search optimization and content strategy:
 **Agents Dispatched:**
 1. **javascript-pro** - Analyze and optimize JavaScript patterns
 2. **frontend-developer** - Refactor React component with hooks optimization
+
+### Example 5: Debugging & Code Audit
+**Input:** "Look over the theme and debug any errors"
+
+**Agents Dispatched:**
+1. **Explore** - Comprehensive codebase audit for errors, anti-patterns, and issues
+2. **javascript-pro** - Fix JavaScript/TypeScript errors found
+3. **frontend-developer** - Fix React component issues
 
 ## What Each Agent Does
 
@@ -237,6 +252,7 @@ When you use `/ultimate-developer`, you'll receive:
 | Keyword research | keyword-extractor | content-analyzer |
 | Blog content | content-analyzer | keyword-extractor, meta-seo-agent |
 | Landing page | frontend-developer, premium-ui-designer | meta-seo-agent, keyword-extractor |
+| Code audit/debugging | Explore | javascript-pro, frontend-developer |
 | Full SaaS feature | All agents (orchestrated) | — |
 
 ## Tips for Maximum Effectiveness

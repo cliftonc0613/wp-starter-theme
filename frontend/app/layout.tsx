@@ -4,7 +4,21 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { SmoothScroll } from "@/components/SmoothScroll";
 import { Toaster } from "@/components/ui/sonner";
+import { StructuredData } from "@/components/structured-data";
+import { generateOrganizationSchema } from "@/lib/schema";
+import { Providers } from "./providers";
 import "./globals.css";
+
+// Site-wide Organization schema for rich snippets
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://example.com";
+const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME || "Starter WP Theme";
+
+const organizationSchema = generateOrganizationSchema({
+  name: SITE_NAME,
+  url: SITE_URL,
+  logo: `${SITE_URL}/logo.png`,
+  description: "A headless WordPress starter theme built with Next.js and shadcn/ui. Perfect for service-based businesses.",
+});
 
 const dmSans = DM_Sans({
   variable: "--font-sans",
@@ -57,13 +71,16 @@ export default function RootLayout({
       <body
         className={`${dmSans.variable} ${playfair.variable} ${jetbrains.variable} font-sans antialiased`}
       >
-        <SmoothScroll />
-        <div className="flex min-h-screen flex-col">
-          <Header />
-          <main className="flex-grow">{children}</main>
-          <Footer />
-        </div>
-        <Toaster />
+        <Providers>
+          <StructuredData data={organizationSchema} />
+          <SmoothScroll />
+          <div className="flex min-h-screen flex-col">
+            <Header />
+            <main className="flex-grow">{children}</main>
+            <Footer />
+          </div>
+          <Toaster />
+        </Providers>
       </body>
     </html>
   );

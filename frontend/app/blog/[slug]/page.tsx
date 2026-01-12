@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
@@ -13,11 +12,14 @@ import {
   rewriteImageUrl,
   rewriteContentUrls,
 } from "@/lib/wordpress";
+import { getRankMathMeta, generateSeoMetadata } from "@/lib/seo";
+import { generateArticleSchema, generateBreadcrumbSchema } from "@/lib/schema";
 import { Button } from "@/components/ui/button";
 import { BlogCard } from "@/components/BlogCard";
-import { BlogPostingSchema, BreadcrumbSchema } from "@/components/JsonLd";
+import { MultiStructuredData } from "@/components/structured-data";
 import { BodyClass } from "@/components/BodyClass";
 import { WordPressContent } from "@/components/WordPressContent";
+import { BlurImage } from "@/components/BlurImage";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME || "Starter WP Theme";
@@ -69,7 +71,13 @@ export async function generateMetadata({
   const description = stripHtml(post.excerpt.rendered);
   const ogImageUrl = rewriteImageUrl(post.featured_image_url);
 
-  return {
+  // Try to get RankMath SEO metadata
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "";
+  const pageUrl = `${siteUrl}/blog/${slug}`;
+  const rankMathMeta = await getRankMathMeta(pageUrl);
+
+  // Fallback metadata from WordPress post data
+  const fallback: Metadata = {
     title,
     description,
     openGraph: {
@@ -88,6 +96,9 @@ export async function generateMetadata({
       images: ogImageUrl ? [ogImageUrl] : [],
     },
   };
+
+  // Use RankMath metadata with fallback
+  return generateSeoMetadata(rankMathMeta, fallback);
 }
 
 // Enable ISR with 5 second revalidation
@@ -113,7 +124,6 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   // Fetch related posts (latest 3 posts excluding current)
   const relatedPosts = await getPosts({ per_page: 3, exclude: [post.id] });
 
-  const description = stripHtml(post.excerpt.rendered);
   const postUrl = `${SITE_URL}/blog/${slug}`;
 
   // Dynamic body classes for CSS targeting
@@ -125,32 +135,24 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     readingTime <= 5 ? "quick-read" : "long-read",
   ].join(" ");
 
+  // Generate structured data schemas
+  const articleSchema = generateArticleSchema(post, SITE_URL, {
+    author: { name: authorName },
+    publisher: { name: SITE_NAME },
+  });
+
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: "Home", url: SITE_URL },
+    { name: "Blog", url: `${SITE_URL}/blog` },
+    { name: title, url: postUrl },
+  ]);
+
   return (
     <>
       <BodyClass className={bodyClasses} />
 
       {/* Structured Data */}
-      <BlogPostingSchema
-        headline={title}
-        description={description}
-        url={postUrl}
-        image={featuredImageUrl || undefined}
-        datePublished={post.date}
-        dateModified={post.modified}
-        author={{
-          name: authorName,
-        }}
-        publisher={{
-          name: SITE_NAME,
-        }}
-      />
-      <BreadcrumbSchema
-        items={[
-          { name: "Home", url: SITE_URL },
-          { name: "Blog", url: `${SITE_URL}/blog` },
-          { name: title, url: postUrl },
-        ]}
-      />
+      <MultiStructuredData schemas={[articleSchema, breadcrumbSchema]} />
 
       {/* Article Header */}
       <section className="bg-muted pb-16 pt-32 md:pb-24 md:pt-48">
@@ -175,7 +177,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           {featuredImageUrl && (
             <div className="mx-auto mt-12 max-w-4xl">
               <div className="relative aspect-video overflow-hidden rounded-xl">
-                <Image
+                <BlurImage
                   src={featuredImageUrl}
                   alt={title}
                   fill
