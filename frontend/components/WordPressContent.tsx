@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState, useMemo } from "react";
 import { createPortal } from "react-dom";
 import dynamic from "next/dynamic";
+import { replaceImagesWithPlaceholders, type ContentImage } from "@/lib/content-images";
+import { ContentImage as ContentImageComponent } from "./ContentImage";
 
 const YouTubePlayer = dynamic(
   () => import("./YouTubePlayer").then((mod) => mod.YouTubePlayer),
@@ -121,8 +123,20 @@ export function WordPressContent({ html, className = "" }: WordPressContentProps
   const containerRef = useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = useState(false);
 
-  // Parse YouTube embeds once when html changes - no cascading renders
-  const { processedHtml, embeds } = useMemo(() => parseYouTubeEmbeds(html), [html]);
+  // Parse content: YouTube embeds first, then images
+  // Order matters: YouTube parsing happens on raw HTML, image parsing on the result
+  const { processedHtml, embeds, images } = useMemo(() => {
+    // First parse YouTube embeds
+    const youtubeResult = parseYouTubeEmbeds(html);
+    // Then parse images from the YouTube-processed HTML
+    const imageResult = replaceImagesWithPlaceholders(youtubeResult.processedHtml);
+
+    return {
+      processedHtml: imageResult.html,
+      embeds: youtubeResult.embeds,
+      images: imageResult.images,
+    };
+  }, [html]);
 
   // Single effect for client-side mounting
   useEffect(() => {
@@ -133,6 +147,7 @@ export function WordPressContent({ html, className = "" }: WordPressContentProps
     <div ref={containerRef} className={className}>
       <div dangerouslySetInnerHTML={{ __html: processedHtml }} />
 
+      {/* Render YouTube players via portals */}
       {mounted && embeds.map((embed) => (
         <YouTubePlayerPortal
           key={embed.id}
@@ -141,6 +156,15 @@ export function WordPressContent({ html, className = "" }: WordPressContentProps
           autoplay={embed.autoplay}
           captions={embed.captions}
           captionLanguage={embed.captionLanguage}
+          containerRef={containerRef}
+        />
+      ))}
+
+      {/* Render optimized images via portals */}
+      {mounted && images.map((image) => (
+        <ContentImagePortal
+          key={`content-image-${image.index}`}
+          image={image}
           containerRef={containerRef}
         />
       ))}
@@ -195,6 +219,38 @@ function YouTubePlayerPortal({
         captionLanguage={captionLanguage}
       />
     </div>,
+    portalTarget
+  );
+}
+
+interface ContentImagePortalProps {
+  image: ContentImage;
+  containerRef: React.RefObject<HTMLDivElement | null>;
+}
+
+function ContentImagePortal({ image, containerRef }: ContentImagePortalProps) {
+  const [portalTarget, setPortalTarget] = useState<Element | null>(null);
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    const element = containerRef.current.querySelector(
+      `[data-content-image="${image.index}"]`
+    );
+
+    if (element && !element.hasAttribute("data-portal-ready")) {
+      // Mark as ready and clear placeholder content once
+      element.setAttribute("data-portal-ready", "true");
+      element.textContent = "";
+      setPortalTarget(element);
+    }
+  }, [containerRef, image.index]);
+
+  // Use React portal to render into the placeholder element
+  if (!portalTarget) return null;
+
+  return createPortal(
+    <ContentImageComponent image={image} />,
     portalTarget
   );
 }
