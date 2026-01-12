@@ -169,7 +169,7 @@ Implement four enhancement phases that address these gaps while maintaining the 
 
 ### 4.3 Assumptions
 
-- Yoast SEO plugin will be installed on WordPress
+- RankMath SEO plugin will be installed on WordPress with Headless CMS Support enabled
 - Vercel hosting for Next.js frontend
 - Flywheel/WP Engine hosting for WordPress
 - GitHub for version control
@@ -188,13 +188,13 @@ Implement four enhancement phases that address these gaps while maintaining the 
 
 ## Phase 1: SEO & Discoverability
 
-### F1.1 Yoast SEO REST API Integration
+### F1.1 RankMath SEO REST API Integration
 
 **Priority:** P0 (Critical)
 **Effort:** Medium
 
 #### Description
-Integrate Yoast SEO plugin data into Next.js frontend for comprehensive meta tag management.
+Integrate RankMath SEO plugin data into Next.js frontend for comprehensive meta tag management using RankMath's headless CMS support.
 
 #### User Stories
 - As a content editor, I want SEO settings from WordPress to automatically appear on the frontend
@@ -204,31 +204,127 @@ Integrate Yoast SEO plugin data into Next.js frontend for comprehensive meta tag
 
 | ID | Requirement | Acceptance Criteria |
 |----|-------------|---------------------|
-| F1.1.1 | Fetch Yoast meta from REST API | `yoast_head_json` field accessible on all post types |
-| F1.1.2 | Dynamic metadata generation | Next.js `generateMetadata()` uses Yoast data |
-| F1.1.3 | Fallback meta tags | Default meta tags when Yoast data unavailable |
-| F1.1.4 | Open Graph tags | OG title, description, image from Yoast |
-| F1.1.5 | Twitter Card tags | Twitter meta tags from Yoast |
+| F1.1.1 | Fetch RankMath meta from REST API | `/wp-json/rankmath/v1/getHead` endpoint returns head data |
+| F1.1.2 | Dynamic metadata generation | Next.js `generateMetadata()` uses RankMath data |
+| F1.1.3 | Fallback meta tags | Default meta tags when RankMath data unavailable |
+| F1.1.4 | Open Graph tags | OG title, description, image from RankMath |
+| F1.1.5 | Twitter Card tags | Twitter meta tags from RankMath |
 | F1.1.6 | Canonical URLs | Proper canonical URL handling |
 
 #### Technical Specifications
 
-**New Function: `getSeoMeta(slug: string, type: string)`**
+> **Note:** RankMath returns an HTML string containing all meta tags, unlike Yoast which provides structured JSON. A parsing utility is required to extract individual meta values.
+
+**Interfaces and Types:**
 ```typescript
-interface YoastMeta {
+interface RankMathMeta {
   title: string;
   description: string;
   canonical: string;
+  robots: string;
   og_title: string;
   og_description: string;
-  og_image: { url: string; width: number; height: number }[];
+  og_image: { url: string; width?: number; height?: number }[];
+  og_type: string;
+  og_locale: string;
   twitter_card: string;
   twitter_title: string;
   twitter_description: string;
-  schema: object;
+  twitter_image: string;
+  schema: object[];
 }
 
-async function getSeoMeta(slug: string, type: 'page' | 'post' | 'service'): Promise<YoastMeta>
+interface RankMathResponse {
+  success: boolean;
+  head: string; // HTML string containing all meta tags
+}
+```
+
+**New Function: `getRankMathMeta(pageUrl: string)`**
+```typescript
+/**
+ * Fetch SEO metadata from RankMath REST API
+ * Note: Requires full URL, not just slug
+ */
+async function getRankMathMeta(pageUrl: string): Promise<RankMathMeta> {
+  const endpoint = `${process.env.WORDPRESS_API_URL}/rankmath/v1/getHead`;
+  const response = await fetch(`${endpoint}?url=${encodeURIComponent(pageUrl)}`);
+  const data: RankMathResponse = await response.json();
+
+  if (!data.success) {
+    throw new Error('Failed to fetch RankMath meta');
+  }
+
+  return parseRankMathHead(data.head);
+}
+```
+
+**Parsing Utility: `parseRankMathHead(html: string)`**
+```typescript
+/**
+ * Parse HTML head string into structured RankMathMeta object
+ */
+function parseRankMathHead(html: string): RankMathMeta {
+  // Extract title
+  const titleMatch = html.match(/<title>([^<]*)<\/title>/);
+  const title = titleMatch?.[1] || '';
+
+  // Extract meta description
+  const descMatch = html.match(/<meta name="description" content="([^"]*)"/);
+  const description = descMatch?.[1] || '';
+
+  // Extract canonical
+  const canonicalMatch = html.match(/<link rel="canonical" href="([^"]*)"/);
+  const canonical = canonicalMatch?.[1] || '';
+
+  // Extract robots
+  const robotsMatch = html.match(/<meta name="robots" content="([^"]*)"/);
+  const robots = robotsMatch?.[1] || '';
+
+  // Extract Open Graph tags
+  const ogTitle = extractMetaProperty(html, 'og:title');
+  const ogDesc = extractMetaProperty(html, 'og:description');
+  const ogImage = extractMetaProperty(html, 'og:image');
+  const ogType = extractMetaProperty(html, 'og:type');
+  const ogLocale = extractMetaProperty(html, 'og:locale');
+
+  // Extract Twitter tags
+  const twitterCard = extractMetaName(html, 'twitter:card');
+  const twitterTitle = extractMetaName(html, 'twitter:title');
+  const twitterDesc = extractMetaName(html, 'twitter:description');
+  const twitterImage = extractMetaName(html, 'twitter:image');
+
+  // Extract JSON-LD schema
+  const schemaMatches = html.matchAll(/<script type="application\/ld\+json">([^<]*)<\/script>/g);
+  const schema = [...schemaMatches].map(m => JSON.parse(m[1]));
+
+  return {
+    title,
+    description,
+    canonical,
+    robots,
+    og_title: ogTitle,
+    og_description: ogDesc,
+    og_image: ogImage ? [{ url: ogImage }] : [],
+    og_type: ogType,
+    og_locale: ogLocale,
+    twitter_card: twitterCard,
+    twitter_title: twitterTitle,
+    twitter_description: twitterDesc,
+    twitter_image: twitterImage,
+    schema,
+  };
+}
+
+function extractMetaProperty(html: string, property: string): string {
+  const match = html.match(new RegExp(`<meta property="${property}" content="([^"]*)"`));
+  return match?.[1] || '';
+}
+
+function extractMetaName(html: string, name: string): string {
+  const match = html.match(new RegExp(`<meta name="${name}" content="([^"]*)"`));
+  return match?.[1] || '';
+}
 ```
 
 **Files to Modify:**
@@ -239,8 +335,11 @@ async function getSeoMeta(slug: string, type: 'page' | 'post' | 'service'): Prom
 - `frontend/app/services/[slug]/page.tsx` - Service metadata
 
 #### Dependencies
-- Yoast SEO WordPress plugin (free version sufficient)
-- Yoast REST API enabled (default with plugin)
+- RankMath SEO WordPress plugin (free version sufficient)
+- Headless CMS Support enabled in RankMath settings
+
+> **RankMath Setup Required:** Enable Headless CMS Support in WordPress admin:
+> Rank Math SEO → General Settings → Others → Enable "Headless CMS Support"
 
 ---
 
@@ -1053,7 +1152,7 @@ export function log(level: LogLevel, message: string, meta?: object) {
 ┌─────────────────────────────────────────────────────────────────┐
 │                  WordPress Backend (Flywheel)                    │
 │  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────────────┐ │
-│  │  Yoast   │  │   ACF    │  │  Custom  │  │   Preview/ISR    │ │
+│  │ RankMath │  │   ACF    │  │  Custom  │  │   Preview/ISR    │ │
 │  │   SEO    │  │  Fields  │  │  CPTs    │  │   Webhooks       │ │
 │  └──────────┘  └──────────┘  └──────────┘  └──────────────────┘ │
 └─────────────────────────────────────────────────────────────────┘
@@ -1063,8 +1162,8 @@ export function log(level: LogLevel, message: string, meta?: object) {
 
 ```
 SEO Request Flow:
-Page Load → generateMetadata() → getSeoMeta(slug) → WordPress REST API
-         → Yoast yoast_head_json → Return to Next.js → Render meta tags
+Page Load → generateMetadata() → getRankMathMeta(url) → WordPress REST API
+         → RankMath /getHead endpoint → Parse HTML → Return to Next.js → Render meta tags
 
 Search Flow:
 User Types → Debounce (300ms) → searchContent(query) → WordPress /search
@@ -1151,7 +1250,7 @@ frontend/
 
 | Plugin | Purpose | Required |
 |--------|---------|----------|
-| Yoast SEO | SEO metadata management | Yes (Phase 1) |
+| RankMath SEO | SEO metadata management | Yes (Phase 1) |
 | ACF Pro | Custom fields (existing) | Already installed |
 
 ### 7.3 External Services
@@ -1221,7 +1320,7 @@ SEARCH_API_URL=https://xxx/search
 
 | Risk | Probability | Impact | Mitigation |
 |------|-------------|--------|------------|
-| Yoast API changes | Low | Medium | Version lock, fallback meta |
+| RankMath API changes | Low | Medium | Version lock, fallback meta |
 | SWR cache staleness | Medium | Low | Configure revalidation intervals |
 | Test flakiness | Medium | Low | Retry logic, stable selectors |
 | Bundle size increase | Medium | Medium | Dynamic imports, tree shaking |
@@ -1250,7 +1349,7 @@ SEARCH_API_URL=https://xxx/search
 
 | Phase | Duration | Start | Deliverables |
 |-------|----------|-------|--------------|
-| Phase 1: SEO | 1 sprint | Week 1 | Yoast, sitemap, structured data |
+| Phase 1: SEO | 1 sprint | Week 1 | RankMath, sitemap, structured data |
 | Phase 2: Performance | 1 sprint | Week 2 | SWR, images, bundles |
 | Phase 3: Search | 1 sprint | Week 3 | Search UI, filters, related |
 | Phase 4: Testing | 1 sprint | Week 4 | Jest, Playwright, Sentry |
@@ -1286,7 +1385,7 @@ Each feature is considered "done" when:
 
 ```typescript
 // SEO
-getSeoMeta(slug: string, type: PostType): Promise<YoastMeta>
+getRankMathMeta(pageUrl: string): Promise<RankMathMeta>
 
 // Search
 searchContent(options: SearchOptions): Promise<SearchResults>
