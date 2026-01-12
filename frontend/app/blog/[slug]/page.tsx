@@ -14,9 +14,10 @@ import {
   rewriteContentUrls,
 } from "@/lib/wordpress";
 import { getRankMathMeta, generateSeoMetadata } from "@/lib/seo";
+import { generateArticleSchema, generateBreadcrumbSchema } from "@/lib/schema";
 import { Button } from "@/components/ui/button";
 import { BlogCard } from "@/components/BlogCard";
-import { BlogPostingSchema, BreadcrumbSchema } from "@/components/JsonLd";
+import { MultiStructuredData } from "@/components/structured-data";
 import { BodyClass } from "@/components/BodyClass";
 import { WordPressContent } from "@/components/WordPressContent";
 
@@ -123,7 +124,6 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   // Fetch related posts (latest 3 posts excluding current)
   const relatedPosts = await getPosts({ per_page: 3, exclude: [post.id] });
 
-  const description = stripHtml(post.excerpt.rendered);
   const postUrl = `${SITE_URL}/blog/${slug}`;
 
   // Dynamic body classes for CSS targeting
@@ -135,32 +135,24 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     readingTime <= 5 ? "quick-read" : "long-read",
   ].join(" ");
 
+  // Generate structured data schemas
+  const articleSchema = generateArticleSchema(post, SITE_URL, {
+    author: { name: authorName },
+    publisher: { name: SITE_NAME },
+  });
+
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: "Home", url: SITE_URL },
+    { name: "Blog", url: `${SITE_URL}/blog` },
+    { name: title, url: postUrl },
+  ]);
+
   return (
     <>
       <BodyClass className={bodyClasses} />
 
       {/* Structured Data */}
-      <BlogPostingSchema
-        headline={title}
-        description={description}
-        url={postUrl}
-        image={featuredImageUrl || undefined}
-        datePublished={post.date}
-        dateModified={post.modified}
-        author={{
-          name: authorName,
-        }}
-        publisher={{
-          name: SITE_NAME,
-        }}
-      />
-      <BreadcrumbSchema
-        items={[
-          { name: "Home", url: SITE_URL },
-          { name: "Blog", url: `${SITE_URL}/blog` },
-          { name: title, url: postUrl },
-        ]}
-      />
+      <MultiStructuredData schemas={[articleSchema, breadcrumbSchema]} />
 
       {/* Article Header */}
       <section className="bg-muted pb-16 pt-32 md:pb-24 md:pt-48">
