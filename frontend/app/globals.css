@@ -940,3 +940,15 @@ ol.wp-block-list {
     padding: 0.125rem 0.5rem !important;
   }
 }
+
+/* --------------------------------------------------------------------------
+   BlurImage Component - Medium-style blur-up loading effect
+   -------------------------------------------------------------------------- */
+.blur-image {
+  filter: blur(20px);
+  transition: filter 0.3s ease-out;
+}
+
+.blur-image--loaded {
+  filter: blur(0);
+}
