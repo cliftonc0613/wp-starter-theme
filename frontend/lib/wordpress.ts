@@ -513,7 +513,8 @@ export async function search(params: {
         id: number;
         slug: string;
         title: { rendered: string };
-        excerpt: { rendered: string };
+        excerpt?: { rendered: string };
+        content?: { rendered: string };
         _embedded?: {
           'wp:featuredmedia'?: Array<{
             source_url: string;
@@ -534,11 +535,18 @@ export async function search(params: {
           || featuredMedia?.media_details?.sizes?.medium?.source_url
           || featuredMedia?.source_url;
 
+        // Use excerpt if available, otherwise extract from content
+        const excerptText = item.excerpt?.rendered
+          ? stripHtml(item.excerpt.rendered)
+          : item.content?.rendered
+            ? stripHtml(item.content.rendered).slice(0, 150)
+            : '';
+
         return {
           id: item.id,
           type,
           title: decodeHtmlEntities(item.title.rendered),
-          excerpt: stripHtml(item.excerpt.rendered).slice(0, 150),
+          excerpt: excerptText.slice(0, 150),
           slug: item.slug,
           url: type === 'post' ? `/blog/${item.slug}`
              : type === 'page' ? `/${item.slug}`
@@ -549,8 +557,9 @@ export async function search(params: {
           } : undefined,
         };
       });
-    } catch {
-      // If a content type fails (e.g., services CPT not registered), return empty
+    } catch (error) {
+      // If a content type fails (e.g., services CPT not registered), log and return empty
+      console.error(`Search failed for ${type}:`, error);
       return [];
     }
   });
