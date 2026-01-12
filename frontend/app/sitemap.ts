@@ -57,19 +57,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ];
 
-  // Blog posts
+  // Blog posts - medium priority, updated monthly
   const blogPosts: MetadataRoute.Sitemap = posts.map((post) => ({
     url: `${SITE_URL}/blog/${post.slug}`,
     lastModified: new Date(post.modified),
-    changeFrequency: "weekly" as const,
+    changeFrequency: "monthly" as const,
     priority: 0.6,
   }));
 
-  // Services
+  // Services - high priority, updated monthly
   const servicePages: MetadataRoute.Sitemap = services.map((service) => ({
     url: `${SITE_URL}/services/${service.slug}`,
     lastModified: new Date(service.modified),
-    changeFrequency: "weekly" as const,
+    changeFrequency: "monthly" as const,
     priority: 0.8,
   }));
 
