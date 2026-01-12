@@ -5,8 +5,8 @@
 | Phase | Name | Goal | Status |
 |-------|------|------|--------|
 | 1 | SEO & Discoverability | RankMath REST API integration with HTML parsing utility, structured data components, enhanced sitemap | Complete |
-| 2 | Performance & Caching | SWR data fetching hooks, image optimization with blur placeholders, bundle analysis | pending |
-| 3 | Search & Filtering | WordPress search endpoint, search UI components, category/tag filtering, related content | pending |
+| 2 | Performance & Caching | SWR data fetching hooks, image optimization with blur placeholders, bundle analysis | Complete |
+| 3 | Search & Filtering | WordPress search endpoint, search UI components, category/tag filtering, related content | Complete |
 | 4 | Testing & Monitoring | Jest + React Testing Library, Playwright E2E tests, Sentry error tracking, health checks | pending |
 
 ## Phase Details
