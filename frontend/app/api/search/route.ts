@@ -5,14 +5,16 @@ export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const query = searchParams.get("q") || "";
   const typesParam = searchParams.get("types");
-  const perPage = parseInt(searchParams.get("per_page") || "5", 10);
+  const perPage = parseInt(searchParams.get("per_page") || "10", 10);
 
   if (!query.trim()) {
     return NextResponse.json([]);
   }
 
+  // Filter out 'static' from types param (for backwards compatibility)
+  // Static pages are now automatically included when searching 'page' type
   const types = typesParam
-    ? (typesParam.split(",") as ("post" | "page" | "service")[])
+    ? (typesParam.split(",").filter(t => t !== "static") as ("post" | "page" | "service")[])
     : undefined;
 
   try {

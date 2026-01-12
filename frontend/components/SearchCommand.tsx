@@ -66,7 +66,7 @@ export function SearchCommand({ open: controlledOpen, onOpenChange }: SearchComm
       try {
         const types = enabledTypes.map(t => t.type).join(",");
         const response = await fetch(
-          `/api/search?q=${encodeURIComponent(query)}&types=${types}&per_page=5`
+          `/api/search?q=${encodeURIComponent(query)}&types=${types}&per_page=10`
         );
         if (!response.ok) {
           throw new Error("Search request failed");

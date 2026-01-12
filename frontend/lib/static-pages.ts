@@ -74,7 +74,7 @@ export function searchStaticPages(query: string): SearchResult[] {
     )
     .map((page, index) => ({
       id: index + 1000, // Offset to avoid ID conflicts with WordPress content
-      type: "static" as const,
+      type: "page" as const,
       title: page.title,
       excerpt: page.description,
       slug: page.url.replace(/^\//, ""),

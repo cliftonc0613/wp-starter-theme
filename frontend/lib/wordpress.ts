@@ -482,7 +482,7 @@ export async function getTags(params?: {
  */
 export interface SearchResult {
   id: number;
-  type: 'post' | 'page' | 'service' | 'static';
+  type: 'post' | 'page' | 'service';
   title: string;
   excerpt: string;
   slug: string;
@@ -495,13 +495,14 @@ export interface SearchResult {
 
 /**
  * Search across multiple content types using WordPress native search
+ * Note: 'page' type searches both WordPress pages AND static Next.js pages
  */
 export async function search(params: {
   query: string;
-  types?: ('post' | 'page' | 'service' | 'static')[];
+  types?: ('post' | 'page' | 'service')[];
   per_page?: number;
 }): Promise<SearchResult[]> {
-  const { query, types = ['post', 'page', 'service', 'static'], per_page = 10 } = params;
+  const { query, types = ['post', 'page', 'service'], per_page = 10 } = params;
 
   if (!query.trim()) return [];
 
@@ -510,11 +511,6 @@ export async function search(params: {
 
   // Search each content type in parallel
   const searches = types.map(async (type) => {
-    // Handle static pages separately (not from WordPress)
-    if (type === 'static') {
-      return searchStaticPages(query);
-    }
-
     const endpoint = type === 'post' ? 'posts' : type === 'page' ? 'pages' : 'services';
     try {
       const items = await fetchAPI<Array<{
@@ -537,7 +533,7 @@ export async function search(params: {
         };
       }>>(`/${endpoint}?search=${encodeURIComponent(query)}&per_page=${per_page}&_embed=wp:featuredmedia`);
 
-      return items.map(item => {
+      const wpResults = items.map(item => {
         const featuredMedia = item._embedded?.['wp:featuredmedia']?.[0];
         const imageUrl = featuredMedia?.media_details?.sizes?.thumbnail?.source_url
           || featuredMedia?.media_details?.sizes?.medium?.source_url
@@ -565,9 +561,21 @@ export async function search(params: {
           } : undefined,
         };
       });
+
+      // For 'page' type, also include static Next.js pages
+      if (type === 'page') {
+        const staticResults = searchStaticPages(query);
+        return [...wpResults, ...staticResults];
+      }
+
+      return wpResults;
     } catch (error) {
       // If a content type fails (e.g., services CPT not registered), log and return empty
       console.error(`Search failed for ${type}:`, error);
+      // Still return static pages for 'page' type even if WordPress fails
+      if (type === 'page') {
+        return searchStaticPages(query);
+      }
       return [];
     }
   });
