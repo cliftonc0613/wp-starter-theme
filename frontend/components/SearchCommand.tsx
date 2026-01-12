@@ -102,7 +102,7 @@ export function SearchCommand({ open: controlledOpen, onOpenChange }: SearchComm
   }, [] as { config: SearchableType; results: SearchResult[] }[]);
 
   return (
-    <CommandDialog open={isOpen} onOpenChange={setOpen}>
+    <CommandDialog open={isOpen} onOpenChange={setOpen} className="sm:max-w-[50vw]">
       <CommandInput
         placeholder="Search posts, pages, services..."
         value={query}
