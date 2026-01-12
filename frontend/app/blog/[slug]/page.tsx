@@ -13,6 +13,7 @@ import {
   rewriteImageUrl,
   rewriteContentUrls,
 } from "@/lib/wordpress";
+import { getRankMathMeta, generateSeoMetadata } from "@/lib/seo";
 import { Button } from "@/components/ui/button";
 import { BlogCard } from "@/components/BlogCard";
 import { BlogPostingSchema, BreadcrumbSchema } from "@/components/JsonLd";
@@ -69,7 +70,13 @@ export async function generateMetadata({
   const description = stripHtml(post.excerpt.rendered);
   const ogImageUrl = rewriteImageUrl(post.featured_image_url);
 
-  return {
+  // Try to get RankMath SEO metadata
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "";
+  const pageUrl = `${siteUrl}/blog/${slug}`;
+  const rankMathMeta = await getRankMathMeta(pageUrl);
+
+  // Fallback metadata from WordPress post data
+  const fallback: Metadata = {
     title,
     description,
     openGraph: {
@@ -88,6 +95,9 @@ export async function generateMetadata({
       images: ogImageUrl ? [ogImageUrl] : [],
     },
   };
+
+  // Use RankMath metadata with fallback
+  return generateSeoMetadata(rankMathMeta, fallback);
 }
 
 // Enable ISR with 5 second revalidation

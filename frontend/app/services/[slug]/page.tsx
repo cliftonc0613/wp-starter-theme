@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getService, getServices, stripHtml, decodeHtmlEntities, isWordPressConfigured, rewriteImageUrl, rewriteContentUrls } from "@/lib/wordpress";
+import { getRankMathMeta, generateSeoMetadata } from "@/lib/seo";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ServiceSchema, BreadcrumbSchema } from "@/components/JsonLd";
@@ -54,19 +55,33 @@ export async function generateMetadata({
 
   const title = decodeHtmlEntities(service.title.rendered);
   const description = stripHtml(service.excerpt.rendered);
+  const ogImageUrl = rewriteImageUrl(service.featured_image_url);
 
-  return {
+  // Try to get RankMath SEO metadata
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "";
+  const pageUrl = `${siteUrl}/services/${slug}`;
+  const rankMathMeta = await getRankMathMeta(pageUrl);
+
+  // Fallback metadata from WordPress service data
+  const fallback: Metadata = {
     title,
     description,
     openGraph: {
       title,
       description,
       type: "article",
-      images: service.featured_image_url
-        ? [{ url: service.featured_image_url }]
-        : [],
+      images: ogImageUrl ? [{ url: ogImageUrl }] : [],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: ogImageUrl ? [ogImageUrl] : [],
     },
   };
+
+  // Use RankMath metadata with fallback
+  return generateSeoMetadata(rankMathMeta, fallback);
 }
 
 // Enable ISR with 5 second revalidation
