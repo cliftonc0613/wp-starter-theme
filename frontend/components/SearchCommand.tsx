@@ -11,7 +11,7 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import { search, type SearchResult } from "@/lib/wordpress";
+import type { SearchResult } from "@/lib/wordpress";
 import { getEnabledSearchTypes, type SearchableType } from "@/lib/search-config";
 
 // Icon mapping for content types
@@ -53,7 +53,7 @@ export function SearchCommand({ open: controlledOpen, onOpenChange }: SearchComm
     return () => document.removeEventListener("keydown", down);
   }, [isOpen, setOpen]);
 
-  // Debounced search
+  // Debounced search via API route
   useEffect(() => {
     if (!query.trim()) {
       setResults([]);
@@ -63,11 +63,14 @@ export function SearchCommand({ open: controlledOpen, onOpenChange }: SearchComm
     const timeoutId = setTimeout(async () => {
       setLoading(true);
       try {
-        const searchResults = await search({
-          query,
-          types: enabledTypes.map(t => t.type),
-          per_page: 5,
-        });
+        const types = enabledTypes.map(t => t.type).join(",");
+        const response = await fetch(
+          `/api/search?q=${encodeURIComponent(query)}&types=${types}&per_page=5`
+        );
+        if (!response.ok) {
+          throw new Error("Search request failed");
+        }
+        const searchResults: SearchResult[] = await response.json();
         setResults(searchResults);
       } catch (error) {
         console.error("Search failed:", error);
