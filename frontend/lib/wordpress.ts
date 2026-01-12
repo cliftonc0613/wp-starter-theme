@@ -474,6 +474,117 @@ export async function getTags(params?: {
 }
 
 // =============================================================================
+// Search
+// =============================================================================
+
+/**
+ * Search Result Interface
+ */
+export interface SearchResult {
+  id: number;
+  type: 'post' | 'page' | 'service';
+  title: string;
+  excerpt: string;
+  slug: string;
+  url: string;
+  image?: {
+    url: string;
+    alt: string;
+  };
+}
+
+/**
+ * Search across multiple content types using WordPress native search
+ * Note: 'page' type searches both WordPress pages AND static Next.js pages
+ */
+export async function search(params: {
+  query: string;
+  types?: ('post' | 'page' | 'service')[];
+  per_page?: number;
+}): Promise<SearchResult[]> {
+  const { query, types = ['post', 'page', 'service'], per_page = 10 } = params;
+
+  if (!query.trim()) return [];
+
+  // Import static page search dynamically to avoid circular deps
+  const { searchStaticPages } = await import('./static-pages');
+
+  // Search each content type in parallel
+  const searches = types.map(async (type) => {
+    const endpoint = type === 'post' ? 'posts' : type === 'page' ? 'pages' : 'services';
+    try {
+      const items = await fetchAPI<Array<{
+        id: number;
+        slug: string;
+        title: { rendered: string };
+        excerpt?: { rendered: string };
+        content?: { rendered: string };
+        _embedded?: {
+          'wp:featuredmedia'?: Array<{
+            source_url: string;
+            alt_text: string;
+            media_details?: {
+              sizes?: {
+                thumbnail?: { source_url: string };
+                medium?: { source_url: string };
+              };
+            };
+          }>;
+        };
+      }>>(`/${endpoint}?search=${encodeURIComponent(query)}&per_page=${per_page}&_embed=wp:featuredmedia`);
+
+      const wpResults = items.map(item => {
+        const featuredMedia = item._embedded?.['wp:featuredmedia']?.[0];
+        const imageUrl = featuredMedia?.media_details?.sizes?.thumbnail?.source_url
+          || featuredMedia?.media_details?.sizes?.medium?.source_url
+          || featuredMedia?.source_url;
+
+        // Use excerpt if available, otherwise extract from content
+        const excerptText = item.excerpt?.rendered
+          ? stripHtml(item.excerpt.rendered)
+          : item.content?.rendered
+            ? stripHtml(item.content.rendered).slice(0, 150)
+            : '';
+
+        return {
+          id: item.id,
+          type,
+          title: decodeHtmlEntities(item.title.rendered),
+          excerpt: excerptText.slice(0, 150),
+          slug: item.slug,
+          url: type === 'post' ? `/blog/${item.slug}`
+             : type === 'page' ? `/${item.slug}`
+             : `/services/${item.slug}`,
+          image: imageUrl ? {
+            url: imageUrl,
+            alt: featuredMedia?.alt_text || '',
+          } : undefined,
+        };
+      });
+
+      // For 'page' type, also include static Next.js pages
+      if (type === 'page') {
+        const staticResults = searchStaticPages(query);
+        return [...wpResults, ...staticResults];
+      }
+
+      return wpResults;
+    } catch (error) {
+      // If a content type fails (e.g., services CPT not registered), log and return empty
+      console.error(`Search failed for ${type}:`, error);
+      // Still return static pages for 'page' type even if WordPress fails
+      if (type === 'page') {
+        return searchStaticPages(query);
+      }
+      return [];
+    }
+  });
+
+  const searchResults = await Promise.all(searches);
+  return searchResults.flat();
+}
+
+// =============================================================================
 // Utility Functions
 // =============================================================================
 

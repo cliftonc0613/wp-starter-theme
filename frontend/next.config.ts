@@ -1,4 +1,10 @@
 import type { NextConfig } from "next";
+import bundleAnalyzer from '@next/bundle-analyzer';
+import { withSentryConfig } from '@sentry/nextjs';
+
+const withBundleAnalyzer = bundleAnalyzer({
+  enabled: process.env.ANALYZE === 'true',
+});
 
 const isDev = process.env.NODE_ENV === 'development';
 
@@ -33,4 +39,29 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+// Wrap with Sentry configuration
+// Sentry configuration options: https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/
+const sentryConfig = withSentryConfig(withBundleAnalyzer(nextConfig), {
+  // For all available options, see:
+  // https://www.npmjs.com/package/@sentry/nextjs#options
+
+  // Only upload source maps if auth token is provided
+  authToken: process.env.SENTRY_AUTH_TOKEN,
+
+  // Suppresses source map upload logs during build
+  silent: !process.env.CI,
+
+  // Upload a larger set of source maps for prettier stack traces (increases build time)
+  widenClientFileUpload: true,
+
+  // Source maps configuration
+  sourcemaps: {
+    // Delete source maps after upload (don't expose to client)
+    deleteSourcemapsAfterUpload: true,
+  },
+
+  // Disable tunneling (use direct Sentry connection)
+  tunnelRoute: undefined,
+});
+
+export default sentryConfig;

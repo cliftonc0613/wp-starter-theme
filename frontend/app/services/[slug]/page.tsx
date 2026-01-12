@@ -1,13 +1,15 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getService, getServices, stripHtml, decodeHtmlEntities, isWordPressConfigured, rewriteImageUrl, rewriteContentUrls } from "@/lib/wordpress";
+import { getRankMathMeta, generateSeoMetadata } from "@/lib/seo";
+import { generateServiceSchema, generateBreadcrumbSchema } from "@/lib/schema";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ServiceSchema, BreadcrumbSchema } from "@/components/JsonLd";
+import { MultiStructuredData } from "@/components/structured-data";
 import { BodyClass } from "@/components/BodyClass";
 import { WordPressContent } from "@/components/WordPressContent";
+import { BlurImage } from "@/components/BlurImage";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME || "Starter WP Theme";
@@ -54,19 +56,33 @@ export async function generateMetadata({
 
   const title = decodeHtmlEntities(service.title.rendered);
   const description = stripHtml(service.excerpt.rendered);
+  const ogImageUrl = rewriteImageUrl(service.featured_image_url);
 
-  return {
+  // Try to get RankMath SEO metadata
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "";
+  const pageUrl = `${siteUrl}/services/${slug}`;
+  const rankMathMeta = await getRankMathMeta(pageUrl);
+
+  // Fallback metadata from WordPress service data
+  const fallback: Metadata = {
     title,
     description,
     openGraph: {
       title,
       description,
       type: "article",
-      images: service.featured_image_url
-        ? [{ url: service.featured_image_url }]
-        : [],
+      images: ogImageUrl ? [{ url: ogImageUrl }] : [],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: ogImageUrl ? [ogImageUrl] : [],
     },
   };
+
+  // Use RankMath metadata with fallback
+  return generateSeoMetadata(rankMathMeta, fallback);
 }
 
 // Enable ISR with 5 second revalidation
@@ -91,7 +107,6 @@ export default async function ServicePage({ params }: ServicePageProps) {
   const featuredImageUrl = rewriteImageUrl(service.featured_image_url);
   const contentHtml = rewriteContentUrls(service.content.rendered);
 
-  const description = stripHtml(service.excerpt.rendered || service.content.rendered);
   const serviceUrl = `${SITE_URL}/services/${slug}`;
 
   // Dynamic body classes for CSS targeting
@@ -103,28 +118,23 @@ export default async function ServicePage({ params }: ServicePageProps) {
     features.length > 0 ? "has-features" : "no-features",
   ].join(" ");
 
+  // Generate structured data schemas
+  const serviceSchema = generateServiceSchema(service, SITE_URL, {
+    provider: { name: SITE_NAME, url: SITE_URL },
+  });
+
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: "Home", url: SITE_URL },
+    { name: "Services", url: `${SITE_URL}/services` },
+    { name: title, url: serviceUrl },
+  ]);
+
   return (
     <>
       <BodyClass className={bodyClasses} />
 
       {/* Structured Data */}
-      <ServiceSchema
-        name={title}
-        description={description}
-        url={serviceUrl}
-        provider={{
-          name: SITE_NAME,
-          url: SITE_URL,
-        }}
-        image={featuredImageUrl || undefined}
-      />
-      <BreadcrumbSchema
-        items={[
-          { name: "Home", url: SITE_URL },
-          { name: "Services", url: `${SITE_URL}/services` },
-          { name: title, url: serviceUrl },
-        ]}
-      />
+      <MultiStructuredData schemas={[serviceSchema, breadcrumbSchema]} />
 
       {/* Hero Section */}
       <section className="bg-muted pb-16 pt-32 md:pb-24 md:pt-48">
@@ -160,7 +170,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
             </div>
             {featuredImageUrl && (
               <div className="relative aspect-video overflow-hidden rounded-xl lg:aspect-square">
-                <Image
+                <BlurImage
                   src={featuredImageUrl}
                   alt={title}
                   fill
