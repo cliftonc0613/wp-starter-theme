@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getService, getServices, stripHtml, decodeHtmlEntities, isWordPressConfigured, rewriteImageUrl, rewriteContentUrls } from "@/lib/wordpress";
@@ -10,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MultiStructuredData } from "@/components/structured-data";
 import { BodyClass } from "@/components/BodyClass";
 import { WordPressContent } from "@/components/WordPressContent";
+import { BlurImage } from "@/components/BlurImage";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME || "Starter WP Theme";
@@ -170,7 +170,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
             </div>
             {featuredImageUrl && (
               <div className="relative aspect-video overflow-hidden rounded-xl lg:aspect-square">
-                <Image
+                <BlurImage
                   src={featuredImageUrl}
                   alt={title}
                   fill
