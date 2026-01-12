@@ -4,9 +4,10 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getService, getServices, stripHtml, decodeHtmlEntities, isWordPressConfigured, rewriteImageUrl, rewriteContentUrls } from "@/lib/wordpress";
 import { getRankMathMeta, generateSeoMetadata } from "@/lib/seo";
+import { generateServiceSchema, generateBreadcrumbSchema } from "@/lib/schema";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ServiceSchema, BreadcrumbSchema } from "@/components/JsonLd";
+import { MultiStructuredData } from "@/components/structured-data";
 import { BodyClass } from "@/components/BodyClass";
 import { WordPressContent } from "@/components/WordPressContent";
 
@@ -106,7 +107,6 @@ export default async function ServicePage({ params }: ServicePageProps) {
   const featuredImageUrl = rewriteImageUrl(service.featured_image_url);
   const contentHtml = rewriteContentUrls(service.content.rendered);
 
-  const description = stripHtml(service.excerpt.rendered || service.content.rendered);
   const serviceUrl = `${SITE_URL}/services/${slug}`;
 
   // Dynamic body classes for CSS targeting
@@ -118,28 +118,23 @@ export default async function ServicePage({ params }: ServicePageProps) {
     features.length > 0 ? "has-features" : "no-features",
   ].join(" ");
 
+  // Generate structured data schemas
+  const serviceSchema = generateServiceSchema(service, SITE_URL, {
+    provider: { name: SITE_NAME, url: SITE_URL },
+  });
+
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: "Home", url: SITE_URL },
+    { name: "Services", url: `${SITE_URL}/services` },
+    { name: title, url: serviceUrl },
+  ]);
+
   return (
     <>
       <BodyClass className={bodyClasses} />
 
       {/* Structured Data */}
-      <ServiceSchema
-        name={title}
-        description={description}
-        url={serviceUrl}
-        provider={{
-          name: SITE_NAME,
-          url: SITE_URL,
-        }}
-        image={featuredImageUrl || undefined}
-      />
-      <BreadcrumbSchema
-        items={[
-          { name: "Home", url: SITE_URL },
-          { name: "Services", url: `${SITE_URL}/services` },
-          { name: title, url: serviceUrl },
-        ]}
-      />
+      <MultiStructuredData schemas={[serviceSchema, breadcrumbSchema]} />
 
       {/* Hero Section */}
       <section className="bg-muted pb-16 pt-32 md:pb-24 md:pt-48">
