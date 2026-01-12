@@ -1,0 +1,155 @@
+"use client";
+
+import { useState, useEffect, useCallback } from "react";
+import { useRouter } from "next/navigation";
+import { FileText, File, Briefcase, Search, Loader2 } from "lucide-react";
+import {
+  CommandDialog,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import { search, type SearchResult } from "@/lib/wordpress";
+import { getEnabledSearchTypes, type SearchableType } from "@/lib/search-config";
+
+// Icon mapping for content types
+const icons: Record<string, React.ComponentType<{ className?: string }>> = {
+  FileText,
+  File,
+  Briefcase,
+};
+
+interface SearchCommandProps {
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+}
+
+export function SearchCommand({ open: controlledOpen, onOpenChange }: SearchCommandProps) {
+  const router = useRouter();
+  const [internalOpen, setInternalOpen] = useState(false);
+  const [query, setQuery] = useState("");
+  const [results, setResults] = useState<SearchResult[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  // Support both controlled and uncontrolled modes
+  const isOpen = controlledOpen ?? internalOpen;
+  const setOpen = onOpenChange ?? setInternalOpen;
+
+  const enabledTypes = getEnabledSearchTypes();
+
+  // Keyboard shortcut: Cmd/Ctrl+K
+  useEffect(() => {
+    const down = (e: KeyboardEvent) => {
+      if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        setOpen(!isOpen);
+      }
+    };
+
+    document.addEventListener("keydown", down);
+    return () => document.removeEventListener("keydown", down);
+  }, [isOpen, setOpen]);
+
+  // Debounced search
+  useEffect(() => {
+    if (!query.trim()) {
+      setResults([]);
+      return;
+    }
+
+    const timeoutId = setTimeout(async () => {
+      setLoading(true);
+      try {
+        const searchResults = await search({
+          query,
+          types: enabledTypes.map(t => t.type),
+          per_page: 5,
+        });
+        setResults(searchResults);
+      } catch (error) {
+        console.error("Search failed:", error);
+        setResults([]);
+      } finally {
+        setLoading(false);
+      }
+    }, 300);
+
+    return () => clearTimeout(timeoutId);
+  }, [query, enabledTypes]);
+
+  // Handle result selection
+  const handleSelect = useCallback((url: string) => {
+    setOpen(false);
+    setQuery("");
+    setResults([]);
+    router.push(url);
+  }, [router, setOpen]);
+
+  // Group results by type
+  const groupedResults = enabledTypes.reduce((acc, typeConfig) => {
+    const typeResults = results.filter(r => r.type === typeConfig.type);
+    if (typeResults.length > 0) {
+      acc.push({ config: typeConfig, results: typeResults });
+    }
+    return acc;
+  }, [] as { config: SearchableType; results: SearchResult[] }[]);
+
+  return (
+    <CommandDialog open={isOpen} onOpenChange={setOpen}>
+      <CommandInput
+        placeholder="Search posts, pages, services..."
+        value={query}
+        onValueChange={setQuery}
+      />
+      <CommandList>
+        {loading && (
+          <div className="flex items-center justify-center py-6">
+            <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+          </div>
+        )}
+
+        {!loading && query && results.length === 0 && (
+          <CommandEmpty>No results found for &quot;{query}&quot;</CommandEmpty>
+        )}
+
+        {!loading && groupedResults.map(({ config, results: groupResults }) => {
+          const Icon = icons[config.icon] || FileText;
+          return (
+            <CommandGroup key={config.type} heading={config.label}>
+              {groupResults.map((result) => (
+                <CommandItem
+                  key={`${result.type}-${result.id}`}
+                  value={`${result.title} ${result.type}`}
+                  onSelect={() => handleSelect(result.url)}
+                  className="cursor-pointer"
+                >
+                  <Icon className="mr-2 h-4 w-4 text-muted-foreground" />
+                  <div className="flex flex-col">
+                    <span>{result.title}</span>
+                    {result.excerpt && (
+                      <span className="text-xs text-muted-foreground line-clamp-1">
+                        {result.excerpt}
+                      </span>
+                    )}
+                  </div>
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          );
+        })}
+
+        {!loading && !query && (
+          <div className="py-6 text-center text-sm text-muted-foreground">
+            <Search className="mx-auto mb-2 h-6 w-6" />
+            <p>Start typing to search...</p>
+            <p className="mt-1 text-xs">
+              Press <kbd className="rounded border bg-muted px-1">Esc</kbd> to close
+            </p>
+          </div>
+        )}
+      </CommandList>
+    </CommandDialog>
+  );
+}
