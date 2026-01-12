@@ -17,11 +17,13 @@ interface BlurImageProps extends Omit<ImageProps, 'onLoad'> {
  *
  * Provides a Medium-style blur-up loading effect for images.
  * - If blurDataURL is provided: uses Next.js native placeholder="blur"
- * - If no blurDataURL: uses CSS-based blur effect with smooth transition
+ * - If priority is true: skips blur effect (LCP images should load fast)
+ * - Otherwise: uses CSS-based blur effect with smooth transition
  */
 export function BlurImage({
   blurDataURL,
   className = '',
+  priority,
   ...props
 }: BlurImageProps) {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -35,9 +37,22 @@ export function BlurImage({
     return (
       <Image
         {...props}
+        priority={priority}
         className={className}
         placeholder="blur"
         blurDataURL={blurDataURL}
+      />
+    );
+  }
+
+  // Skip blur effect for priority images (LCP optimization)
+  // Priority images are preloaded and should render immediately
+  if (priority) {
+    return (
+      <Image
+        {...props}
+        priority={priority}
+        className={className}
       />
     );
   }

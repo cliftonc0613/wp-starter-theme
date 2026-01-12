@@ -5,6 +5,8 @@ import type { ContentImage as ContentImageData } from '@/lib/content-images';
 
 interface ContentImageProps {
   image: ContentImageData;
+  /** Index of this image in the content (0-based) */
+  index?: number;
 }
 
 /**
@@ -13,9 +15,14 @@ interface ContentImageProps {
  * Wraps BlurImage to handle images embedded in WordPress content.
  * Supports both dimensioned images (uses explicit width/height) and
  * non-dimensioned images (uses fill with aspect-ratio container).
+ *
+ * The first image (index 0) gets priority loading for LCP optimization.
  */
-export function ContentImage({ image }: ContentImageProps) {
+export function ContentImage({ image, index = 0 }: ContentImageProps) {
   const { src, alt, width, height, className } = image;
+
+  // First content image gets priority (likely above fold, could be LCP)
+  const isPriority = index === 0;
 
   // If we have dimensions, use them directly
   if (width && height) {
@@ -27,6 +34,7 @@ export function ContentImage({ image }: ContentImageProps) {
         height={height}
         className={className || ''}
         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 720px"
+        priority={isPriority}
       />
     );
   }
@@ -44,6 +52,7 @@ export function ContentImage({ image }: ContentImageProps) {
         fill
         className={`object-cover ${className || ''}`}
         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 720px"
+        priority={isPriority}
       />
     </div>
   );

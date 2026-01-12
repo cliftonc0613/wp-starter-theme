@@ -250,7 +250,7 @@ function ContentImagePortal({ image, containerRef }: ContentImagePortalProps) {
   if (!portalTarget) return null;
 
   return createPortal(
-    <ContentImageComponent image={image} />,
+    <ContentImageComponent image={image} index={image.index} />,
     portalTarget
   );
 }

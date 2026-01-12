@@ -93,6 +93,7 @@ export function extractImages(html: string): ContentImage[] {
 
 /**
  * Replace img tags with placeholder divs for React portal rendering.
+ * The first image is kept as native HTML for LCP optimization.
  *
  * @param html - WordPress HTML content
  * @returns Object with transformed HTML and extracted image data
@@ -115,6 +116,29 @@ export function replaceImagesWithPlaceholders(html: string): ParsedContent {
 
     const currentIndex = imageIndex++;
 
+    // Keep the FIRST image as native HTML for LCP optimization
+    // Portal-based rendering delays client-side hydration, hurting LCP
+    // Native img loads immediately with server-rendered HTML
+    if (currentIndex === 0) {
+      // Add loading="eager" and fetchpriority="high" for LCP
+      const existingLoading = getAttribute(attrString, 'loading');
+      const existingFetchpriority = getAttribute(attrString, 'fetchpriority');
+
+      let enhancedTag = fullMatch;
+
+      // Add loading="eager" if not present
+      if (!existingLoading) {
+        enhancedTag = enhancedTag.replace(/<img\s/, '<img loading="eager" ');
+      }
+
+      // Add fetchpriority="high" if not present
+      if (!existingFetchpriority) {
+        enhancedTag = enhancedTag.replace(/<img\s/, '<img fetchpriority="high" ');
+      }
+
+      return enhancedTag;
+    }
+
     images.push({
       src,
       alt: getAttribute(attrString, 'alt') || '',
@@ -124,7 +148,7 @@ export function replaceImagesWithPlaceholders(html: string): ParsedContent {
       index: currentIndex,
     });
 
-    // Return placeholder div for React portal
+    // Return placeholder div for React portal (images after the first)
     return `<div data-content-image="${currentIndex}" class="content-image-placeholder"></div>`;
   });
 
