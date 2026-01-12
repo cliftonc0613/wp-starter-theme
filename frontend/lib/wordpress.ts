@@ -482,7 +482,7 @@ export async function getTags(params?: {
  */
 export interface SearchResult {
   id: number;
-  type: 'post' | 'page' | 'service';
+  type: 'post' | 'page' | 'service' | 'static';
   title: string;
   excerpt: string;
   slug: string;
@@ -498,15 +498,23 @@ export interface SearchResult {
  */
 export async function search(params: {
   query: string;
-  types?: ('post' | 'page' | 'service')[];
+  types?: ('post' | 'page' | 'service' | 'static')[];
   per_page?: number;
 }): Promise<SearchResult[]> {
-  const { query, types = ['post', 'page', 'service'], per_page = 10 } = params;
+  const { query, types = ['post', 'page', 'service', 'static'], per_page = 10 } = params;
 
   if (!query.trim()) return [];
 
+  // Import static page search dynamically to avoid circular deps
+  const { searchStaticPages } = await import('./static-pages');
+
   // Search each content type in parallel
   const searches = types.map(async (type) => {
+    // Handle static pages separately (not from WordPress)
+    if (type === 'static') {
+      return searchStaticPages(query);
+    }
+
     const endpoint = type === 'post' ? 'posts' : type === 'page' ? 'pages' : 'services';
     try {
       const items = await fetchAPI<Array<{

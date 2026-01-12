@@ -6,7 +6,7 @@
  */
 
 export interface SearchableType {
-  type: 'post' | 'page' | 'service';
+  type: 'post' | 'page' | 'service' | 'static';
   label: string;
   icon: string; // Lucide icon name
   enabled: boolean;
@@ -18,8 +18,9 @@ export interface SearchableType {
  */
 export const SEARCHABLE_TYPES: SearchableType[] = [
   { type: 'post', label: 'Blog Posts', icon: 'FileText', enabled: true },
-  { type: 'page', label: 'Pages', icon: 'File', enabled: true },
+  { type: 'page', label: 'WordPress Pages', icon: 'File', enabled: true },
   { type: 'service', label: 'Services', icon: 'Briefcase', enabled: true },
+  { type: 'static', label: 'Site Pages', icon: 'File', enabled: true },
 ];
 
 /**
