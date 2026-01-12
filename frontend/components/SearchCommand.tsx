@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { FileText, File, Briefcase, Search, Loader2 } from "lucide-react";
 import {
@@ -37,7 +37,8 @@ export function SearchCommand({ open: controlledOpen, onOpenChange }: SearchComm
   const isOpen = controlledOpen ?? internalOpen;
   const setOpen = onOpenChange ?? setInternalOpen;
 
-  const enabledTypes = getEnabledSearchTypes();
+  // Memoize to prevent new array reference on every render
+  const enabledTypes = useMemo(() => getEnabledSearchTypes(), []);
 
   // Keyboard shortcut: Cmd/Ctrl+K
   useEffect(() => {
