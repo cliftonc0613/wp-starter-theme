@@ -474,6 +474,65 @@ export async function getTags(params?: {
 }
 
 // =============================================================================
+// Search
+// =============================================================================
+
+/**
+ * Search Result Interface
+ */
+export interface SearchResult {
+  id: number;
+  type: 'post' | 'page' | 'service';
+  title: string;
+  excerpt: string;
+  slug: string;
+  url: string;
+}
+
+/**
+ * Search across multiple content types using WordPress native search
+ */
+export async function search(params: {
+  query: string;
+  types?: ('post' | 'page' | 'service')[];
+  per_page?: number;
+}): Promise<SearchResult[]> {
+  const { query, types = ['post', 'page', 'service'], per_page = 10 } = params;
+
+  if (!query.trim()) return [];
+
+  // Search each content type in parallel
+  const searches = types.map(async (type) => {
+    const endpoint = type === 'post' ? 'posts' : type === 'page' ? 'pages' : 'services';
+    try {
+      const items = await fetchAPI<Array<{
+        id: number;
+        slug: string;
+        title: { rendered: string };
+        excerpt: { rendered: string };
+      }>>(`/${endpoint}?search=${encodeURIComponent(query)}&per_page=${per_page}`);
+
+      return items.map(item => ({
+        id: item.id,
+        type,
+        title: decodeHtmlEntities(item.title.rendered),
+        excerpt: stripHtml(item.excerpt.rendered).slice(0, 150),
+        slug: item.slug,
+        url: type === 'post' ? `/blog/${item.slug}`
+           : type === 'page' ? `/${item.slug}`
+           : `/services/${item.slug}`,
+      }));
+    } catch {
+      // If a content type fails (e.g., services CPT not registered), return empty
+      return [];
+    }
+  });
+
+  const searchResults = await Promise.all(searches);
+  return searchResults.flat();
+}
+
+// =============================================================================
 // Utility Functions
 // =============================================================================
 
