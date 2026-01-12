@@ -6,6 +6,7 @@ import { SmoothScroll } from "@/components/SmoothScroll";
 import { Toaster } from "@/components/ui/sonner";
 import { StructuredData } from "@/components/structured-data";
 import { generateOrganizationSchema } from "@/lib/schema";
+import { Providers } from "./providers";
 import "./globals.css";
 
 // Site-wide Organization schema for rich snippets
@@ -70,14 +71,16 @@ export default function RootLayout({
       <body
         className={`${dmSans.variable} ${playfair.variable} ${jetbrains.variable} font-sans antialiased`}
       >
-        <StructuredData data={organizationSchema} />
-        <SmoothScroll />
-        <div className="flex min-h-screen flex-col">
-          <Header />
-          <main className="flex-grow">{children}</main>
-          <Footer />
-        </div>
-        <Toaster />
+        <Providers>
+          <StructuredData data={organizationSchema} />
+          <SmoothScroll />
+          <div className="flex min-h-screen flex-col">
+            <Header />
+            <main className="flex-grow">{children}</main>
+            <Footer />
+          </div>
+          <Toaster />
+        </Providers>
       </body>
     </html>
   );
