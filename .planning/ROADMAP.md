@@ -1,6 +1,11 @@
 # Roadmap: Headless Theme Enhancements
 
-## Milestone 1.0: Core Enhancements
+## Milestone 1.0: Core Enhancements ✅ COMPLETE
+
+**Completed:** 2026-01-12 | **Tests:** 155 | **Plans:** 14
+
+<details>
+<summary>View completed phases</summary>
 
 | Phase | Name | Goal | Status |
 |-------|------|------|--------|
@@ -9,83 +14,11 @@
 | 3 | Search & Filtering | WordPress search endpoint, search UI components, category/tag filtering, related content | Complete |
 | 4 | Testing & Monitoring | Vitest + React Testing Library, Playwright E2E tests, Sentry error tracking, health checks | Complete |
 
-## Phase Details
+See [v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md) for full details.
 
-### Phase 1: SEO & Discoverability
-
-**Goal:** Implement RankMath SEO integration to enable rich snippets and structured data in Google search results.
-
-**Features:**
-- F1.1: RankMath SEO REST API integration with HTML parsing utility
-- F1.2: Structured data components (Organization, Article, Service, Breadcrumb schemas)
-- F1.3: Enhanced dynamic sitemap with all content types and priority settings
-
-**Dependencies:** RankMath SEO plugin installed, Headless CMS Support enabled
-
-**Exit Criteria:**
-- RankMath meta data fetched and parsed for all page types
-- JSON-LD structured data renders correctly
-- Google Rich Results Test passes for all schema types
-
----
-
-### Phase 2: Performance & Caching
-
-**Goal:** Improve client-side performance with SWR caching and optimized image loading.
-
-**Features:**
-- F2.1: SWR data fetching hooks (usePost, useServices, useSearch)
-- F2.2: Image optimization component with blur placeholders
-- F2.3: Bundle analysis and code splitting optimization
-
-**Dependencies:** Phase 1 complete (SEO meta can be cached via SWR)
-
-**Exit Criteria:**
-- SWR hooks provide stale-while-revalidate caching
-- Images load with blur-up effect
-- Bundle size reduced, Lighthouse performance score improved
-
----
-
-### Phase 3: Search & Filtering
-
-**Goal:** Enable site-wide search and content filtering for improved discoverability.
-
-**Features:**
-- F3.1: WordPress search endpoint with multi-type support
-- F3.2: Search UI components (SearchBar, SearchResults)
-- F3.3: Category and tag filtering on blog/services
-- F3.4: Related content suggestions
-
-**Dependencies:** Phase 2 complete (search uses SWR hooks)
-
-**Exit Criteria:**
-- Search returns results across posts, pages, services
-- Filter UI updates content without full page reload
-- Related content displays on single post/service pages
-
----
-
-### Phase 4: Testing & Monitoring
-
-**Goal:** Establish testing infrastructure and production error tracking.
-
-**Features:**
-- F4.1: Unit testing setup (Vitest + React Testing Library) ✓
-- F4.2: API and library tests (113 tests) ✓
-- F4.3: E2E testing (Playwright, 42 tests) ✓
-- F4.4: Sentry error tracking integration ✓
-- F4.5: Health check API endpoint ✓
-
-**Dependencies:** All previous phases complete (tests cover implemented features)
-
-**Exit Criteria:**
-- Unit tests for API client, schemas, components
-- E2E tests for critical user flows
-- Sentry captures and reports errors
-- Health endpoints return system status
+</details>
 
 ---
 
 *Roadmap created: 2026-01-11*
-*Source: docs/PRD-headless-theme-enhancements.md*
+*Milestone 1.0 completed: 2026-01-12*

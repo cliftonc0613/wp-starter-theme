@@ -2,13 +2,11 @@
 
 ## Current Position
 
-**Milestone:** 1.0 - Core Enhancements - COMPLETE 🎉
-**Phase:** 4 of 4 (Testing & Monitoring) - COMPLETE
-**Plan:** 4 of 4 in current phase (all done)
-**Status:** Milestone 1.0 complete
-**Last activity:** 2026-01-12 - Completed 4-04-PLAN.md (Sentry error tracking)
+**Milestone:** 1.0 - Core Enhancements - ARCHIVED ✅
+**Status:** Milestone 1.0 archived to `.planning/milestones/v1.0-ROADMAP.md`
+**Last activity:** 2026-01-12 - Archived milestone, created v1.0 tag
 
-**Progress:** ████████████████ 100% (14/14 plans complete)
+**Next:** Ready for Milestone 2.0 planning
 
 ## Phase Progress
 
@@ -91,9 +89,10 @@ None currently.
 
 ## Next Actions
 
-1. Run `/gsd:complete-milestone` to archive Milestone 1.0
-2. Consider starting Milestone 2.0 with new features
+1. Start Milestone 2.0 planning with `/gsd:new-milestone`
+2. Or add features ad-hoc with `/gsd:add-phase`
 
 ---
 
-*Last updated: 2026-01-12T22:02:00Z*
+*Last updated: 2026-01-12*
+*Milestone 1.0 archived: 2026-01-12*
