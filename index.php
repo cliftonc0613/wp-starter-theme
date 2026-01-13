@@ -112,6 +112,9 @@ if (empty($endpoints) && $show_endpoints) {
             min-height: 100vh;
             padding: 2rem;
             text-align: center;
+            width: 100%;
+            max-width: 100%;
+            overflow-x: hidden;
         }
 
         /* Logo */
@@ -226,10 +229,12 @@ if (empty($endpoints) && $show_endpoints) {
         }
 
         .api-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
             gap: 1rem;
             max-width: 1000px;
+            width: 100%;
         }
 
         .api-card {
@@ -242,6 +247,8 @@ if (empty($endpoints) && $show_endpoints) {
             border-radius: 12px;
             text-decoration: none;
             transition: all 0.2s ease;
+            flex: 0 1 280px;
+            max-width: 320px;
         }
 
         .api-card:hover {
@@ -277,6 +284,7 @@ if (empty($endpoints) && $show_endpoints) {
             font-family: 'SF Mono', Monaco, monospace;
             font-size: 0.75rem;
             color: rgba(255,255,255,0.5);
+            word-break: break-all;
         }
 
         .api-card-desc {
@@ -297,7 +305,12 @@ if (empty($endpoints) && $show_endpoints) {
         }
 
         @media (max-width: 640px) {
-            .button-group { flex-direction: column; }
+            .container { padding: 1.5rem; }
+            .button-group { flex-direction: column; width: 100%; }
+            .cta { width: 100%; justify-content: center; }
+            .api-section { width: 100%; }
+            .api-grid { width: 100%; max-width: 100%; }
+            .api-card { padding: 1rem; flex: 1 1 100%; max-width: 100%; }
         }
 
         @media (prefers-reduced-motion: reduce) {
