@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 import bundleAnalyzer from '@next/bundle-analyzer';
 import { withSentryConfig } from '@sentry/nextjs';
-import withSerwist from "@serwist/next";
+import withSerwistInit from "@serwist/next";
 
 const withBundleAnalyzer = bundleAnalyzer({
   enabled: process.env.ANALYZE === 'true',
@@ -15,10 +15,10 @@ const isDev = process.env.NODE_ENV === 'development';
  *
  * Key differences from @ducanh2912/next-pwa:
  * - Uses a dedicated sw.ts file in app/ directory
- * - Works with both webpack and Turbopack
- * - Service worker is generated at build time
+ * - Works with webpack (required for service worker generation)
+ * - Service worker is automatically registered
  */
-const withPWA = withSerwist({
+const withPWA = withSerwistInit({
   swSrc: "app/sw.ts",
   swDest: "public/sw.js",
   disable: isDev,

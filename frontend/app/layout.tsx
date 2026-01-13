@@ -7,6 +7,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { StructuredData } from "@/components/structured-data";
 import { generateOrganizationSchema } from "@/lib/schema";
 import { Providers } from "./providers";
+import RegisterPWA from "@/components/RegisterPWA";
 import "./globals.css";
 
 // Site-wide Organization schema for rich snippets
@@ -106,6 +107,7 @@ export default function RootLayout({
         className={`${dmSans.variable} ${playfair.variable} ${jetbrains.variable} font-sans antialiased`}
       >
         <Providers>
+          <RegisterPWA />
           <StructuredData data={organizationSchema} />
           <SmoothScroll />
           <div className="flex min-h-screen flex-col">
