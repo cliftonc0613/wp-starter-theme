@@ -31,11 +31,11 @@ if (empty($frontend_label)) $frontend_label = 'Visit Site';
 // Default endpoints
 if (empty($endpoints) && $show_endpoints) {
     $endpoints = array(
-        array('name' => 'Posts', 'path' => '/wp-json/wp/v2/posts'),
-        array('name' => 'Pages', 'path' => '/wp-json/wp/v2/pages'),
-        array('name' => 'Services', 'path' => '/wp-json/wp/v2/services'),
-        array('name' => 'Testimonials', 'path' => '/wp-json/wp/v2/testimonials'),
-        array('name' => 'Media', 'path' => '/wp-json/wp/v2/media'),
+        array('name' => 'Posts', 'path' => '/wp-json/wp/v2/posts', 'description' => 'Blog posts and articles'),
+        array('name' => 'Pages', 'path' => '/wp-json/wp/v2/pages', 'description' => 'Static pages content'),
+        array('name' => 'Services', 'path' => '/wp-json/wp/v2/services', 'description' => 'Service offerings'),
+        array('name' => 'Testimonials', 'path' => '/wp-json/wp/v2/testimonials', 'description' => 'Client testimonials'),
+        array('name' => 'Media', 'path' => '/wp-json/wp/v2/media', 'description' => 'Images and attachments'),
     );
 }
 ?>
@@ -116,13 +116,13 @@ if (empty($endpoints) && $show_endpoints) {
 
         /* Logo */
         .logo {
-            margin-bottom: 4rem;
+            margin-bottom: 2rem;
             opacity: 0;
             animation: fadeUp 1s ease forwards;
         }
 
         .logo img {
-            height: 40px;
+            height: 70px;
             width: auto;
             filter: brightness(0) invert(1);
         }
@@ -130,11 +130,12 @@ if (empty($endpoints) && $show_endpoints) {
         /* Title */
         .title {
             font-family: 'Playfair Display', Georgia, serif;
-            font-size: clamp(4rem, 15vw, 10rem);
+            font-size: clamp(2.5rem, 8vw, 4.5rem);
             font-weight: 500;
             letter-spacing: -0.04em;
-            line-height: 0.9;
-            margin-bottom: 2rem;
+            line-height: 0.95;
+            margin-bottom: 1.5rem;
+            max-width: 1200px;
             opacity: 0;
             animation: fadeUp 1s ease forwards 0.2s;
         }
@@ -142,10 +143,10 @@ if (empty($endpoints) && $show_endpoints) {
         /* Intro */
         .intro {
             max-width: 400px;
-            font-size: 1.125rem;
-            line-height: 1.7;
+            font-size: 1rem;
+            line-height: 1.6;
             color: rgba(255,255,255,0.5);
-            margin-bottom: 3rem;
+            margin-bottom: 2rem;
             opacity: 0;
             animation: fadeUp 1s ease forwards 0.4s;
         }
@@ -184,10 +185,29 @@ if (empty($endpoints) && $show_endpoints) {
             transform: translateX(4px);
         }
 
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .cta-outline {
+            background: transparent;
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.25);
+        }
+
+        .cta-outline:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: rgba(255,255,255,0.4);
+            box-shadow: 0 0 40px rgba(255,255,255,0.1);
+        }
+
         /* API Section */
         .api-section {
-            margin-top: 4rem;
-            padding-top: 3rem;
+            margin-top: 2.5rem;
+            padding-top: 2rem;
             border-top: 1px solid rgba(255,255,255,0.08);
             opacity: 0;
             animation: fadeUp 1s ease forwards 0.8s;
@@ -206,61 +226,65 @@ if (empty($endpoints) && $show_endpoints) {
         }
 
         .api-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            justify-content: center;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem;
+            max-width: 1000px;
         }
 
-        .api-chip {
-            display: inline-flex;
-            align-items: center;
+        .api-card {
+            display: flex;
+            flex-direction: column;
             gap: 0.5rem;
-            padding: 0.5rem 1rem;
+            padding: 1.25rem;
             background: rgba(255,255,255,0.03);
             border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 100px;
-            color: rgba(255,255,255,0.5);
-            font-size: 0.75rem;
+            border-radius: 12px;
             text-decoration: none;
             transition: all 0.2s ease;
         }
 
-        .api-chip:hover {
-            background: rgba(255,255,255,0.08);
+        .api-card:hover {
+            background: rgba(255,255,255,0.06);
             border-color: rgba(255,255,255,0.15);
-            color: rgba(255,255,255,0.8);
+            transform: translateY(-2px);
         }
 
-        .api-chip code {
+        .api-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+        }
+
+        .api-card-name {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .api-card-method {
             font-family: 'SF Mono', Monaco, monospace;
-            font-size: 0.6875rem;
+            font-size: 0.625rem;
+            font-weight: 600;
             color: rgba(255,255,255,0.4);
+            background: rgba(255,255,255,0.08);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
         }
 
-        .api-chip:hover code {
-            color: rgba(255,255,255,0.6);
-        }
-
-        /* Footer */
-        .footer {
-            margin-top: 4rem;
-            padding-top: 2rem;
-            text-align: center;
-            opacity: 0;
-            animation: fadeIn 1s ease forwards 1s;
-        }
-
-        .footer a {
-            color: rgba(255,255,255,0.3);
+        .api-card code {
+            font-family: 'SF Mono', Monaco, monospace;
             font-size: 0.75rem;
-            text-decoration: none;
-            transition: color 0.2s ease;
+            color: rgba(255,255,255,0.5);
         }
 
-        .footer a:hover {
-            color: rgba(255,255,255,0.6);
+        .api-card-desc {
+            font-size: 0.8125rem;
+            color: rgba(255,255,255,0.4);
+            line-height: 1.5;
         }
+
 
         @keyframes fadeUp {
             from { opacity: 0; transform: translateY(30px); }
@@ -273,8 +297,7 @@ if (empty($endpoints) && $show_endpoints) {
         }
 
         @media (max-width: 640px) {
-            .footer { flex-direction: column; gap: 1rem; text-align: center; }
-            .api-panel { right: 1rem; left: 1rem; width: auto; bottom: 6rem; }
+            .button-group { flex-direction: column; }
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -300,14 +323,19 @@ if (empty($endpoints) && $show_endpoints) {
 
         <div class="intro"><?php echo wp_kses_post($intro); ?></div>
 
-        <?php if ($frontend_url): ?>
-            <a href="<?php echo esc_url($frontend_url); ?>" class="cta">
-                <?php echo esc_html($frontend_label); ?>
-                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-                </svg>
+        <div class="button-group">
+            <?php if ($frontend_url): ?>
+                <a href="<?php echo esc_url($frontend_url); ?>" class="cta">
+                    <?php echo esc_html($frontend_label); ?>
+                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                    </svg>
+                </a>
+            <?php endif; ?>
+            <a href="<?php echo esc_url(admin_url()); ?>" class="cta cta-outline">
+                WordPress Admin
             </a>
-        <?php endif; ?>
+        </div>
 
         <?php if ($show_endpoints && !empty($endpoints)): ?>
             <div class="api-section">
@@ -316,16 +344,21 @@ if (empty($endpoints) && $show_endpoints) {
                 </div>
                 <div class="api-grid">
                     <?php foreach ($endpoints as $ep): ?>
-                        <a href="<?php echo esc_url(home_url($ep['path'])); ?>" target="_blank" class="api-chip">
-                            <?php echo esc_html($ep['name']); ?>
+                        <a href="<?php echo esc_url(home_url($ep['path'])); ?>" target="_blank" class="api-card">
+                            <div class="api-card-header">
+                                <span class="api-card-name"><?php echo esc_html($ep['name']); ?></span>
+                                <span class="api-card-method">GET</span>
+                            </div>
                             <code><?php echo esc_html($ep['path']); ?></code>
+                            <?php if (!empty($ep['description'])): ?>
+                                <p class="api-card-desc"><?php echo esc_html($ep['description']); ?></p>
+                            <?php endif; ?>
                         </a>
                     <?php endforeach; ?>
                 </div>
             </div>
         <?php endif; ?>
 
-        <footer class="footer">
-            <a href="<?php echo esc_url(admin_url()); ?>">WordPress Admin</a>
+    </main>
 </body>
 </html>
