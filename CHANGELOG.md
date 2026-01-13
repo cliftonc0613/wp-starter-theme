@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.0] - 2026-01-13
+
+### Added
+- ACF-powered customizable homepage template with dynamic content management
+- Coming soon page design with visible API endpoint status table
+- Frontend link opening in new window for better UX
+
+### Changed
+- Homepage redesigned as coming soon page with API endpoint visibility
+- Homepage layout refined to fit single viewport for better first impression
+- Homepage styling matches Next.js frontend design system for consistency
+- API endpoint rows centered for improved visual balance
+
+### Fixed
+- Frontend link now opens in new window instead of same tab
+
 ## [1.2.0] - 2026-01-11
 
 ### Added
