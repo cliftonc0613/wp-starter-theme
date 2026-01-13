@@ -193,6 +193,23 @@ function starter_theme_acf_json_load_point($paths) {
 add_filter('acf/settings/load_json', 'starter_theme_acf_json_load_point');
 
 /**
+ * Register ACF Options Sub-Page under Settings
+ * Provides customizable homepage settings for the headless landing page
+ */
+function starter_theme_acf_options_page() {
+    if (function_exists('acf_add_options_sub_page')) {
+        acf_add_options_sub_page(array(
+            'page_title'  => __('Homepage Settings', 'starter-wp-theme'),
+            'menu_title'  => __('Homepage', 'starter-wp-theme'),
+            'menu_slug'   => 'homepage-settings',
+            'parent_slug' => 'options-general.php',
+            'capability'  => 'manage_options',
+        ));
+    }
+}
+add_action('acf/init', 'starter_theme_acf_options_page');
+
+/**
  * Add ACF fields to REST API response
  */
 function starter_theme_add_acf_to_rest() {
