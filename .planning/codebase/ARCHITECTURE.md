@@ -1,158 +1,158 @@
 # Architecture
 
-**Analysis Date:** 2026-01-11
+**Analysis Date:** 2026-01-12
 
 ## Pattern Overview
 
-**Overall:** Headless WordPress + Next.js Decoupled Architecture
+**Overall:** Headless WordPress + Next.js Hybrid Architecture
 
 **Key Characteristics:**
-- WordPress functions as content management backend (REST API only)
-- Next.js serves as the frontend application (App Router)
-- Communication happens exclusively through WordPress REST API
-- No traditional WordPress theme rendering used
-- ISR (Incremental Static Regeneration) for caching with on-demand revalidation
+- Decoupled CMS architecture
+- WordPress serves as REST API backend only
+- Next.js handles all rendering and user interaction
+- Independent deployment pipelines
+- ISR (Incremental Static Regeneration) for caching
 
 ## Layers
 
-**Layer 1: WordPress Backend (Root Level)**
-- Purpose: Content management and REST API provider
-- Contains: Theme setup, custom post types (Services, Testimonials), REST API customization
-- Location: `functions.php`, `index.php`, `style.css`, `acf-json/`
-- Depends on: WordPress core, ACF plugin
-- Used by: Next.js frontend via REST API
-
-**Layer 2: API Bridge & Data Fetching**
-- Purpose: Central API client with TypeScript interfaces for all content types
-- Contains: Fetch functions, URL rewriting, HTML utilities, caching strategies
-- Location: `frontend/lib/wordpress.ts` (575 lines)
-- Depends on: WordPress REST API
-- Used by: Page components and API routes
-
-**Layer 3: Next.js Frontend**
-- Purpose: Server-rendered pages with React components
-- Contains: App Router pages, API routes, React components
+**Presentation Layer (Next.js):**
+- Purpose: Server-side rendering, client-side hydration, routing
+- Contains: App Router pages, layouts, React components
 - Location: `frontend/app/`, `frontend/components/`
-- Depends on: API bridge (lib/wordpress.ts)
+- Depends on: Service layer for data
 - Used by: End users via browser
 
-**Layer 4: UI Components**
-- Purpose: Reusable React components
-- Contains: shadcn/ui primitives, StoryBrand sections, content components
-- Location: `frontend/components/ui/`, `frontend/components/storybrand/`
-- Depends on: Radix UI, Tailwind CSS
-- Used by: Page components
+**API Layer (Next.js Routes):**
+- Purpose: Handle form submissions, preview mode, cache invalidation
+- Contains: Route handlers for POST requests
+- Location: `frontend/app/api/`
+- Depends on: WordPress API, email services (planned)
+- Used by: Frontend forms, WordPress webhooks
+
+**Service Layer (WordPress Integration):**
+- Purpose: Centralized data fetching from WordPress REST API
+- Contains: TypeScript interfaces, fetch functions
+- Location: `frontend/lib/wordpress.ts`
+- Depends on: WordPress REST API
+- Used by: Page components, API routes
+
+**Data Layer (WordPress CMS):**
+- Purpose: Content management, custom post types, ACF fields
+- Contains: PHP hooks, REST API endpoints
+- Location: `functions.php`, `acf-json/`
+- Depends on: MySQL database
+- Used by: Service layer via REST API
 
 ## Data Flow
 
-**Content Publishing Flow:**
+**Page Request (Blog Post):**
 
-1. Editor creates/updates post in WordPress admin
-2. WordPress `save_post` hook triggers - `functions.php:309-351`
-3. WordPress makes HTTP POST to `frontend/app/api/revalidate/route.ts`
-4. Next.js revalidates affected paths using `revalidatePath()`
-5. ISR with 5-second revalidation window keeps cache fresh
+1. User navigates to `/blog/[slug]`
+2. Next.js matches route in `frontend/app/blog/[slug]/page.tsx`
+3. `getPost(slug)` called via `frontend/lib/wordpress.ts`
+4. HTTP GET to WordPress REST API `/wp-json/wp/v2/posts?slug=[slug]&_embed=true`
+5. WordPress returns JSON with content, images, ACF fields
+6. Next.js renders HTML (SSG/ISR)
+7. Browser receives static HTML
+8. Client-side hydration activates React
 
-**Page Rendering Flow:**
+**Contact Form Submission:**
 
-1. User visits Next.js page (e.g., `/blog/[slug]`)
-2. Page component calls `getPost(slug)` from `lib/wordpress.ts`
-3. WordPress.ts makes fetch request to `WORDPRESS_API_URL/wp-json/wp/v2/posts`
-4. Response includes ACF fields, featured images, author data
-5. Page renders with data, applies ISR caching
+1. User fills form in `frontend/components/ContactForm.tsx`
+2. Zod validation via `frontend/lib/schemas/contact.ts`
+3. POST to `frontend/app/api/contact/route.ts`
+4. Server validates payload
+5. Email service called (placeholder - not implemented)
+6. Response returned to client
+7. Toast notification displayed via Sonner
 
-**Preview Mode Flow:**
+**Cache Invalidation (ISR):**
 
-1. Editor clicks "Preview" in WordPress
-2. WordPress constructs URL to `frontend/api/preview?secret=...&slug=...&type=...`
-3. `/api/preview/route.ts` validates secret and enables Draft Mode
-4. Redirects to appropriate page path with preview=true query param
-5. Page fetches latest unpublished content from WordPress
+1. Editor publishes post in WordPress admin
+2. `save_post` hook triggers in `functions.php`
+3. `starter_theme_trigger_revalidation()` sends webhook
+4. POST to `frontend/app/api/revalidate/route.ts` with secret
+5. Next.js ISR invalidates the path
+6. Next rebuild on next request
 
 **State Management:**
-- File-based: All content lives in WordPress database
-- No persistent in-memory state in Next.js
-- Each page request fetches from WordPress or ISR cache
+- Server-side: Stateless request handling
+- Client-side: React Hook Form for form state
+- Cache: Next.js ISR + PWA service worker
+- No global client state (Redux, Zustand)
 
 ## Key Abstractions
 
 **WordPress API Client:**
-- Purpose: Encapsulate all WordPress REST API interactions
-- Location: `frontend/lib/wordpress.ts`
-- Pattern: Module with exported async functions
-- Examples: `getPosts()`, `getPost()`, `getServices()`, `getTestimonials()`, `getPage()`
-
-**Page Components:**
-- Purpose: Server components that fetch and render content
-- Location: `frontend/app/*/page.tsx`
-- Pattern: Async server components with `generateStaticParams()` and `generateMetadata()`
-- Examples: `app/page.tsx`, `app/blog/[slug]/page.tsx`, `app/services/[slug]/page.tsx`
-
-**UI Components:**
-- Purpose: Reusable presentational components
-- Location: `frontend/components/*.tsx`
-- Pattern: Props interface + exported function component
-- Examples: `Header.tsx`, `Footer.tsx`, `BlogCard.tsx`, `ServiceCard.tsx`
+- Purpose: Type-safe data fetching from WordPress
+- Location: `frontend/lib/wordpress.ts` (575 lines)
+- Pattern: Function-based service with TypeScript interfaces
+- Examples: `getPosts()`, `getServices()`, `getTestimonials()`
 
 **StoryBrand Components:**
-- Purpose: Marketing page sections following StoryBrand framework
+- Purpose: Pre-built marketing sections
 - Location: `frontend/components/storybrand/`
-- Pattern: Section components for homepage
-- Examples: `StoryBrandHero.tsx`, `ProblemSection.tsx`, `GuideSection.tsx`
+- Pattern: Composable React components
+- Examples: `StoryBrandHero`, `ProblemSection`, `ValueStack`, `PlanSteps`
+
+**shadcn/ui Components:**
+- Purpose: Accessible UI primitives
+- Location: `frontend/components/ui/`
+- Pattern: Radix UI wrapped with Tailwind
+- Examples: `Button`, `Card`, `Dialog`, `Form`, `Select`
+
+**Zod Schemas:**
+- Purpose: Runtime validation
+- Location: `frontend/lib/schemas/`
+- Pattern: Schema-first validation
+- Examples: `contactFormSchema`
 
 ## Entry Points
 
-**WordPress Entry:**
-- Location: `functions.php`
-- Triggers: WordPress initialization, post saves, REST API requests
-- Responsibilities: Register post types, customize REST API, trigger revalidation
+**Next.js:**
+- `frontend/app/page.tsx` - Homepage
+- `frontend/app/layout.tsx` - Root layout (fonts, metadata, PWA)
+- `frontend/app/blog/[slug]/page.tsx` - Blog posts
+- `frontend/app/services/[slug]/page.tsx` - Services
+- `frontend/app/api/*/route.ts` - API routes
 
-**Next.js Entry:**
-- Location: `frontend/app/layout.tsx`
-- Triggers: Every page request
-- Responsibilities: Root layout with Header, Footer, global styles, fonts
-
-**API Routes:**
-- Location: `frontend/app/api/*/route.ts`
-- Triggers: HTTP requests to `/api/*` endpoints
-- Responsibilities:
-  - `/api/revalidate` - ISR cache invalidation from WordPress
-  - `/api/preview` - Enable draft mode for content preview
-  - `/api/exit-preview` - Disable draft mode
-  - `/api/contact` - Contact form submission
+**WordPress:**
+- `functions.php` - Theme setup, hooks, CPTs (462 lines)
+- `index.php` - Fallback template (headless notice)
 
 ## Error Handling
 
-**Strategy:** Try/catch at API route level, `notFound()` for missing content
+**Strategy:** Try/catch at boundaries, graceful degradation
 
 **Patterns:**
-- API routes return NextResponse with appropriate status codes
-- Page components use `notFound()` from `next/navigation` for missing content
-- Logger abstraction in `frontend/lib/logger.ts` (environment-aware)
-- Missing: Error boundaries for client-side errors
+- API routes return JSON with error messages
+- Page components show fallback UI on fetch failure
+- WordPress hooks log errors when WP_DEBUG enabled
+- Toast notifications for user-facing errors
 
 ## Cross-Cutting Concerns
 
 **Logging:**
-- Logger abstraction: `frontend/lib/logger.ts`
-- Development: Verbose (debug, info, warn, error)
-- Production: Minimal (warn, error only)
-- TODO: Sentry integration for error tracking
+- `frontend/lib/logger.ts` - Console-based logging utility
+- WordPress `error_log()` for PHP errors
+- No external error tracking (Sentry planned)
 
 **Validation:**
-- Zod schemas at API boundary: `frontend/lib/schemas/contact.ts`
-- Shared between client and server for contact form
-
-**Caching:**
-- ISR with 5-second revalidation on all pages
-- On-demand revalidation via `/api/revalidate` webhook
-- Path-aware revalidation (blog post triggers homepage revalidation)
+- Zod schemas at API boundary
+- WordPress REST API field validation
+- Client-side form validation via react-hook-form
 
 **Authentication:**
-- Not implemented (public site)
-- Preview/revalidation protected by secrets in environment variables
+- Preview secret for draft content
+- Revalidation secret for ISR webhooks
+- No user authentication system
+
+**PWA:**
+- Service worker via `@ducanh2912/next-pwa`
+- Offline fallback page
+- Runtime caching strategies per resource type
 
 ---
 
-*Architecture analysis: 2026-01-11*
+*Architecture analysis: 2026-01-12*
 *Update when major patterns change*

@@ -1,209 +1,112 @@
 # Testing Patterns
 
-**Analysis Date:** 2026-01-11
+**Analysis Date:** 2026-01-12
 
 ## Test Framework
 
-**Status:** ❌ NOT CURRENTLY CONFIGURED
-
 **Runner:**
-- No test framework installed
-- No test configuration files found
-- No test scripts in `frontend/package.json`
+- Not configured - No test framework detected
+- No `vitest.config.*`, `jest.config.*`, or `playwright.config.*` files
 
-**PRD Plans (Phase 4):**
-- Jest + React Testing Library for unit tests
-- Playwright for E2E tests
-- Sentry for error tracking
+**Assertion Library:**
+- Not configured
 
 **Run Commands:**
 ```bash
-# Not yet available - testing infrastructure not implemented
-# Future commands:
-npm test                    # Run all tests
-npm test -- --watch         # Watch mode
-npm run test:coverage       # Coverage report
-npm run test:e2e            # E2E tests
+# No test scripts configured
+npm run lint                    # ESLint only
 ```
 
 ## Test File Organization
 
-**Planned Location:**
-- Co-located `*.test.ts` alongside source files (recommended)
-- Or `__tests__/` directories
+**Location:**
+- No test files present in codebase
+- No `__tests__/` directories
+- No `*.test.ts`, `*.test.tsx`, `*.spec.ts` files
 
-**Planned Naming:**
-- Unit tests: `component-name.test.ts`
-- Integration: `feature-name.integration.test.ts`
-- E2E: `user-flow.e2e.test.ts`
-
-**Planned Structure:**
+**Recommended Pattern (if implemented):**
 ```
 frontend/
   components/
     Header.tsx
-    Header.test.tsx
+    Header.test.tsx          # Co-located unit test
   lib/
     wordpress.ts
-    wordpress.test.ts
-  app/
-    api/
-      contact/
-        route.ts
-        route.test.ts
+    wordpress.test.ts        # Service tests
+  __tests__/
+    integration/             # Integration tests
 ```
 
-## Test Structure
-
-**Recommended Suite Organization:**
-```typescript
-import { describe, it, expect, beforeEach, vi } from 'vitest';
-
-describe('ModuleName', () => {
-  describe('functionName', () => {
-    beforeEach(() => {
-      // reset state
-    });
-
-    it('should handle valid input', () => {
-      // arrange
-      const input = createTestInput();
-
-      // act
-      const result = functionName(input);
-
-      // assert
-      expect(result).toEqual(expectedOutput);
-    });
-
-    it('should throw on invalid input', () => {
-      expect(() => functionName(null)).toThrow('Invalid input');
-    });
-  });
-});
-```
-
-**Patterns (to implement):**
-- Use beforeEach for per-test setup
-- Use afterEach to restore mocks
-- Arrange/act/assert structure
-- One assertion focus per test
-
-## Mocking
-
-**Recommended Framework:**
-- Vitest built-in mocking (vi)
-- Or Jest mocks if using Jest
-
-**Patterns (to implement):**
-```typescript
-import { vi } from 'vitest';
-
-// Mock fetch for WordPress API calls
-vi.mock('./wordpress', () => ({
-  getPosts: vi.fn()
-}));
-
-// Mock module
-vi.mock('next/navigation', () => ({
-  notFound: vi.fn()
-}));
-```
-
-**What to Mock:**
-- WordPress REST API calls (`fetch` in `lib/wordpress.ts`)
-- Next.js navigation (`notFound`, `redirect`)
-- External services (when implemented)
-- Environment variables
-
-**What NOT to Mock:**
-- Pure utility functions (`cn`, `formatDate`)
-- Zod schemas (test actual validation)
-- React component rendering
-
-## Fixtures and Factories
-
-**Recommended Test Data:**
-```typescript
-// Factory pattern for WordPress posts
-function createTestPost(overrides?: Partial<WPPost>): WPPost {
-  return {
-    id: 1,
-    slug: 'test-post',
-    title: { rendered: 'Test Post' },
-    content: { rendered: '<p>Content</p>' },
-    excerpt: { rendered: '<p>Excerpt</p>' },
-    date: '2025-01-01T00:00:00',
-    ...overrides
-  };
-}
-
-// Factory for services
-function createTestService(overrides?: Partial<WPService>): WPService {
-  return {
-    id: 1,
-    slug: 'test-service',
-    title: { rendered: 'Test Service' },
-    acf: {
-      short_description: 'Description',
-      icon: 'icon-name',
-      features: []
-    },
-    ...overrides
-  };
-}
-```
-
-**Location (when implemented):**
-- Factory functions: define in test file near usage
-- Shared fixtures: `frontend/__fixtures__/`
-- Mock API responses: `frontend/__fixtures__/api/`
-
-## Coverage
+## Test Coverage
 
 **Requirements:**
-- Not currently enforced
-- Recommended: 80% for critical paths (lib/, api routes)
+- No coverage target configured
+- No coverage reporting
 
-**When Implemented:**
-```bash
-npm run test:coverage
-open coverage/index.html
-```
+**Opportunities (High Priority):**
+1. WordPress API client (`frontend/lib/wordpress.ts`)
+   - Test `getPosts()`, `getServices()`, `getTestimonials()`
+   - Mock fetch responses
+   - Test error handling
 
-**Focus Areas:**
-- `frontend/lib/wordpress.ts` - API functions
-- `frontend/lib/schemas/contact.ts` - Validation
-- `frontend/app/api/*/route.ts` - API routes
+2. Form validation (`frontend/lib/schemas/contact.ts`)
+   - Zod schema validation
+   - Phone regex patterns
+   - Honeypot field logic
 
-## Test Types
+3. API routes (`frontend/app/api/*/route.ts`)
+   - Request validation
+   - Error responses
+   - Secret verification
 
-**Unit Tests (to implement):**
-- Scope: Test single function/component in isolation
-- Focus:
-  - `lib/wordpress.ts` fetch functions
-  - `lib/schemas/contact.ts` validation
-  - Component prop handling
-- Speed: <100ms per test
+4. YouTube embed parsing (`frontend/components/WordPressContent.tsx`)
+   - 5 regex patterns for different embed formats
+   - Critical: high risk of silent failures
 
-**Integration Tests (to implement):**
-- Scope: Test API routes end-to-end
-- Focus:
-  - `/api/contact` form submission
-  - `/api/revalidate` webhook handling
-  - `/api/preview` draft mode
-- Mock: WordPress API, not internal modules
+## Linting & Code Quality
 
-**E2E Tests (Playwright, to implement):**
+**ESLint Configuration:**
+- Config File: `frontend/eslint.config.mjs`
+- Format: ESM flat config
+- Extends:
+  - `eslint-config-next/core-web-vitals`
+  - `eslint-config-next/typescript`
+- Ignores: `.next/**`, `out/**`, `build/**`
+
+**TypeScript:**
+- Config: `frontend/tsconfig.json`
+- Strict mode: `true`
+- Target: ES2017
+- Path alias: `@/*` → `./*`
+
+**Prettier:**
+- Not configured
+- No `.prettierrc` or `prettier.config.js`
+- Manual formatting
+
+**PHP:**
+- No linting configured
+- No phpcs.xml or phpstan.neon
+- Follows WordPress conventions by practice
+
+## Test Types (Recommended)
+
+**Unit Tests:**
+- Scope: Individual functions in isolation
+- Targets: `lib/wordpress.ts`, `lib/schemas/*.ts`
+- Mocking: Mock fetch for API calls
+
+**Integration Tests:**
+- Scope: Multiple modules together
+- Targets: API routes with database mocks
+- Setup: Test environment variables
+
+**E2E Tests:**
+- Framework: Playwright recommended
 - Scope: Full user flows
-- Focus:
-  - Homepage load and navigation
-  - Blog listing and detail pages
-  - Contact form submission
-  - Mobile menu interaction
-- Location: `frontend/e2e/`
+- Targets: Contact form submission, navigation
 
-## Common Patterns
+## Common Patterns (Recommended)
 
 **Async Testing:**
 ```typescript
@@ -215,50 +118,44 @@ it('should fetch posts', async () => {
 
 **Error Testing:**
 ```typescript
-it('should throw on invalid slug', async () => {
-  await expect(getPost('nonexistent')).rejects.toThrow();
+it('should throw on invalid input', () => {
+  expect(() => contactFormSchema.parse({})).toThrow();
 });
 ```
 
-**Form Validation Testing:**
+**Mocking Fetch:**
 ```typescript
-it('should validate email format', () => {
-  const result = contactFormSchema.safeParse({
-    name: 'Test',
-    email: 'invalid-email',
-    message: 'Hello'
-  });
-  expect(result.success).toBe(false);
-});
+vi.mock('global', () => ({
+  fetch: vi.fn().mockResolvedValue({
+    ok: true,
+    json: () => Promise.resolve(mockData)
+  })
+}));
 ```
 
-**API Route Testing:**
-```typescript
-it('should return 400 for invalid input', async () => {
-  const response = await POST(
-    new Request('http://localhost/api/contact', {
-      method: 'POST',
-      body: JSON.stringify({ invalid: 'data' })
-    })
-  );
-  expect(response.status).toBe(400);
-});
-```
+## Gaps & Recommendations
 
-## Current Validation
+**Critical Gaps:**
+1. No test framework configured
+2. No test coverage for WordPress API integration
+3. No validation of YouTube embed regex patterns
+4. No API route testing
 
-**Existing Validation (not tests, but type safety):**
-- Zod schema validation for contact form: `frontend/lib/schemas/contact.ts`
-- TypeScript strict mode catches type errors at build time
-- ESLint catches code quality issues
+**Recommended Setup:**
+1. Install Vitest: `npm install -D vitest @testing-library/react`
+2. Add test scripts to `package.json`
+3. Create `vitest.config.ts`
+4. Start with `lib/wordpress.ts` tests
+5. Add form validation tests
+6. Add API route tests
 
-**Gaps:**
-- No runtime test execution
-- No regression testing
-- No coverage tracking
-- No E2E verification
+**Priority Order:**
+1. WordPress API client (data integrity)
+2. Form validation (user experience)
+3. YouTube embed parsing (content rendering)
+4. API routes (security)
 
 ---
 
-*Testing analysis: 2026-01-11*
+*Testing analysis: 2026-01-12*
 *Update when test patterns change*

@@ -1,187 +1,171 @@
 # Coding Conventions
 
-**Analysis Date:** 2026-01-11
+**Analysis Date:** 2026-01-12
 
 ## Naming Patterns
 
 **Files:**
-- PascalCase for React components: `Header.tsx`, `BlogCard.tsx`, `ContactForm.tsx`
-- kebab-case for utility modules: `wordpress.ts`, `logger.ts`, `utils.ts`
-- Lowercase for shadcn/ui primitives: `button.tsx`, `card.tsx`, `dialog.tsx`
-- `page.tsx`, `route.ts` for Next.js conventions
+- `PascalCase.tsx` - React components (`Header.tsx`, `ContactForm.tsx`, `Hero.tsx`)
+- `kebab-case` directories - Page routes (`app/blog/[slug]/page.tsx`)
+- `camelCase.ts` - Utilities and services (`wordpress.ts`, `logger.ts`, `utils.ts`)
+- `index.ts` - Barrel exports (`components/storybrand/index.ts`)
 
 **Functions:**
-- camelCase for all functions: `getPosts()`, `getService()`, `formatDate()`
+- camelCase for all functions (`getPosts`, `getServices`, `fetchAPI`)
 - No special prefix for async functions
-- `handle*` for event handlers: `handleSubmit`, `handleClick`
+- `handle*` for event handlers (`handleSubmit`)
+- `use*` for React hooks (standard convention)
 
 **Variables:**
-- camelCase for variables: `headerRef`, `currentYear`, `validatedData`
-- Boolean prefix conventions: `isOpen`, `isSubmitting`, `isDev`
-- UPPER_SNAKE_CASE for constants: `STARTER_THEME_VERSION` (PHP)
-- camelCase for config objects: `budgetOptions`, `timelineOptions`, `navItems`
+- camelCase for variables and function parameters
+- SCREAMING_SNAKE_CASE for PHP constants (`STARTER_THEME_VERSION`)
+- No underscore prefix for private members
 
 **Types:**
-- PascalCase for interfaces: `HeroProps`, `ContactFormProps`, `WPPost`
-- `WP` prefix for WordPress content types: `WPPost`, `WPService`, `WPTestimonial`
-- `ACF` prefix for ACF field types: `ServiceACF`, `TestimonialACF`
-- Type inference via Zod: `export type ContactFormValues = z.infer<typeof contactFormSchema>`
+- PascalCase for interfaces and types (`WPPost`, `WPService`, `ContactFormValues`)
+- `WP` prefix for WordPress-related interfaces
+- `*Props` suffix for component props (`HeroProps`, `ContactFormProps`)
 
 ## Code Style
 
-**Formatting:**
-- 2-space indentation
-- Double quotes for strings in JSX and TypeScript
+**Formatting (TypeScript/React):**
+- 2 space indentation
+- Double quotes for strings and JSX attributes
+- Semicolons present
+- ~100 character line length
+- No Prettier configured (manual formatting)
+
+**Formatting (PHP):**
+- 4 space indentation (WordPress standard)
+- Single quotes for array keys
 - Semicolons required
-- No trailing commas in function parameters
+- PSR-2 compatible style
 
 **Linting:**
-- ESLint with modern flat config: `frontend/eslint.config.mjs`
-- Extends: `eslint-config-next/core-web-vitals`, `eslint-config-next/typescript`
-- Global ignores: `.next/`, `out/`, `build/`, `next-env.d.ts`
+- ESLint with flat config (`frontend/eslint.config.mjs`)
+- Extends `eslint-config-next/core-web-vitals`
+- Extends `eslint-config-next/typescript`
 - Run: `npm run lint`
-
-**CRITICAL:** Never use inline styles. Always use Tailwind classes or global CSS.
-- Per CLAUDE.md: "Never, ever use inline styles; always use the global style sheet."
 
 ## Import Organization
 
 **Order:**
-1. External packages: `import { z } from "zod"`
-2. Next.js imports: `import type { Metadata } from "next"`
-3. Internal modules via path alias: `import { cn } from "@/lib/utils"`
-4. Relative imports: `import { Button } from "./button"`
+1. React and Next.js imports (`"react"`, `"next/link"`)
+2. External packages (`"zod"`, `"lucide-react"`)
+3. Internal modules (`"@/components/ui/button"`)
+4. Relative imports (`"./utils"`)
+5. Type imports (`import type { ... }`)
 
 **Grouping:**
 - Blank line between groups
-- Type imports mixed with regular imports
+- Related imports grouped together
 
 **Path Aliases:**
-- `@/*` maps to `frontend/` root - `frontend/tsconfig.json`
-- Example: `@/components/Header`, `@/lib/wordpress`, `@/lib/utils`
+- `@/*` maps to `frontend/*` (configured in `tsconfig.json`)
+- Example: `import { Button } from "@/components/ui/button"`
 
 ## Error Handling
 
 **Patterns:**
-- API routes: try/catch with NextResponse error returns
-- Page components: `notFound()` for missing content
-- Form validation: Zod schemas with error messages
+- Try/catch at API boundaries
+- Graceful degradation with fallback UI
+- Toast notifications for user errors via Sonner
 
 **Error Types:**
-- Throw on validation failure, API errors
-- Return structured error responses from API routes
-- Log errors with context via `frontend/lib/logger.ts`
+- Throw on validation failures
+- Return JSON error responses from API routes
+- Log errors with context in development
 
-**API Route Pattern:**
-```typescript
-try {
-  const validatedData = schema.safeParse(body);
-  if (!validatedData.success) {
-    return NextResponse.json({ error: "Validation failed" }, { status: 400 });
-  }
-  // ... logic
-  return NextResponse.json({ success: true });
-} catch (error) {
-  console.error("Error:", error);
-  return NextResponse.json({ error: "Internal error" }, { status: 500 });
-}
-```
+**Logging:**
+- `console.error()` for errors
+- Custom `logger.ts` for structured logging
+- WordPress `error_log()` for PHP errors
 
 ## Logging
 
 **Framework:**
-- Custom logger abstraction: `frontend/lib/logger.ts`
-- Levels: debug, info, warn, error
+- `frontend/lib/logger.ts` - Custom logger utility
+- Console-based (no external service)
+- Levels: info, warn, error, debug
 
 **Patterns:**
-- Development: Verbose (debug, info, warn, error)
-- Production: Minimal (warn, error only)
-- Structured format: `[timestamp] [LEVEL] message {context}`
-
-**Usage:**
-```typescript
-logger.debug("Fetching posts", { count: 10 });
-logger.error("API failed", error, { endpoint: "/posts" });
-```
+- Log at service boundaries
+- Include context in error logs
+- No console.log in production (ESLint rule)
 
 ## Comments
 
 **When to Comment:**
 - Explain why, not what
 - Document business logic and edge cases
-- Section dividers in large files
-
-**Section Comments (used in page.tsx):**
-```typescript
-/* ============================================
-   SECTION 1: HERO
-   Pass the "grunt test"
-   ============================================ */
-```
+- Complex regex patterns (see `WordPressContent.tsx`)
 
 **JSDoc/TSDoc:**
-- Required for exported functions in lib/
-- Optional for component props (interface is self-documenting)
-- Use `@param`, `@returns` tags
+- Used for exported functions and components
+- Include `@param`, `@returns` tags
+- Example in `frontend/lib/wordpress.ts`
 
 **TODO Comments:**
 - Format: `// TODO: description`
-- Example: `// TODO: Integrate with error tracking service`
+- Link to issue if exists
+- Present in `logger.ts`, `contact/route.ts`
+
+**Section Markers:**
+- HTML comments for visual separation in TSX
+- Example: `{/* ============================================ SECTION 1: HERO */}`
 
 ## Function Design
 
 **Size:**
-- Keep functions focused and readable
+- Keep under 50 lines
 - Extract helpers for complex logic
+- Large files exist but should be refactored
 
 **Parameters:**
-- Use object destructuring for multiple props
-- Default values in destructuring: `{ size = "default" }: HeroProps`
+- Max 3 positional parameters
+- Use options object for more
+- Destructure in parameter list
 
 **Return Values:**
 - Explicit return statements
 - Return early for guard clauses
-- Use `notFound()` for missing content in pages
+- TypeScript return types on public functions
 
 ## Module Design
 
 **Exports:**
-- Named exports preferred: `export function Hero()`
-- Default exports only for page components (Next.js convention)
+- Named exports preferred
+- Default exports for React components (optional)
+- Barrel files for public API (`index.ts`)
 
-**Component Pattern:**
-```typescript
-interface ComponentProps {
-  title: string;
-  subtitle?: string;
-  size?: "default" | "large" | "small";
-}
+**Barrel Files:**
+- `frontend/components/storybrand/index.ts`
+- `frontend/lib/schemas/index.ts`
+- Re-export public API only
 
-export function Component({ title, subtitle, size = "default" }: ComponentProps) {
-  return (/* JSX */);
-}
-```
+**Component Patterns:**
+- "use client" directive for client components
+- Server components by default (Next.js 13+)
+- Props interface above component definition
 
-**Server vs Client Components:**
-- Server components by default (no directive)
-- Client components explicitly marked: `"use client";` at file top
-- Client components: Forms, interactive UI, browser APIs
+## WordPress Conventions
 
-## Styling Approach
+**PHP Functions:**
+- snake_case with theme prefix (`starter_theme_*`)
+- Hook callbacks follow action/filter name
+- DocBlocks with `@param`, `@return`
 
-**Tailwind CSS:**
-- Utility classes only, no inline styles
-- `cn()` helper for conditional classes: `cn("base-class", isActive && "active-class")`
-- CSS variables in `globals.css` for theme values
+**Hooks:**
+- `add_action()` and `add_filter()` patterns
+- Priority 10 default, explicit when needed
+- Callback function defined before hook registration
 
-**Component Variants:**
-- Use `class-variance-authority` (CVA) for variants
-- Example in shadcn/ui components
-
-**Responsive:**
-- Mobile-first with Tailwind breakpoints: `sm:`, `md:`, `lg:`
+**REST API:**
+- `register_rest_field()` for custom fields
+- `rest_api_init` hook for registration
+- JSON responses via WordPress functions
 
 ---
 
-*Convention analysis: 2026-01-11*
+*Convention analysis: 2026-01-12*
 *Update when patterns change*

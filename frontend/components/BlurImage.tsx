@@ -41,6 +41,7 @@ export function BlurImage({
         className={className}
         placeholder="blur"
         blurDataURL={blurDataURL}
+        unoptimized
       />
     );
   }
@@ -53,6 +54,7 @@ export function BlurImage({
         {...props}
         priority={priority}
         className={className}
+        unoptimized
       />
     );
   }
@@ -63,6 +65,7 @@ export function BlurImage({
       {...props}
       className={`blur-image ${isLoaded ? 'blur-image--loaded' : ''} ${className}`}
       onLoad={handleLoad}
+      unoptimized
     />
   );
 }
