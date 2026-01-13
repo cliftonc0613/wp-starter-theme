@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 import bundleAnalyzer from '@next/bundle-analyzer';
 import { withSentryConfig } from '@sentry/nextjs';
-import withPWAInit from "@ducanh2912/next-pwa";
+import withSerwist from "@serwist/next";
 
 const withBundleAnalyzer = bundleAnalyzer({
   enabled: process.env.ANALYZE === 'true',
@@ -9,89 +9,20 @@ const withBundleAnalyzer = bundleAnalyzer({
 
 const isDev = process.env.NODE_ENV === 'development';
 
-const withPWA = withPWAInit({
-  dest: "public",
+/**
+ * Serwist PWA configuration
+ * Replaces @ducanh2912/next-pwa which is incompatible with Next.js 16 Turbopack
+ *
+ * Key differences from @ducanh2912/next-pwa:
+ * - Uses a dedicated sw.ts file in app/ directory
+ * - Works with both webpack and Turbopack
+ * - Service worker is generated at build time
+ */
+const withPWA = withSerwist({
+  swSrc: "app/sw.ts",
+  swDest: "public/sw.js",
   disable: isDev,
-  register: true,
   reloadOnOnline: true,
-  cacheOnFrontEndNav: true,
-  aggressiveFrontEndNavCaching: true,
-  fallbacks: {
-    document: "/offline",
-  },
-  workboxOptions: {
-    disableDevLogs: true,
-    skipWaiting: true,
-    runtimeCaching: [
-      {
-        urlPattern: /^https:\/\/fonts\.(?:gstatic|googleapis)\.com\/.*/i,
-        handler: "CacheFirst",
-        options: {
-          cacheName: "google-fonts",
-          expiration: {
-            maxEntries: 10,
-            maxAgeSeconds: 365 * 24 * 60 * 60,
-          },
-        },
-      },
-      {
-        urlPattern: /\.(?:eot|otf|ttc|ttf|woff|woff2|font\.css)$/i,
-        handler: "StaleWhileRevalidate",
-        options: {
-          cacheName: "static-fonts",
-          expiration: {
-            maxEntries: 10,
-            maxAgeSeconds: 365 * 24 * 60 * 60,
-          },
-        },
-      },
-      {
-        urlPattern: /\.(?:jpg|jpeg|gif|png|svg|ico|webp)$/i,
-        handler: "StaleWhileRevalidate",
-        options: {
-          cacheName: "static-images",
-          expiration: {
-            maxEntries: 64,
-            maxAgeSeconds: 30 * 24 * 60 * 60,
-          },
-        },
-      },
-      {
-        urlPattern: /\.(?:js|css)$/i,
-        handler: "StaleWhileRevalidate",
-        options: {
-          cacheName: "static-assets",
-          expiration: {
-            maxEntries: 32,
-            maxAgeSeconds: 24 * 60 * 60,
-          },
-        },
-      },
-      {
-        urlPattern: /^https:\/\/.*\.(?:wpstarter\.mysites\.io|websiteplayground\.local)\/wp-json\/.*/i,
-        handler: "NetworkFirst",
-        options: {
-          cacheName: "wordpress-api",
-          expiration: {
-            maxEntries: 32,
-            maxAgeSeconds: 60 * 60,
-          },
-          networkTimeoutSeconds: 10,
-        },
-      },
-      {
-        urlPattern: /^https:\/\/.*\/wp-content\/uploads\/.*/i,
-        handler: "CacheFirst",
-        options: {
-          cacheName: "wordpress-uploads",
-          expiration: {
-            maxEntries: 64,
-            maxAgeSeconds: 30 * 24 * 60 * 60,
-          },
-        },
-      },
-    ],
-  },
 });
 
 // Check if we're using a local WordPress (resolves to loopback IP)
