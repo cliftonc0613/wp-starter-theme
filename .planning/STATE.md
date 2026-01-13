@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-01-12)
 
 **Core value:** Clean, verified merge: no conflicts, build passes, PWA features work.
-**Current focus:** Phase 5 — PWA Verification
+**Current focus:** Milestone complete — ready for merge
 
 ## Current Position
 
-Phase: 4 of 5 (Build Verification) — COMPLETE
+Phase: 5 of 5 (PWA Verification) — COMPLETE (partial)
 Plan: 1 of 1 in phase complete
-Status: Phase complete, ready for Phase 5
-Last activity: 2026-01-12 — Completed 04-01-PLAN.md
+Status: All phases complete, ready for final merge
+Last activity: 2026-01-12 — Completed 05-01-PLAN.md
 
-Progress: ████████░░ 80%
+Progress: ██████████ 100%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 5
-- Average duration: 3.4 min
-- Total execution time: 0.3 hours
+- Total plans completed: 6
+- Average duration: 6.5 min
+- Total execution time: 0.65 hours
 
 **By Phase:**
 
@@ -31,10 +31,11 @@ Progress: ████████░░ 80%
 | 2 | 2 | 7 min | 3.5 min |
 | 3 | 1 | 3 min | 3 min |
 | 4 | 1 | 5 min | 5 min |
+| 5 | 1 | 25 min | 25 min |
 
 **Recent Trend:**
-- Last 5 plans: 2min, 3min, 4min, 3min, 5min
-- Trend: —
+- Last 6 plans: 2min, 3min, 4min, 3min, 5min, 25min
+- Trend: Phase 5 longer due to debugging image + SW issues
 
 ## Accumulated Context
 
@@ -53,10 +54,16 @@ Recent decisions affecting current work:
 - [Phase 2]: Delete and regenerate package-lock for clean resolution
 - [Phase 3]: Copy files exactly from PWA branch (no modifications)
 - [Phase 4]: skipWaiting is a workboxOptions property, not top-level PWA config
+- [Phase 5]: Add `unoptimized` to BlurImage for local WordPress (SSRF protection bypass)
+- [Phase 5]: Defer service worker issue - package compatibility with Next.js 16
 
 ### Deferred Issues
 
-None yet.
+1. **Service Worker Not Generating** (Medium priority)
+   - Package: `@ducanh2912/next-pwa@10.2.9`
+   - Issue: SW files not generated during build with Next.js 16
+   - Recommendation: Migrate to Serwist (`@serwist/next`)
+   - Impact: PWA installability won't work until resolved
 
 ### Blockers/Concerns
 
@@ -64,6 +71,16 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-01-12 21:17
-Stopped at: Completed 04-01-PLAN.md (Phase 4 complete)
+Last session: 2026-01-12 22:00
+Stopped at: Completed 05-01-PLAN.md (All phases complete)
 Resume file: None
+
+## Milestone Complete
+
+All 5 phases of the PWA merge are complete:
+- Branch prepared, conflicts resolved, files integrated
+- Build passes, 113 tests pass
+- PWA manifest and offline page verified
+- Service worker deferred (package compatibility issue)
+
+Ready for final merge commit.

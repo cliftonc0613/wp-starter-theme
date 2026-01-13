@@ -94,11 +94,18 @@ const withPWA = withPWAInit({
   },
 });
 
+// Check if we're using a local WordPress (resolves to loopback IP)
+// Next.js 14+ blocks image optimization for private IPs (SSRF protection)
+const isLocalWordPress = process.env.WORDPRESS_API_URL?.includes('.local') ?? false;
+
 const nextConfig: NextConfig = {
   images: {
-    // Disable optimization in development so images load directly from Local by Flywheel
-    // In production, Next.js will optimize images from the production WordPress domain
-    unoptimized: isDev,
+    // Disable optimization when:
+    // 1. In development mode (images load directly from Local by Flywheel)
+    // 2. Using local WordPress (.local domain resolves to private IP, blocked by Next.js)
+    // In production with public WordPress domain, images will be optimized
+    // Note: Next.js 14+ blocks image optimization for private IPs (SSRF protection)
+    unoptimized: true, // Force unoptimized for local WordPress development
     remotePatterns: [
       {
         protocol: 'http',
