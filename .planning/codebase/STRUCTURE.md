@@ -1,193 +1,161 @@
 # Codebase Structure
 
-**Analysis Date:** 2026-01-11
+**Analysis Date:** 2026-01-12
 
 ## Directory Layout
 
 ```
 mytheme/
-├── .claude/                # Claude Code automation
-│   ├── agents/            # AI agent configurations
-│   ├── commands/          # Custom slash commands
-│   └── skills/            # Specialized skills
-├── .planning/             # Project planning documents
-│   └── codebase/          # Codebase analysis (this file)
-├── acf-json/              # ACF field group exports
-├── context/               # Business/brand documentation
-│   └── core/              # Core profiles (JSON)
-├── docs/                  # Project documentation
-├── frontend/              # Next.js application
-│   ├── app/              # App Router pages and routes
-│   ├── components/       # React components
-│   ├── lib/              # Utility libraries
-│   ├── public/           # Static assets
-│   └── types/            # TypeScript definitions
-├── knowledge/             # Content drafts and research
-├── functions.php          # WordPress theme setup
-├── index.php              # Headless placeholder
-├── style.css              # Theme metadata
-└── CLAUDE.md              # Project instructions
+├── frontend/                    # Next.js application
+│   ├── app/                     # App Router (pages, API routes)
+│   ├── components/              # React components
+│   ├── lib/                     # Utilities and services
+│   ├── types/                   # TypeScript definitions
+│   ├── public/                  # Static assets
+│   ├── scripts/                 # Build scripts
+│   └── .next/                   # Build output (generated)
+├── acf-json/                    # ACF field definitions
+├── docs/                        # Project documentation
+├── .claude/                     # Claude Code configuration
+├── .planning/                   # GSD planning files
+├── context/                     # Business context
+├── knowledge/                   # Research and notes
+├── tasks/                       # Phase tracking
+├── functions.php                # WordPress theme setup
+├── index.php                    # WordPress fallback
+├── style.css                    # Theme metadata
+└── CLAUDE.md                    # AI instructions
 ```
 
 ## Directory Purposes
 
-**frontend/app/**
-- Purpose: Next.js App Router pages, API routes, global styles
-- Contains: `page.tsx`, `layout.tsx`, `route.ts` files
-- Key files:
-  - `layout.tsx` - Root layout with Header/Footer
-  - `page.tsx` - Homepage with StoryBrand sections
-  - `globals.css` - Tailwind config and CSS variables
-  - `sitemap.ts`, `robots.ts` - SEO files
-- Subdirectories:
-  - `api/` - API routes (contact, preview, revalidate)
-  - `blog/` - Blog listing and `[slug]` detail
-  - `services/` - Services listing and `[slug]` detail
-  - `[slug]/` - Dynamic page routes
+**frontend/app/:**
+- Purpose: Next.js App Router pages and API routes
+- Contains: `page.tsx` files, `layout.tsx`, `route.ts` API handlers
+- Key files: `page.tsx` (home), `layout.tsx` (root), `globals.css` (styles)
+- Subdirectories: `blog/`, `services/`, `contact/`, `api/`, `offline/`
 
-**frontend/components/**
+**frontend/components/:**
 - Purpose: Reusable React components
-- Contains: `.tsx` component files (14 total)
-- Key files:
-  - `Header.tsx` - Navigation with Headroom.js
-  - `Footer.tsx` - Site footer
-  - `ContactForm.tsx` - Contact form with validation
-  - `BlogCard.tsx`, `ServiceCard.tsx`, `TestimonialCard.tsx`
-  - `YouTubePlayer.tsx` - Video.js YouTube integration
-- Subdirectories:
-  - `ui/` - shadcn/ui primitive components
-  - `storybrand/` - StoryBrand framework sections
+- Contains: Page components, UI primitives, StoryBrand sections
+- Key files: `Header.tsx`, `Footer.tsx`, `ContactForm.tsx`
+- Subdirectories: `ui/` (shadcn), `storybrand/` (marketing sections)
 
-**frontend/lib/**
-- Purpose: Utility libraries and services
-- Contains: TypeScript modules
-- Key files:
-  - `wordpress.ts` - API client (575 lines)
-  - `utils.ts` - Utility functions (cn helper)
-  - `logger.ts` - Logging abstraction
-- Subdirectories:
-  - `schemas/` - Zod validation schemas (`contact.ts`)
+**frontend/lib/:**
+- Purpose: Utilities, services, and shared logic
+- Contains: WordPress API client, validation schemas, utilities
+- Key files: `wordpress.ts` (API client), `utils.ts` (cn helper), `logger.ts`
+- Subdirectories: `schemas/` (Zod schemas)
 
-**acf-json/**
-- Purpose: ACF field group exports (version controlled)
-- Contains: JSON field group definitions
-- Key files:
-  - `group_services_fields.json`
-  - `group_testimonials_fields.json`
+**frontend/public/:**
+- Purpose: Static assets served directly
+- Contains: PWA manifest, icons, images
+- Key files: `manifest.json`, `icons/*.png`
+- Subdirectories: `icons/` (PWA icons)
 
-**context/core/**
-- Purpose: Business and brand documentation for AI
-- Contains: JSON profile files
-- Key files:
-  - `business-profile.json`
-  - `voice-dna.json`
-  - `icp.json` (Ideal Client Profile)
-
-**docs/**
-- Purpose: Project documentation
-- Contains: Markdown documentation files
-- Key files:
-  - `PRD-headless-theme-enhancements.md` - Enhancement roadmap
+**acf-json/:**
+- Purpose: ACF field definitions (version controlled)
+- Contains: JSON field group exports
+- Key files: Service and testimonial field groups
 
 ## Key File Locations
 
 **Entry Points:**
-- `functions.php` - WordPress theme setup, REST API customization
-- `frontend/app/layout.tsx` - Next.js root layout
-- `frontend/app/page.tsx` - Homepage
+- `frontend/app/page.tsx` - Homepage (StoryBrand layout)
+- `frontend/app/layout.tsx` - Root layout with metadata
+- `functions.php` - WordPress theme initialization
 
 **Configuration:**
-- `frontend/next.config.ts` - Next.js config (images, env vars)
-- `frontend/tsconfig.json` - TypeScript config
-- `frontend/postcss.config.mjs` - Tailwind CSS 4
-- `frontend/components.json` - shadcn/ui config
-- `frontend/.env.local` - Development environment (gitignored)
-- `frontend/.env.production.example` - Production template
+- `frontend/next.config.ts` - Next.js + PWA configuration
+- `frontend/tsconfig.json` - TypeScript settings
+- `frontend/components.json` - shadcn/ui configuration
+- `frontend/.env.local` - Environment variables (development)
 
 **Core Logic:**
-- `frontend/lib/wordpress.ts` - WordPress API client
+- `frontend/lib/wordpress.ts` - WordPress REST API client (575 lines)
 - `frontend/lib/schemas/contact.ts` - Contact form validation
-- `frontend/app/api/revalidate/route.ts` - ISR webhook
-- `frontend/app/api/preview/route.ts` - Draft mode handler
-- `frontend/app/api/contact/route.ts` - Contact form API
+- `functions.php` - Custom post types, REST fields, hooks
+
+**API Routes:**
+- `frontend/app/api/contact/route.ts` - Form submission
+- `frontend/app/api/preview/route.ts` - Draft preview
+- `frontend/app/api/revalidate/route.ts` - Cache invalidation
 
 **Testing:**
-- Not currently configured
-- Planned: `frontend/__tests__/` or co-located `*.test.ts`
+- Not configured (no test files present)
 
 **Documentation:**
-- `CLAUDE.md` - Project instructions for Claude Code
-- `docs/` - Technical documentation
+- `docs/PRD-headless-theme-enhancements.md` - Product requirements
+- `docs/merge-pwa-into-develop.md` - PWA merge guide
+- `CLAUDE.md` - AI assistant instructions
 
 ## Naming Conventions
 
 **Files:**
-- `PascalCase.tsx` - React components (`Header.tsx`, `BlogCard.tsx`)
-- `kebab-case.ts` - Utility modules (`wordpress.ts`, `logger.ts`)
-- `page.tsx` - Next.js page files (App Router convention)
-- `route.ts` - Next.js API route files
-- `*.json` - Configuration and data files
+- `PascalCase.tsx` - React components (`Header.tsx`, `ContactForm.tsx`)
+- `kebab-case/page.tsx` - Page routes (`blog/[slug]/page.tsx`)
+- `camelCase.ts` - Utility files (`wordpress.ts`, `logger.ts`)
+- `snake_case.php` - WordPress files (`functions.php`)
 
 **Directories:**
 - `kebab-case` - All directories (`storybrand/`, `acf-json/`)
-- `[param]` - Dynamic route parameters (`[slug]/`)
+- Plural for collections (`components/`, `schemas/`)
 
 **Special Patterns:**
-- `globals.css` - Global styles in app directory
-- `components.json` - shadcn/ui configuration
-- `UPPERCASE.md` - Important project files (CLAUDE.md, README.md)
+- `page.tsx` - Next.js page component
+- `layout.tsx` - Next.js layout component
+- `route.ts` - Next.js API route handler
+- `*.d.ts` - TypeScript declarations
+- `[slug]` - Dynamic route parameter
 
 ## Where to Add New Code
 
-**New Feature:**
-- Primary code: `frontend/app/[route]/page.tsx` for pages
-- Components: `frontend/components/[Component].tsx`
-- Utilities: `frontend/lib/[module].ts`
-- Tests: Co-located as `*.test.ts` (when implemented)
+**New Page:**
+- Implementation: `frontend/app/[page-name]/page.tsx`
+- Metadata: Export `metadata` object in same file
+- Data fetching: Use `frontend/lib/wordpress.ts` functions
 
 **New Component:**
-- UI primitives: `frontend/components/ui/`
-- Feature components: `frontend/components/`
-- StoryBrand sections: `frontend/components/storybrand/`
-- Types: Inline interface in component file
+- UI primitive: `frontend/components/ui/[name].tsx`
+- Page component: `frontend/components/[Name].tsx`
+- StoryBrand section: `frontend/components/storybrand/[Name].tsx`
 
 **New API Route:**
-- Definition: `frontend/app/api/[name]/route.ts`
-- Validation: `frontend/lib/schemas/[name].ts`
+- Implementation: `frontend/app/api/[endpoint]/route.ts`
+- Export: `POST`, `GET`, etc. async functions
 
-**New WordPress Feature:**
-- Custom post type: Add to `functions.php`
-- ACF fields: Export to `acf-json/`
-- REST API customization: `functions.php`
+**New Custom Post Type:**
+- Registration: `functions.php` (follow Services/Testimonials pattern)
+- API client: Add functions in `frontend/lib/wordpress.ts`
+- TypeScript: Add interface in `frontend/lib/wordpress.ts`
 
-**Utilities:**
-- Shared helpers: `frontend/lib/utils.ts`
-- Type definitions: `frontend/types/`
-- Validation schemas: `frontend/lib/schemas/`
+**New Validation Schema:**
+- Implementation: `frontend/lib/schemas/[name].ts`
+- Export: Re-export from `frontend/lib/schemas/index.ts`
 
 ## Special Directories
 
-**.planning/**
-- Purpose: Project planning documents (GSD workflow)
-- Source: Generated by Claude Code commands
-- Committed: Yes
-
-**acf-json/**
-- Purpose: ACF field group sync (version controlled)
-- Source: Exported from WordPress ACF plugin
-- Committed: Yes (enables field group versioning)
-
-**frontend/node_modules/**
-- Purpose: npm dependencies
-- Source: Generated by `npm install`
-- Committed: No (in .gitignore)
-
-**frontend/.next/**
+**.next/:**
 - Purpose: Next.js build output
-- Source: Generated by `npm run build`
-- Committed: No (in .gitignore)
+- Source: Auto-generated by `npm run build`
+- Committed: No (in `.gitignore`)
+
+**node_modules/:**
+- Purpose: npm dependencies
+- Source: Auto-generated by `npm install`
+- Committed: No (in `.gitignore`)
+
+**acf-json/:**
+- Purpose: ACF field definitions
+- Source: Auto-synced by ACF plugin
+- Committed: Yes (version control for fields)
+
+**.planning/:**
+- Purpose: GSD planning documentation
+- Source: Created by Claude during planning
+- Committed: Yes (project context)
 
 ---
 
-*Structure analysis: 2026-01-11*
+*Structure analysis: 2026-01-12*
 *Update when directory structure changes*
