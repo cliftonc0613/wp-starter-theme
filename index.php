@@ -102,76 +102,176 @@ get_header();
     </div>
 </main>
 
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+
 <style>
-    .headless-notice {
-        max-width: 800px;
-        margin: 4rem auto;
+    :root {
+        /* Dark mode colors matching Next.js frontend */
+        --background: oklch(0.145 0 0);
+        --foreground: oklch(0.985 0 0);
+        --card: oklch(0.205 0 0);
+        --card-foreground: oklch(0.985 0 0);
+        --muted: oklch(0.269 0 0);
+        --muted-foreground: oklch(0.708 0 0);
+        --border: oklch(1 0 0 / 10%);
+        --primary: oklch(0.922 0 0);
+        --primary-foreground: oklch(0.205 0 0);
+        --radius: 0.625rem;
+
+        /* Typography */
+        --font-sans: 'DM Sans', system-ui, sans-serif;
+        --font-heading: 'Playfair Display', Georgia, serif;
+        --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+        background: var(--background);
+        color: var(--foreground);
+        font-family: var(--font-sans);
+        line-height: 1.6;
+        min-height: 100vh;
+    }
+
+    .site-main {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
         padding: 2rem;
-        font-family: var(--font-primary, -apple-system, BlinkMacSystemFont, sans-serif);
-        background: var(--color-surface, #1a1a2e);
-        color: var(--color-text, #edf2f4);
-        border-radius: 1rem;
     }
+
+    .headless-notice {
+        max-width: 720px;
+        width: 100%;
+        padding: 3rem;
+        background: var(--card);
+        color: var(--card-foreground);
+        border-radius: calc(var(--radius) + 8px);
+        border: 1px solid var(--border);
+    }
+
     .site-logo {
-        margin-bottom: 1.5rem;
+        margin-bottom: 2rem;
     }
+
     .logo-image {
-        max-width: 200px;
-        max-height: 80px;
+        max-width: 180px;
+        max-height: 60px;
         width: auto;
         height: auto;
+        filter: brightness(0) invert(1);
     }
+
     .headless-notice h1 {
-        font-family: var(--font-heading, Georgia, serif);
-        margin-bottom: 1rem;
+        font-family: var(--font-heading);
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin: 0 0 1.5rem 0;
+        letter-spacing: -0.02em;
+        line-height: 1.2;
     }
+
     .headless-notice h2 {
+        font-family: var(--font-heading);
         font-size: 1.25rem;
-        margin: 1.5rem 0 1rem;
+        font-weight: 600;
+        margin: 2rem 0 1rem;
+        letter-spacing: -0.01em;
     }
-    .headless-notice p,
-    .intro-content {
-        color: var(--color-text-muted, #8d99ae);
-        line-height: 1.6;
-    }
+
+    .intro-content,
     .intro-content p {
-        margin-bottom: 1rem;
+        color: var(--muted-foreground);
+        font-size: 1.0625rem;
+        line-height: 1.7;
+        margin-bottom: 1.5rem;
     }
+
     .headless-notice hr {
         border: none;
-        border-top: 1px solid var(--color-border, #2b2d42);
-        margin: 2rem 0;
+        border-top: 1px solid var(--border);
+        margin: 2.5rem 0;
     }
+
     .headless-notice code {
-        background: var(--color-background, #0f0f1a);
+        background: var(--muted);
+        color: var(--foreground);
         padding: 0.25rem 0.5rem;
-        border-radius: 0.25rem;
-        font-family: var(--font-mono, monospace);
-        font-size: 0.875rem;
+        border-radius: calc(var(--radius) - 4px);
+        font-family: var(--font-mono);
+        font-size: 0.8125rem;
+        font-weight: 500;
     }
+
     .api-endpoints {
         list-style: none;
         padding: 0;
+        margin: 0;
     }
+
     .api-endpoints li {
-        padding: 0.5rem 0;
-        border-bottom: 1px solid var(--color-border, #2b2d42);
+        padding: 0.875rem 0;
+        border-bottom: 1px solid var(--border);
+        color: var(--muted-foreground);
+        font-size: 0.9375rem;
     }
+
+    .api-endpoints li:last-child {
+        border-bottom: none;
+    }
+
     .frontend-link {
-        display: inline-block;
-        background: var(--color-accent, #e94560);
-        color: white !important;
-        padding: 0.75rem 1.5rem;
-        border-radius: 0.5rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: var(--primary);
+        color: var(--primary-foreground) !important;
+        padding: 0.875rem 1.75rem;
+        border-radius: var(--radius);
         text-decoration: none;
         font-weight: 600;
-        transition: background 0.2s ease;
+        font-size: 0.9375rem;
+        transition: opacity 0.2s ease, transform 0.2s ease;
     }
+
     .frontend-link:hover {
-        background: var(--color-accent-hover, #ff6b6b);
+        opacity: 0.9;
+        transform: translateY(-1px);
     }
+
+    .admin-link {
+        margin-top: 2rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid var(--border);
+    }
+
     .admin-link a {
-        color: var(--color-accent, #e94560);
+        color: var(--muted-foreground);
+        text-decoration: none;
+        font-size: 0.875rem;
+        transition: color 0.2s ease;
+    }
+
+    .admin-link a:hover {
+        color: var(--foreground);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 640px) {
+        .headless-notice {
+            padding: 2rem;
+        }
+        .headless-notice h1 {
+            font-size: 1.875rem;
+        }
     }
 </style>
 
