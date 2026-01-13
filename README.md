@@ -14,6 +14,44 @@ A modern WordPress starter theme with a headless Next.js frontend, featuring Sto
 - **shadcn/ui Components** - Beautiful, accessible React components
 - **WordPress Integration** - Headless CMS with REST API content fetching
 - **Tailwind CSS 4** - Modern utility-first styling
+- **Progressive Web App** - Installable PWA with offline support via Serwist
+
+---
+
+## PWA Assets
+
+### Generate Icons
+
+Replace the source icon and regenerate all sizes:
+
+```bash
+cd frontend
+
+# Place your 512x512 source icon at public/icons/icon-512x512.png
+npm run generate-icons
+```
+
+This creates all required PWA icon sizes (72x72 to 512x512) plus maskable variants.
+
+### Generate Screenshots
+
+Capture PWA install screenshots from your running app:
+
+```bash
+cd frontend
+
+# Start dev server first
+npm run dev
+
+# In another terminal, generate screenshots
+npm run generate-screenshots
+```
+
+This creates:
+- `frontend/public/screenshots/desktop.png` (1280×720)
+- `frontend/public/screenshots/mobile.png` (750×1334)
+
+**Note:** The dev server must be running on `localhost:3000` for screenshot generation.
 
 ---
 
