@@ -1,188 +1,144 @@
 # Codebase Concerns
 
-**Analysis Date:** 2026-01-11
+**Analysis Date:** 2026-01-12
 
 ## Tech Debt
 
-**Inline Styles Violating Project Guidelines:**
-- Issue: Components use inline `style={{}}` objects instead of Tailwind classes
-- Files: `frontend/components/YouTubePlayer.tsx` (lines 130-135, 144-147)
-- Why: Quick implementation during development
-- Impact: Violates CLAUDE.md guidelines, harder to maintain, bypasses theme system
-- Fix approach: Convert to Tailwind utilities or CSS classes in `globals.css`
+**Contact Form Email Not Implemented:**
+- Issue: Form submissions accepted but never sent anywhere
+- Files: `frontend/app/api/contact/route.ts` (line 15 TODO)
+- Why: Placeholder for email service integration
+- Impact: Users believe messages are sent when they aren't
+- Fix approach: Integrate Resend, SendGrid, or Nodemailer
 
-**Hardcoded Contact Info in Header:**
-- Issue: Phone, email, social links hardcoded in component
-- File: `frontend/components/Header.tsx` (lines 31-42)
-- Why: Quick setup without CMS integration
-- Impact: Changes require code modification instead of CMS updates
-- Fix approach: Move to WordPress ACF options page or environment variables
+**Error Tracking Not Integrated:**
+- Issue: Errors logged to console only, not captured
+- Files: `frontend/lib/logger.ts` (line 60 TODO)
+- Why: External service not yet configured
+- Impact: Production errors go unnoticed
+- Fix approach: Integrate Sentry or similar service
 
-**Large API Client File:**
-- Issue: `wordpress.ts` is 575 lines with all fetch functions in one file
-- File: `frontend/lib/wordpress.ts`
-- Why: Organic growth as endpoints were added
-- Impact: Hard to navigate, test individual functions
-- Fix approach: Split into `lib/api/posts.ts`, `lib/api/services.ts`, etc.
+**Hardcoded Domains in PWA Config:**
+- Issue: Cache patterns use specific WordPress domains
+- Files: `frontend/next.config.ts` (lines 65, 99-111)
+- Why: Configuration not externalized
+- Impact: Cache patterns won't match on different domains
+- Fix approach: Use environment variables for domain patterns
+
+**Duplicate Path Mapping:**
+- Issue: Post type to URL path mapping in two places
+- Files: `frontend/app/api/revalidate/route.ts` (lines 46-51), `frontend/app/api/preview/route.ts` (lines 47-54)
+- Why: Ad-hoc implementation without abstraction
+- Impact: Must update both files when adding post types
+- Fix approach: Extract to shared config file
 
 ## Known Bugs
 
-**Race condition in subscription updates (potential):**
-- Symptoms: Content may show stale briefly after WordPress update
-- Trigger: Fast navigation after content save, before webhook processes
-- File: `frontend/app/api/revalidate/route.ts`
-- Workaround: 5-second ISR revalidation eventually updates
-- Root cause: Webhook processing can be slower than user navigation
+**No critical bugs identified during analysis.**
 
 ## Security Considerations
 
-**Placeholder Secrets in Development:**
-- Risk: Development secrets like `preview-secret-change-me` could leak to production
-- Files: `frontend/.env.local`, `frontend/.env.production.example`
-- Current mitigation: `.env.local` is gitignored, file has restricted permissions
-- Recommendations: Add pre-commit hook to block placeholder secrets, document secret rotation
+**Overly Permissive CORS:**
+- Risk: Wildcard CORS (`Access-Control-Allow-Origin: *`) when WP_DEBUG is true
+- Files: `functions.php` (lines 246-260)
+- Current mitigation: Only enabled with WP_DEBUG flag
+- Recommendations: Restrict to specific frontend domains even in development
 
-**POST-Only Revalidation (DONE):**
-- Status: ✅ Already properly implemented
-- File: `frontend/app/api/revalidate/route.ts`
-- Current: POST-only endpoint, secrets never in URL query params
-- Comment in code explains security rationale
+**Weak Default Secrets:**
+- Risk: Hardcoded defaults 'preview-secret' and 'revalidation-secret-change-me'
+- Files: `functions.php` (lines 289-291, 325-327)
+- Current mitigation: Documentation to change them
+- Recommendations: Add validation that rejects default values in production
+
+**XSS Risk in WordPress Content:**
+- Risk: WordPress HTML rendered via dangerouslySetInnerHTML without sanitization
+- Files: `frontend/components/WordPressContent.tsx` (lines 152, 201, 227)
+- Current mitigation: WordPress REST API generally safe
+- Recommendations: Add sanitize-html library for additional protection
 
 ## Performance Bottlenecks
 
-**No Client-Side Caching:**
-- Problem: No SWR or React Query for client-side data caching
-- Measurement: Full API calls on every navigation (server-side ISR helps, but no client cache)
-- Cause: Not yet implemented (PRD Phase 2 feature)
-- Improvement path: Implement SWR hooks as specified in PRD F2.1
+**N+1 Query Pattern in REST Fields:**
+- Problem: Three REST field callbacks per post type
+- Files: `functions.php` (lines 198-240)
+- Measurement: 3+ extra queries per post in list views
+- Cause: Separate `get_fields()`, `wp_get_attachment_image_src()`, `get_the_author_meta()` calls
+- Improvement path: Consolidate into single callback or use `_embed=true` parameter
 
-**Dashboard/Listing Page Queries:**
-- Problem: Blog listing fetches all posts without pagination limits
-- File: `frontend/app/blog/page.tsx`
-- Measurement: Could slow with 100+ posts
-- Cause: Simple implementation without growth planning
-- Improvement path: Add pagination, implement cursor-based fetching
+**Image Optimization Disabled:**
+- Problem: Development images not optimized
+- Files: `frontend/next.config.ts` (line 95)
+- Measurement: Larger image payloads in development
+- Cause: `unoptimized: isDev` configuration
+- Improvement path: Enable optimization or use production images in development
 
 ## Fragile Areas
 
-**WordPress API Integration:**
-- File: `frontend/lib/wordpress.ts`
-- Why fragile: Any WordPress REST API change breaks frontend
-- Common failures: Field name changes, ACF structure changes
-- Safe modification: Add TypeScript interfaces for all responses
-- Test coverage: No tests (high priority to add)
+**YouTube Embed Parsing:**
+- Files: `frontend/components/WordPressContent.tsx` (lines 25-121)
+- Why fragile: 5 different regex patterns parsing WordPress HTML
+- Common failures: Silent failures when WordPress HTML structure changes
+- Safe modification: Add unit tests before changing regex patterns
+- Test coverage: None - high priority for testing
 
-**Preview Mode Flow:**
-- Files: `frontend/app/api/preview/route.ts`, `functions.php:283-304`
-- Why fragile: Depends on secret matching, correct URL construction
-- Common failures: Secret mismatch, wrong slug/type parameters
-- Safe modification: Add logging, test both endpoints together
-- Test coverage: No automated tests
+**WordPress Hook Chain:**
+- Files: `functions.php` (multiple hook registrations)
+- Why fragile: Order-dependent hook execution
+- Common failures: Hook order changes break functionality
+- Safe modification: Document hook dependencies, test individually
 
 ## Scaling Limits
 
-**ISR Cache Invalidation:**
-- Current capacity: Handles typical blog update frequency
-- Limit: High-frequency updates could overwhelm revalidation
-- Symptoms at limit: Stale content, webhook timeouts
-- Scaling path: Batch revalidation, debounce WordPress hooks
+**No scaling limits identified.** Current architecture is stateless and horizontally scalable via Vercel.
 
 ## Dependencies at Risk
 
-**No Significant Risks Detected:**
-- All dependencies are actively maintained
-- React 19, Next.js 16 are current versions
-- shadcn/ui and Radix UI have active development
+**No deprecated or unmaintained dependencies detected.** Stack is modern and actively maintained:
+- React 19 (latest)
+- Next.js 16 (latest)
+- Tailwind CSS 4 (latest)
 
 ## Missing Critical Features
 
-**Email Integration for Contact Form:**
-- Problem: Contact form submissions log to console, no notification sent
-- File: `frontend/app/api/contact/route.ts` (line 15 TODO)
-- Current workaround: None - form appears to work but doesn't notify anyone
-- Blocks: Cannot receive customer inquiries
-- Implementation complexity: Low (add Resend or similar)
+**No Testing Framework:**
+- Problem: No unit, integration, or E2E tests
+- Current workaround: Manual testing
+- Blocks: Confident refactoring, CI/CD quality gates
+- Implementation complexity: Low - add Vitest and initial tests
 
-**RankMath SEO Integration:**
-- Problem: No SEO metadata from WordPress
-- Files: Not implemented (PRD F1.1)
-- Current workaround: Manual metadata in page components
-- Blocks: Dynamic SEO from CMS
-- Implementation complexity: Medium (parsing utility needed)
-
-**Search Functionality:**
-- Problem: No search across content
-- Files: Not implemented (PRD F3.1-F3.2)
-- Current workaround: Users manually browse
-- Blocks: Content discovery for larger sites
-- Implementation complexity: Medium (endpoint + UI)
-
-**Testing Infrastructure:**
-- Problem: No test framework, no tests
-- Files: Not configured (PRD F4.1-F4.2)
-- Current workaround: Manual testing only
-- Blocks: Confident refactoring, regression prevention
-- Implementation complexity: Medium (setup + initial tests)
-
-**Error Tracking:**
-- Problem: No Sentry or similar error tracking
-- File: `frontend/lib/logger.ts` has TODO for Sentry
-- Current workaround: Console logs in development
-- Blocks: Production error visibility
-- Implementation complexity: Low (add Sentry SDK)
+**No Analytics:**
+- Problem: No user behavior tracking
+- Current workaround: Vercel analytics (if enabled)
+- Blocks: Data-driven decisions
+- Implementation complexity: Low - add Google Analytics or similar
 
 ## Test Coverage Gaps
 
-**API Client Functions:**
-- What's not tested: All functions in `frontend/lib/wordpress.ts`
+**WordPress API Client:**
+- What's not tested: All fetch functions in `frontend/lib/wordpress.ts`
 - Risk: API changes break silently
 - Priority: High
-- Difficulty to test: Medium (mock fetch)
+- Difficulty to test: Medium - requires fetch mocking
 
 **Form Validation:**
-- What's not tested: `frontend/lib/schemas/contact.ts` schema
-- Risk: Invalid data accepted or valid rejected
+- What's not tested: Zod schemas in `frontend/lib/schemas/`
+- Risk: Validation bypass or unexpected rejections
 - Priority: Medium
-- Difficulty to test: Low (pure functions)
+- Difficulty to test: Low - pure functions
+
+**YouTube Embed Regex:**
+- What's not tested: 5 regex patterns for different embed formats
+- Risk: Content rendering breaks silently
+- Priority: High
+- Difficulty to test: Low - pure string matching
 
 **API Routes:**
-- What's not tested: All routes in `frontend/app/api/*/route.ts`
-- Risk: Authentication, validation failures undetected
-- Priority: High
-- Difficulty to test: Medium (mock requests)
-
-**Component Rendering:**
-- What's not tested: React components
-- Risk: UI breaks go unnoticed
+- What's not tested: `frontend/app/api/*/route.ts` handlers
+- Risk: Security issues, incorrect responses
 - Priority: Medium
-- Difficulty to test: Medium (React Testing Library)
-
-## PRD Feature Implementation Status
-
-**Phase 1 - SEO & Discoverability:**
-- F1.1 RankMath Integration: ❌ Not implemented
-- F1.2 Structured Data: ❌ Not implemented
-- F1.3 Dynamic Sitemap: ✅ Implemented
-- F1.4 Robots.txt: ✅ Implemented
-
-**Phase 2 - Performance & Caching:**
-- F2.1 SWR Hooks: ❌ Not implemented
-- F2.2 Image Optimization: ⚠️ Partial (config exists, component incomplete)
-- F2.3 Bundle Optimization: ❌ Not implemented
-
-**Phase 3 - Search & Filtering:**
-- F3.1 Search Endpoint: ❌ Not implemented
-- F3.2 Search UI: ❌ Not implemented
-- F3.3 Category/Tag Filtering: ❌ Not implemented
-- F3.4 Related Content: ✅ Implemented (blog posts)
-
-**Phase 4 - Testing & Monitoring:**
-- F4.1 Unit Testing: ❌ Not implemented
-- F4.2 E2E Testing: ❌ Not implemented
-- F4.3 Sentry Integration: ❌ Not implemented
-- F4.4 Health Checks: ❌ Not implemented
+- Difficulty to test: Medium - requires request mocking
 
 ---
 
-*Concerns audit: 2026-01-11*
+*Concerns audit: 2026-01-12*
 *Update as issues are fixed or new ones discovered*
