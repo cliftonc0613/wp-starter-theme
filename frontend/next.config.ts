@@ -13,7 +13,6 @@ const withPWA = withPWAInit({
   dest: "public",
   disable: isDev,
   register: true,
-  skipWaiting: true,
   reloadOnOnline: true,
   cacheOnFrontEndNav: true,
   aggressiveFrontEndNavCaching: true,
@@ -22,6 +21,7 @@ const withPWA = withPWAInit({
   },
   workboxOptions: {
     disableDevLogs: true,
+    skipWaiting: true,
     runtimeCaching: [
       {
         urlPattern: /^https:\/\/fonts\.(?:gstatic|googleapis)\.com\/.*/i,
