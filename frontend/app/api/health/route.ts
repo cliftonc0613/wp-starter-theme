@@ -1,12 +1,17 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 
 /**
  * Health Check API Endpoint
  *
- * Returns system status with individual component checks.
- * Used for monitoring and load balancer health checks.
+ * Returns system status for monitoring and load balancer health checks.
  *
  * GET /api/health
+ *   - Public: Returns basic status (ok/degraded/error)
+ *   - With X-Health-Detail header or in development: Returns full diagnostics
+ *
+ * SECURITY: Detailed metrics are only exposed when:
+ *   1. X-Health-Detail header matches HEALTH_CHECK_SECRET env var
+ *   2. Or running in development mode (NODE_ENV=development)
  */
 
 interface HealthCheck {
@@ -17,9 +22,12 @@ interface HealthCheck {
   error?: string
 }
 
-interface HealthResponse {
+interface HealthResponseBasic {
   status: 'ok' | 'degraded' | 'error'
   timestamp: string
+}
+
+interface HealthResponseDetailed extends HealthResponseBasic {
   version: string
   checks: {
     wordpress: HealthCheck
@@ -33,6 +41,25 @@ const VERSION = process.env.npm_package_version || '1.0.0'
 
 // Track server start time for uptime calculation
 const startTime = Date.now()
+
+/**
+ * Check if detailed health info should be exposed
+ */
+function shouldShowDetails(request: NextRequest): boolean {
+  // Always show in development
+  if (process.env.NODE_ENV === 'development') {
+    return true
+  }
+
+  // Check for secret header in production
+  const healthSecret = process.env.HEALTH_CHECK_SECRET
+  if (!healthSecret) {
+    return false
+  }
+
+  const providedSecret = request.headers.get('x-health-detail')
+  return providedSecret === healthSecret
+}
 
 async function checkWordPress(): Promise<HealthCheck> {
   const apiUrl = process.env.WORDPRESS_API_URL
@@ -83,7 +110,7 @@ function checkUptime(): HealthCheck {
 }
 
 function determineOverallStatus(
-  checks: HealthResponse['checks']
+  checks: HealthResponseDetailed['checks']
 ): 'ok' | 'degraded' | 'error' {
   const statuses = Object.values(checks).map((c) => c.status)
 
@@ -101,7 +128,9 @@ function determineOverallStatus(
   return 'degraded'
 }
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  const showDetails = shouldShowDetails(request)
+
   try {
     // Run checks in parallel
     const [wordpress, memory, uptime] = await Promise.all([
@@ -113,14 +142,20 @@ export async function GET() {
     const checks = { wordpress, memory, uptime }
     const status = determineOverallStatus(checks)
 
-    const response: HealthResponse = {
+    // Basic response for public requests (load balancers, etc.)
+    const basicResponse: HealthResponseBasic = {
       status,
       timestamp: new Date().toISOString(),
+    }
+
+    // Detailed response for authenticated requests
+    const detailedResponse: HealthResponseDetailed = {
+      ...basicResponse,
       version: VERSION,
       checks,
     }
 
-    return NextResponse.json(response, {
+    return NextResponse.json(showDetails ? detailedResponse : basicResponse, {
       status: status === 'error' ? 503 : 200,
       headers: {
         'Cache-Control': 'no-store, no-cache, must-revalidate',
@@ -129,25 +164,29 @@ export async function GET() {
     })
   } catch (error) {
     // Endpoint should always return valid JSON
-    return NextResponse.json(
-      {
-        status: 'error',
-        timestamp: new Date().toISOString(),
-        version: VERSION,
-        checks: {
-          wordpress: { status: 'error', error: 'Health check failed' },
-          memory: { status: 'error' },
-          uptime: { status: 'error' },
-        },
-        error: error instanceof Error ? error.message : 'Unknown error',
-      } satisfies HealthResponse & { error: string },
-      {
-        status: 503,
-        headers: {
-          'Cache-Control': 'no-store, no-cache, must-revalidate',
-          'Content-Type': 'application/json',
-        },
-      }
-    )
+    const errorResponse = showDetails
+      ? {
+          status: 'error' as const,
+          timestamp: new Date().toISOString(),
+          version: VERSION,
+          checks: {
+            wordpress: { status: 'error' as const, error: 'Health check failed' },
+            memory: { status: 'error' as const },
+            uptime: { status: 'error' as const },
+          },
+          error: error instanceof Error ? error.message : 'Unknown error',
+        }
+      : {
+          status: 'error' as const,
+          timestamp: new Date().toISOString(),
+        }
+
+    return NextResponse.json(errorResponse, {
+      status: 503,
+      headers: {
+        'Cache-Control': 'no-store, no-cache, must-revalidate',
+        'Content-Type': 'application/json',
+      },
+    })
   }
 }

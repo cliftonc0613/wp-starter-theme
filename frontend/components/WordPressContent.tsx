@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 import dynamic from "next/dynamic";
 import { replaceImagesWithPlaceholders, type ContentImage } from "@/lib/content-images";
 import { ContentImage as ContentImageComponent } from "./ContentImage";
+import { sanitizeWordPressHtml } from "@/lib/sanitize";
 
 const YouTubePlayer = dynamic(
   () => import("./YouTubePlayer").then((mod) => mod.YouTubePlayer),
@@ -123,11 +124,13 @@ export function WordPressContent({ html, className = "" }: WordPressContentProps
   const containerRef = useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = useState(false);
 
-  // Parse content: YouTube embeds first, then images
-  // Order matters: YouTube parsing happens on raw HTML, image parsing on the result
+  // Parse content: sanitize first, then YouTube embeds, then images
+  // Order matters: sanitization happens first for security
   const { processedHtml, embeds, images } = useMemo(() => {
-    // First parse YouTube embeds
-    const youtubeResult = parseYouTubeEmbeds(html);
+    // First sanitize the HTML to prevent XSS attacks
+    const sanitizedHtml = sanitizeWordPressHtml(html);
+    // Then parse YouTube embeds
+    const youtubeResult = parseYouTubeEmbeds(sanitizedHtml);
     // Then parse images from the YouTube-processed HTML
     const imageResult = replaceImagesWithPlaceholders(youtubeResult.processedHtml);
 

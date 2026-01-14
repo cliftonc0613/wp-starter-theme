@@ -303,9 +303,18 @@ function starter_theme_preview_link($preview_link, $post) {
         ? STARTER_FRONTEND_URL
         : get_option('starter_frontend_url', 'http://localhost:3000');
 
+    // Get preview secret - SECURITY: No default fallback to prevent accidental exposure
     $preview_secret = defined('STARTER_PREVIEW_SECRET')
         ? STARTER_PREVIEW_SECRET
-        : get_option('starter_preview_secret', 'preview-secret');
+        : get_option('starter_preview_secret', '');
+
+    // Warn if preview secret is not configured
+    if (empty($preview_secret)) {
+        if (defined('WP_DEBUG') && WP_DEBUG) {
+            error_log('STARTER_PREVIEW_SECRET is not configured. Preview links will not work correctly.');
+        }
+        return $preview_link; // Return original link if secret not configured
+    }
 
     // Build the preview URL with type parameter for proper routing
     return add_query_arg(
@@ -339,9 +348,18 @@ function starter_theme_trigger_revalidation($post_id, $post, $update) {
         ? STARTER_FRONTEND_URL
         : get_option('starter_frontend_url', 'http://localhost:3000');
 
+    // Get revalidation secret - SECURITY: No default fallback to prevent accidental exposure
     $revalidation_secret = defined('STARTER_REVALIDATION_SECRET')
         ? STARTER_REVALIDATION_SECRET
-        : get_option('starter_revalidation_secret', 'revalidation-secret-change-me');
+        : get_option('starter_revalidation_secret', '');
+
+    // Skip revalidation if secret is not configured
+    if (empty($revalidation_secret)) {
+        if (defined('WP_DEBUG') && WP_DEBUG) {
+            error_log('STARTER_REVALIDATION_SECRET is not configured. Cache revalidation is disabled.');
+        }
+        return;
+    }
 
     // Build the revalidation URL
     $revalidate_url = $frontend_url . '/api/revalidate';
