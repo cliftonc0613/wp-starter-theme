@@ -8,6 +8,7 @@ import { StructuredData } from "@/components/structured-data";
 import { generateOrganizationSchema } from "@/lib/schema";
 import { Providers } from "./providers";
 import RegisterPWA from "@/components/RegisterPWA";
+import PWALoadScreen from "@/components/PWALoadScreen";
 import "./globals.css";
 
 // Site-wide Organization schema for rich snippets
@@ -107,6 +108,7 @@ export default function RootLayout({
         className={`${dmSans.variable} ${playfair.variable} ${jetbrains.variable} font-sans antialiased`}
       >
         <Providers>
+          <PWALoadScreen />
           <RegisterPWA />
           <StructuredData data={organizationSchema} />
           <SmoothScroll />
