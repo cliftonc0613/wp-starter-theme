@@ -31,12 +31,10 @@ const isLocalWordPress = process.env.WORDPRESS_API_URL?.includes('.local') ?? fa
 
 const nextConfig: NextConfig = {
   images: {
-    // Disable optimization when:
-    // 1. In development mode (images load directly from Local by Flywheel)
-    // 2. Using local WordPress (.local domain resolves to private IP, blocked by Next.js)
+    // Disable optimization only in development or when using local WordPress
     // In production with public WordPress domain, images will be optimized
     // Note: Next.js 14+ blocks image optimization for private IPs (SSRF protection)
-    unoptimized: true, // Force unoptimized for local WordPress development
+    unoptimized: isDev || isLocalWordPress,
     remotePatterns: [
       {
         protocol: 'http',

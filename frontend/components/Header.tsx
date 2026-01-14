@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState, useRef, useEffect } from "react";
 import { Menu, Phone, Mail, Calendar, Facebook, Linkedin, Search } from "lucide-react";
 import { SearchCommand } from "@/components/SearchCommand";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { Button } from "@/components/ui/button";
 import {
   NavigationMenu,
@@ -101,7 +102,7 @@ export function Header() {
           </NavigationMenuList>
         </NavigationMenu>
 
-        {/* Desktop Search & CTA */}
+        {/* Desktop Search, Theme Toggle & CTA */}
         <div className="hidden items-center gap-2 md:flex">
           <Button
             variant="ghost"
@@ -111,12 +112,13 @@ export function Header() {
           >
             <Search className="h-5 w-5" />
           </Button>
+          <ThemeToggle />
           <Button asChild>
             <Link href="/contact">Get in Touch</Link>
           </Button>
         </div>
 
-        {/* Mobile Search & Menu */}
+        {/* Mobile Search, Theme Toggle & Menu */}
         <div className="flex items-center gap-1 md:hidden">
           <Button
             variant="ghost"
@@ -126,6 +128,7 @@ export function Header() {
           >
             <Search className="h-5 w-5" />
           </Button>
+          <ThemeToggle />
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" aria-label="Toggle menu">
