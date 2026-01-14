@@ -1069,12 +1069,28 @@ ol.wp-block-list {
    Skeleton Loading Components
    Content placeholders for async data loading
    -------------------------------------------------------------------------- */
-.skeleton {
+
+/* Base skeleton styles - applied to all skeleton elements */
+.skeleton,
+.skeleton-text,
+.skeleton-text-sm,
+.skeleton-text-lg,
+.skeleton-title,
+.skeleton-avatar,
+.skeleton-image,
+.skeleton-card {
   @apply relative overflow-hidden rounded;
   background: oklch(from var(--muted) l c h / 60%);
 }
 
-.skeleton::after {
+.skeleton::after,
+.skeleton-text::after,
+.skeleton-text-sm::after,
+.skeleton-text-lg::after,
+.skeleton-title::after,
+.skeleton-avatar::after,
+.skeleton-image::after,
+.skeleton-card::after {
   content: "";
   @apply absolute inset-0;
   background: linear-gradient(
@@ -1095,33 +1111,33 @@ ol.wp-block-list {
   }
 }
 
-/* Skeleton variants */
+/* Skeleton variants - specific sizing */
 .skeleton-text {
-  @apply skeleton h-4 w-full;
+  @apply h-4 w-full;
 }
 
 .skeleton-text-sm {
-  @apply skeleton h-3 w-full;
+  @apply h-3 w-full;
 }
 
 .skeleton-text-lg {
-  @apply skeleton h-6 w-full;
+  @apply h-6 w-full;
 }
 
 .skeleton-title {
-  @apply skeleton h-8 w-3/4;
+  @apply h-8 w-3/4;
 }
 
 .skeleton-avatar {
-  @apply skeleton rounded-full;
+  @apply rounded-full;
 }
 
 .skeleton-image {
-  @apply skeleton aspect-video w-full;
+  @apply aspect-video w-full;
 }
 
 .skeleton-card {
-  @apply skeleton rounded-lg p-4;
+  @apply rounded-lg p-4;
 }
 
 /* --------------------------------------------------------------------------
