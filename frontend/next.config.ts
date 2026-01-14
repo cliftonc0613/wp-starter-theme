@@ -77,8 +77,11 @@ const sentryConfig = withSentryConfig(withBundleAnalyzer(withPWA(nextConfig)), {
   // Only upload source maps if auth token is provided
   authToken: process.env.SENTRY_AUTH_TOKEN,
 
-  // Suppresses source map upload logs during build
-  silent: !process.env.CI,
+  // Suppresses source map upload logs during build (silent when no auth token)
+  silent: true,
+
+  // Disable telemetry collection
+  telemetry: false,
 
   // Upload a larger set of source maps for prettier stack traces (increases build time)
   widenClientFileUpload: true,
