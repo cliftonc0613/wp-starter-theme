@@ -384,7 +384,7 @@ export function ContactForm({ services = [] }: ContactFormProps) {
         {/* Privacy Policy */}
         <p className="text-center text-sm text-muted-foreground">
           By submitting this form, you agree to our{" "}
-          <Link href="/privacy-policy" className="text-neutral-900 underline hover:text-neutral-600">
+          <Link href="/privacy-policy" className="underline text-neutral-900 hover:text-neutral-600 dark:text-white dark:hover:text-neutral-300">
             Privacy Policy
           </Link>
         </p>

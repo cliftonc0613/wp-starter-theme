@@ -38,12 +38,22 @@ function ValueBlock({
   );
 }
 
+// Helper function to strip HTML tags from content
+function stripHtml(html: string): string {
+  return html
+    .replace(/<br\s*\/?>/gi, ' ')  // Replace <br> with space
+    .replace(/<[^>]*>/g, '')        // Remove all other HTML tags
+    .replace(/\s+/g, ' ')           // Collapse multiple spaces
+    .trim();
+}
+
 // Featured Testimonial Component
 function FeaturedTestimonial({ testimonial }: { testimonial: WPTestimonial }) {
   const clientName =
     testimonial.acf?.client_name || testimonial.title.rendered;
   const company = testimonial.acf?.company;
-  const quote = testimonial.acf?.quote;
+  const rawQuote = testimonial.acf?.quote;
+  const quote = rawQuote ? stripHtml(rawQuote) : null;
   const rating = testimonial.acf?.rating || 5;
 
   // Get initials
@@ -73,7 +83,7 @@ function FeaturedTestimonial({ testimonial }: { testimonial: WPTestimonial }) {
 
         {/* Quote */}
         {quote && (
-          <blockquote className="text-xl leading-relaxed text-neutral-800 dark:text-neutral-100 md:text-2xl">
+          <blockquote className="text-xl leading-relaxed text-neutral-800 dark:text-white md:text-2xl">
             &ldquo;{quote}&rdquo;
           </blockquote>
         )}
