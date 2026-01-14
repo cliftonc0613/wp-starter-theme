@@ -21,9 +21,10 @@ interface LoadingStage {
  * - Better state management with refs for cleanup
  */
 export default function PWALoadScreenEnhanced() {
+  // Start with null to avoid hydration mismatch, then determine PWA status
+  const [isPWA, setIsPWA] = useState<boolean | null>(null);
   const [isVisible, setIsVisible] = useState(true);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [isPWA, setIsPWA] = useState(false);
   const [progress, setProgress] = useState(0);
   const [loadingText, setLoadingText] = useState("Initializing...");
   const mountedRef = useRef(true);
@@ -170,7 +171,9 @@ export default function PWALoadScreenEnhanced() {
     };
   }, [completeStage, isLoaded]);
 
-  if (!isVisible || !isPWA) {
+  // Hide if: explicitly not a PWA, or loading is complete
+  // Show if: isPWA is null (checking) or true (confirmed PWA) AND still visible
+  if (isPWA === false || !isVisible) {
     return null;
   }
 
