@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
+import { Loader2, WifiOff, CloudOff } from "lucide-react";
 import Link from "next/link";
+import { useOnlineStatus, isBackgroundSyncSupported } from "@/lib/hooks/useOnlineStatus";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -62,6 +63,19 @@ interface ContactFormProps {
 
 export function ContactForm({ services = [] }: ContactFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isQueuedOffline, setIsQueuedOffline] = useState(false);
+
+  // Handle background sync success notification
+  const handleSyncSuccess = useCallback((queue: string) => {
+    if (queue === "contact-form-queue") {
+      toast.success("Message sent!", {
+        description: "Your queued message was sent when you came back online.",
+      });
+      setIsQueuedOffline(false);
+    }
+  }, []);
+
+  const isOnline = useOnlineStatus(handleSyncSuccess);
 
   const form = useForm<ContactFormValues>({
     resolver: zodResolver(contactFormSchema),
@@ -101,13 +115,24 @@ export function ContactForm({ services = [] }: ContactFormProps) {
       });
 
       form.reset();
+      setIsQueuedOffline(false);
     } catch (error) {
-      toast.error("Failed to send message", {
-        description:
-          error instanceof Error
-            ? error.message
-            : "Please try again later or contact us directly.",
-      });
+      // Check if we're offline and Background Sync is supported
+      if (!navigator.onLine && isBackgroundSyncSupported()) {
+        toast.info("Message queued for delivery", {
+          description: "Your message will be sent automatically when you're back online.",
+          icon: <CloudOff className="h-4 w-4" />,
+        });
+        setIsQueuedOffline(true);
+        form.reset();
+      } else {
+        toast.error("Failed to send message", {
+          description:
+            error instanceof Error
+              ? error.message
+              : "Please try again later or contact us directly.",
+        });
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -318,21 +343,40 @@ export function ContactForm({ services = [] }: ContactFormProps) {
           )}
         />
 
+        {/* Offline Status Indicator */}
+        {!isOnline && (
+          <div className="flex items-center justify-center gap-2 rounded-lg bg-amber-50 p-3 text-sm text-amber-800 dark:bg-amber-900/20 dark:text-amber-200">
+            <WifiOff className="h-4 w-4" />
+            <span>You&apos;re offline. Your message will be sent when you reconnect.</span>
+          </div>
+        )}
+
+        {/* Queued Message Indicator */}
+        {isQueuedOffline && isOnline && (
+          <div className="flex items-center justify-center gap-2 rounded-lg bg-blue-50 p-3 text-sm text-blue-800 dark:bg-blue-900/20 dark:text-blue-200">
+            <CloudOff className="h-4 w-4" />
+            <span>A message is queued and will be sent shortly...</span>
+          </div>
+        )}
+
         {/* Submit Button */}
         <div className="flex justify-center pt-4">
           <Button
             type="submit"
             size="lg"
-            className="min-w-[200px] bg-neutral-900 hover:bg-neutral-800"
+            className="min-w-[200px] bg-neutral-900 hover:bg-neutral-800 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-200"
             disabled={isSubmitting}
           >
             {isSubmitting ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Sending...
+                {isOnline ? "Sending..." : "Queuing..."}
               </>
             ) : (
-              "Send Message"
+              <>
+                {!isOnline && <WifiOff className="mr-2 h-4 w-4" />}
+                {isOnline ? "Send Message" : "Queue Message"}
+              </>
             )}
           </Button>
         </div>

@@ -6,7 +6,9 @@ import {
   CacheFirst,
   StaleWhileRevalidate,
   NetworkFirst,
+  NetworkOnly,
   ExpirationPlugin,
+  BackgroundSyncPlugin,
 } from "serwist";
 
 /**
@@ -27,12 +29,49 @@ declare const self: ServiceWorkerGlobalScope & {
   __SW_MANIFEST: (string | { url: string; revision: string | null })[];
 };
 
+/**
+ * Background Sync plugin for offline form submissions
+ * Queues failed POST requests and retries when back online
+ */
+const contactFormSync = new BackgroundSyncPlugin("contact-form-queue", {
+  maxRetentionTime: 24 * 60, // Retry for up to 24 hours (in minutes)
+  onSync: async ({ queue }) => {
+    let entry;
+    while ((entry = await queue.shiftRequest())) {
+      try {
+        await fetch(entry.request.clone());
+        // Notify the client that the form was successfully synced
+        const clients = await self.clients.matchAll();
+        for (const client of clients) {
+          client.postMessage({
+            type: "BACKGROUND_SYNC_SUCCESS",
+            payload: { queue: "contact-form-queue" },
+          });
+        }
+      } catch (error) {
+        // Put the request back in the queue and re-throw to signal failure
+        await queue.unshiftRequest(entry);
+        throw error;
+      }
+    }
+  },
+});
+
 const serwist = new Serwist({
   precacheEntries: self.__SW_MANIFEST,
   skipWaiting: true,
   clientsClaim: true,
   navigationPreload: true,
   runtimeCaching: [
+    // Contact form API - network only with background sync fallback
+    // When offline, queues the request and syncs when back online
+    {
+      matcher: /\/api\/contact$/i,
+      handler: new NetworkOnly({
+        plugins: [contactFormSync],
+      }),
+      method: "POST",
+    },
     // Google Fonts - cache first for performance (1 year)
     {
       matcher: /^https:\/\/fonts\.(?:gstatic|googleapis)\.com\/.*/i,

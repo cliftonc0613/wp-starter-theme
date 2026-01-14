@@ -20,6 +20,7 @@ import { MultiStructuredData } from "@/components/structured-data";
 import { BodyClass } from "@/components/BodyClass";
 import { WordPressContent } from "@/components/WordPressContent";
 import { BlurImage } from "@/components/BlurImage";
+import { ShareButton } from "@/components/ShareButton";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME || "Starter WP Theme";
@@ -201,11 +202,16 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             />
           </div>
 
-          {/* Back to Blog */}
-          <div className="mt-12">
+          {/* Actions: Back to Blog & Share */}
+          <div className="mt-12 flex flex-wrap items-center justify-between gap-4">
             <Button asChild variant="outline">
               <Link href="/blog">← Back to Blog</Link>
             </Button>
+            <ShareButton
+              title={title}
+              text={stripHtml(post.excerpt.rendered)}
+              url={postUrl}
+            />
           </div>
         </div>
       </article>
