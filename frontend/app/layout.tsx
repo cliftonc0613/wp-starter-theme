@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { Suspense } from "react";
 import { DM_Sans, Playfair_Display, JetBrains_Mono } from "next/font/google";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -8,7 +9,8 @@ import { StructuredData } from "@/components/structured-data";
 import { generateOrganizationSchema } from "@/lib/schema";
 import { Providers } from "./providers";
 import RegisterPWA from "@/components/RegisterPWA";
-import PWALoadScreen from "@/components/PWALoadScreen";
+import PWALoadScreen from "@/components/PWALoadScreen.enhanced";
+import RouteProgress from "@/components/RouteProgress";
 import "./globals.css";
 
 // Site-wide Organization schema for rich snippets
@@ -110,6 +112,9 @@ export default function RootLayout({
         <Providers>
           <PWALoadScreen />
           <RegisterPWA />
+          <Suspense fallback={null}>
+            <RouteProgress />
+          </Suspense>
           <StructuredData data={organizationSchema} />
           <SmoothScroll />
           <div className="flex min-h-screen flex-col">
