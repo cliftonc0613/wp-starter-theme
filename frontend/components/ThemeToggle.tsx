@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useTheme } from 'next-themes';
 import { Moon, Sun } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 /**
  * Theme Toggle Component
@@ -12,7 +13,7 @@ import { Button } from '@/components/ui/button';
  * Uses next-themes for persistence and system preference detection.
  * Animated icon transition for visual feedback.
  */
-export function ThemeToggle() {
+export function ThemeToggle({ className }: { className?: string }) {
   const [mounted, setMounted] = useState(false);
   const { resolvedTheme, setTheme } = useTheme();
 
@@ -31,7 +32,7 @@ export function ThemeToggle() {
         variant="ghost"
         size="icon"
         aria-label="Toggle theme"
-        className="relative"
+        className={cn("relative", className)}
       >
         <Sun className="h-5 w-5" />
       </Button>
@@ -44,7 +45,7 @@ export function ThemeToggle() {
       size="icon"
       onClick={toggleTheme}
       aria-label={`Switch to ${resolvedTheme === 'dark' ? 'light' : 'dark'} mode`}
-      className="relative"
+      className={cn("relative", className)}
     >
       <Sun className="h-5 w-5 rotate-0 scale-100 transition-transform duration-200 dark:-rotate-90 dark:scale-0" />
       <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-transform duration-200 dark:rotate-0 dark:scale-100" />

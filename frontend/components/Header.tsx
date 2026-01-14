@@ -78,12 +78,12 @@ export function Header() {
   return (
     <header
       ref={headerRef}
-      className="fixed top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
+      className="fixed top-0 z-50 w-full border-b bg-neutral-200/95 backdrop-blur supports-[backdrop-filter]:bg-neutral-200/80"
     >
       <div className="container mx-auto flex h-[var(--header-height,4rem)] items-center justify-between px-4 transition-[height] duration-300">
         {/* Logo */}
         <Link href="/" className="flex items-center space-x-2">
-          <span className="text-xl font-bold tracking-tight">Starter WP</span>
+          <span className="text-xl font-bold tracking-tight text-neutral-900">Starter WP</span>
         </Link>
 
         {/* Desktop Navigation */}
@@ -106,11 +106,12 @@ export function Header() {
             size="icon"
             onClick={() => setSearchOpen(true)}
             aria-label="Search"
+            className="text-neutral-900 hover:bg-neutral-300/50"
           >
             <Search className="h-5 w-5" />
           </Button>
-          <ThemeToggle />
-          <Button asChild className="bg-neutral-900 text-white hover:bg-neutral-800 dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-100">
+          <ThemeToggle className="text-neutral-900 hover:bg-neutral-300/50" />
+          <Button asChild className="bg-white text-neutral-900 hover:bg-neutral-100 border border-neutral-300">
             <Link href="/contact">Get in Touch</Link>
           </Button>
         </div>
@@ -122,13 +123,14 @@ export function Header() {
             size="icon"
             onClick={() => setSearchOpen(true)}
             aria-label="Search"
+            className="text-neutral-900 hover:bg-neutral-300/50"
           >
             <Search className="h-5 w-5" />
           </Button>
-          <ThemeToggle />
+          <ThemeToggle className="text-neutral-900 hover:bg-neutral-300/50" />
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" aria-label="Toggle menu">
+              <Button variant="ghost" size="icon" aria-label="Toggle menu" className="text-neutral-900 hover:bg-neutral-300/50">
                 <Menu className="h-6 w-6" />
               </Button>
             </SheetTrigger>
