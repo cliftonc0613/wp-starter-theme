@@ -3,6 +3,7 @@ import { DM_Sans, Playfair_Display, JetBrains_Mono } from "next/font/google";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { SmoothScroll } from "@/components/SmoothScroll";
+import { ScrollAnimations } from "@/components/ScrollAnimations";
 import { Toaster } from "@/components/ui/sonner";
 import { StructuredData } from "@/components/structured-data";
 import { generateOrganizationSchema } from "@/lib/schema";
@@ -117,6 +118,7 @@ export default function RootLayout({
           <RegisterPWA />
           <StructuredData data={organizationSchema} />
           <SmoothScroll />
+          <ScrollAnimations />
           <div className="flex min-h-screen flex-col">
             <Header />
             <main className="flex-grow">{children}</main>

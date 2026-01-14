@@ -21,6 +21,8 @@ import { BodyClass } from "@/components/BodyClass";
 import { WordPressContent } from "@/components/WordPressContent";
 import { BlurImage } from "@/components/BlurImage";
 import { ShareButton } from "@/components/ShareButton";
+import { ReadingProgress } from "@/components/ReadingProgress";
+import { SaveOfflineButton } from "@/components/SaveOfflineButton";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME || "Starter WP Theme";
@@ -151,6 +153,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   return (
     <>
       <BodyClass className={bodyClasses} />
+      <ReadingProgress />
 
       {/* Structured Data */}
       <MultiStructuredData schemas={[articleSchema, breadcrumbSchema]} />
@@ -202,16 +205,19 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             />
           </div>
 
-          {/* Actions: Back to Blog & Share */}
+          {/* Actions: Back to Blog, Save Offline & Share */}
           <div className="mt-12 flex flex-wrap items-center justify-between gap-4">
             <Button asChild variant="outline">
               <Link href="/blog">← Back to Blog</Link>
             </Button>
-            <ShareButton
-              title={title}
-              text={stripHtml(post.excerpt.rendered)}
-              url={postUrl}
-            />
+            <div className="flex items-center gap-2">
+              <SaveOfflineButton url={postUrl} title={title} />
+              <ShareButton
+                title={title}
+                text={stripHtml(post.excerpt.rendered)}
+                url={postUrl}
+              />
+            </div>
           </div>
         </div>
       </article>
