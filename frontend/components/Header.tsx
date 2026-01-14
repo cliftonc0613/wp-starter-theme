@@ -4,13 +4,13 @@ import Link from "next/link";
 import { useState, useRef, useEffect } from "react";
 import { Menu, Phone, Mail, Calendar, Facebook, Linkedin, Search } from "lucide-react";
 import { SearchCommand } from "@/components/SearchCommand";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { Button } from "@/components/ui/button";
 import {
   NavigationMenu,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-  navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import {
   Sheet,
@@ -78,12 +78,12 @@ export function Header() {
   return (
     <header
       ref={headerRef}
-      className="fixed top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
+      className="fixed top-0 z-50 w-full border-b bg-neutral-200/95 backdrop-blur supports-[backdrop-filter]:bg-neutral-200/80"
     >
       <div className="container mx-auto flex h-[var(--header-height,4rem)] items-center justify-between px-4 transition-[height] duration-300">
         {/* Logo */}
         <Link href="/" className="flex items-center space-x-2">
-          <span className="text-xl font-bold tracking-tight">Starter WP</span>
+          <span className="text-xl font-bold tracking-tight text-neutral-900">Starter WP</span>
         </Link>
 
         {/* Desktop Navigation */}
@@ -91,44 +91,46 @@ export function Header() {
           <NavigationMenuList>
             {navItems.map((item) => (
               <NavigationMenuItem key={item.href}>
-                <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-                  <Link href={item.href}>
-                    {item.label}
-                  </Link>
+                <NavigationMenuLink asChild>
+                  <Link href={item.href}>{item.label}</Link>
                 </NavigationMenuLink>
               </NavigationMenuItem>
             ))}
           </NavigationMenuList>
         </NavigationMenu>
 
-        {/* Desktop Search & CTA */}
+        {/* Desktop Search, Theme Toggle & CTA */}
         <div className="hidden items-center gap-2 md:flex">
           <Button
             variant="ghost"
             size="icon"
             onClick={() => setSearchOpen(true)}
             aria-label="Search"
+            className="text-neutral-900 hover:bg-neutral-300/50"
           >
             <Search className="h-5 w-5" />
           </Button>
-          <Button asChild>
+          <ThemeToggle className="text-neutral-900 hover:bg-neutral-300/50" />
+          <Button asChild className="bg-white text-neutral-900 hover:bg-neutral-100 border border-neutral-300">
             <Link href="/contact">Get in Touch</Link>
           </Button>
         </div>
 
-        {/* Mobile Search & Menu */}
+        {/* Mobile Search, Theme Toggle & Menu */}
         <div className="flex items-center gap-1 md:hidden">
           <Button
             variant="ghost"
             size="icon"
             onClick={() => setSearchOpen(true)}
             aria-label="Search"
+            className="text-neutral-900 hover:bg-neutral-300/50"
           >
             <Search className="h-5 w-5" />
           </Button>
+          <ThemeToggle className="text-neutral-900 hover:bg-neutral-300/50" />
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" aria-label="Toggle menu">
+              <Button variant="ghost" size="icon" aria-label="Toggle menu" className="text-neutral-900 hover:bg-neutral-300/50">
                 <Menu className="h-6 w-6" />
               </Button>
             </SheetTrigger>
@@ -146,7 +148,7 @@ export function Header() {
                   key={item.href}
                   href={item.href}
                   onClick={() => setIsOpen(false)}
-                  className="py-2 text-sm font-bold uppercase tracking-wider transition-colors hover:text-neutral-600"
+                  className="py-2 text-sm font-bold uppercase tracking-wider text-foreground/90 transition-colors hover:text-foreground"
                 >
                   {item.label}
                 </Link>
@@ -155,7 +157,7 @@ export function Header() {
 
             {/* CTA Button */}
             <div className="px-4 pt-4">
-              <Button asChild className="w-full rounded-lg py-6 text-sm font-bold uppercase tracking-wider">
+              <Button asChild className="w-full rounded-lg py-6 text-sm font-bold uppercase tracking-wider bg-neutral-900 text-white hover:bg-neutral-800 dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-100">
                 <Link href="/contact" onClick={() => setIsOpen(false)}>
                   Get in Touch
                 </Link>
@@ -170,14 +172,14 @@ export function Header() {
               <div className="space-y-3">
                 <a
                   href={`tel:${contactInfo.phone.replace(/[^0-9]/g, "")}`}
-                  className="flex items-center gap-3 text-sm text-neutral-600 transition-colors hover:text-neutral-900"
+                  className="flex items-center gap-3 text-sm text-muted-foreground transition-colors hover:text-foreground"
                 >
                   <Phone className="h-4 w-4" />
                   {contactInfo.phone}
                 </a>
                 <a
                   href={`mailto:${contactInfo.email}`}
-                  className="flex items-center gap-3 text-sm text-neutral-600 transition-colors hover:text-neutral-900"
+                  className="flex items-center gap-3 text-sm text-muted-foreground transition-colors hover:text-foreground"
                 >
                   <Mail className="h-4 w-4" />
                   {contactInfo.email}
@@ -185,7 +187,7 @@ export function Header() {
                 <Link
                   href={contactInfo.schedulingUrl}
                   onClick={() => setIsOpen(false)}
-                  className="flex items-center gap-3 text-sm font-bold uppercase tracking-wider text-neutral-600 transition-colors hover:text-neutral-900"
+                  className="flex items-center gap-3 text-sm font-bold uppercase tracking-wider text-muted-foreground transition-colors hover:text-foreground"
                 >
                   <Calendar className="h-4 w-4" />
                   Schedule Meeting
@@ -206,7 +208,7 @@ export function Header() {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={social.label}
-                    className="flex h-10 w-10 items-center justify-center rounded-full border border-neutral-200 text-neutral-600 transition-colors hover:border-neutral-400 hover:text-neutral-900"
+                    className="flex h-10 w-10 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:border-foreground/50 hover:text-foreground"
                   >
                     <social.icon className="h-5 w-5" />
                   </a>
