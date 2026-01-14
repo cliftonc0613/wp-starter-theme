@@ -11,7 +11,6 @@ import {
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-  navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import {
   Sheet,
@@ -92,10 +91,8 @@ export function Header() {
           <NavigationMenuList>
             {navItems.map((item) => (
               <NavigationMenuItem key={item.href}>
-                <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-                  <Link href={item.href}>
-                    {item.label}
-                  </Link>
+                <NavigationMenuLink asChild>
+                  <Link href={item.href}>{item.label}</Link>
                 </NavigationMenuLink>
               </NavigationMenuItem>
             ))}
@@ -113,7 +110,7 @@ export function Header() {
             <Search className="h-5 w-5" />
           </Button>
           <ThemeToggle />
-          <Button asChild>
+          <Button asChild className="bg-neutral-900 text-white hover:bg-neutral-800 dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-100">
             <Link href="/contact">Get in Touch</Link>
           </Button>
         </div>
@@ -149,7 +146,7 @@ export function Header() {
                   key={item.href}
                   href={item.href}
                   onClick={() => setIsOpen(false)}
-                  className="py-2 text-sm font-bold uppercase tracking-wider transition-colors hover:text-neutral-600"
+                  className="py-2 text-sm font-bold uppercase tracking-wider text-foreground/90 transition-colors hover:text-foreground"
                 >
                   {item.label}
                 </Link>
@@ -158,7 +155,7 @@ export function Header() {
 
             {/* CTA Button */}
             <div className="px-4 pt-4">
-              <Button asChild className="w-full rounded-lg py-6 text-sm font-bold uppercase tracking-wider">
+              <Button asChild className="w-full rounded-lg py-6 text-sm font-bold uppercase tracking-wider bg-neutral-900 text-white hover:bg-neutral-800 dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-100">
                 <Link href="/contact" onClick={() => setIsOpen(false)}>
                   Get in Touch
                 </Link>
@@ -173,14 +170,14 @@ export function Header() {
               <div className="space-y-3">
                 <a
                   href={`tel:${contactInfo.phone.replace(/[^0-9]/g, "")}`}
-                  className="flex items-center gap-3 text-sm text-neutral-600 transition-colors hover:text-neutral-900"
+                  className="flex items-center gap-3 text-sm text-muted-foreground transition-colors hover:text-foreground"
                 >
                   <Phone className="h-4 w-4" />
                   {contactInfo.phone}
                 </a>
                 <a
                   href={`mailto:${contactInfo.email}`}
-                  className="flex items-center gap-3 text-sm text-neutral-600 transition-colors hover:text-neutral-900"
+                  className="flex items-center gap-3 text-sm text-muted-foreground transition-colors hover:text-foreground"
                 >
                   <Mail className="h-4 w-4" />
                   {contactInfo.email}
@@ -188,7 +185,7 @@ export function Header() {
                 <Link
                   href={contactInfo.schedulingUrl}
                   onClick={() => setIsOpen(false)}
-                  className="flex items-center gap-3 text-sm font-bold uppercase tracking-wider text-neutral-600 transition-colors hover:text-neutral-900"
+                  className="flex items-center gap-3 text-sm font-bold uppercase tracking-wider text-muted-foreground transition-colors hover:text-foreground"
                 >
                   <Calendar className="h-4 w-4" />
                   Schedule Meeting
@@ -209,7 +206,7 @@ export function Header() {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={social.label}
-                    className="flex h-10 w-10 items-center justify-center rounded-full border border-neutral-200 text-neutral-600 transition-colors hover:border-neutral-400 hover:text-neutral-900"
+                    className="flex h-10 w-10 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:border-foreground/50 hover:text-foreground"
                   >
                     <social.icon className="h-5 w-5" />
                   </a>

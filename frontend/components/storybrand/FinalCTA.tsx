@@ -44,7 +44,7 @@ export function FinalCTA({
   return (
     <section className="relative overflow-hidden py-16 md:py-24">
       {/* Background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary to-primary/90" />
+      <div className="absolute inset-0 bg-gradient-to-br from-neutral-900 via-neutral-900 to-neutral-800" />
 
       {/* Decorative elements */}
       <div className="absolute inset-0 overflow-hidden">
@@ -53,14 +53,14 @@ export function FinalCTA({
       </div>
 
       <div className="container relative mx-auto px-4">
-        <div className="mx-auto max-w-4xl text-center text-primary-foreground">
+        <div className="mx-auto max-w-4xl text-center text-white">
           {/* Heading */}
           <h2 className="text-3xl font-bold tracking-tight md:text-4xl lg:text-5xl">
             {heading}
           </h2>
 
           {/* Subheading */}
-          <p className="mx-auto mt-6 max-w-2xl text-lg opacity-90 md:text-xl">
+          <p className="mx-auto mt-6 max-w-2xl text-lg text-white/90 md:text-xl">
             {subheading}
           </p>
 
@@ -70,7 +70,7 @@ export function FinalCTA({
               asChild
               size="lg"
               variant="secondary"
-              className="group min-w-[200px] bg-white text-lg text-primary hover:bg-white/90"
+              className="group min-w-[200px] bg-white text-lg text-neutral-900 hover:bg-neutral-100"
             >
               <Link href={primaryCta.href}>
                 {primaryCta.text}
@@ -82,7 +82,7 @@ export function FinalCTA({
               asChild
               size="lg"
               variant="outline"
-              className="min-w-[200px] border-white/30 text-lg text-white hover:bg-white/10"
+              className="min-w-[200px] border-white/40 text-lg text-white hover:bg-white/10 hover:border-white/60"
             >
               <Link href={secondaryCta.href}>{secondaryCta.text}</Link>
             </Button>
@@ -109,7 +109,7 @@ export function FinalCTA({
           )}
 
           {/* Trust reminder */}
-          <p className="mt-8 text-sm opacity-70">
+          <p className="mt-8 text-sm text-white/70">
             [TRUST STATEMENT: No obligation. Free consultation. Cancel anytime.]
           </p>
         </div>
