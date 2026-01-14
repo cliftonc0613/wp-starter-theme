@@ -1,9 +1,31 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { contactFormSchema } from "@/lib/schemas";
+import { contactFormLimiter, getClientIp } from "@/lib/rate-limit";
 
 export async function POST(request: NextRequest) {
   try {
+    // Rate limiting - 5 submissions per minute per IP
+    const clientIp = getClientIp(request);
+    const { success, remaining, reset } = contactFormLimiter.check(clientIp);
+
+    if (!success) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Too many requests. Please try again later.",
+        },
+        {
+          status: 429,
+          headers: {
+            "Retry-After": String(reset),
+            "X-RateLimit-Remaining": "0",
+            "X-RateLimit-Reset": String(reset),
+          },
+        }
+      );
+    }
+
     const body = await request.json();
 
     // Validate the form data
@@ -39,13 +61,19 @@ export async function POST(request: NextRequest) {
     //   `,
     // });
 
-    // Return success response
+    // Return success response with rate limit headers
     return NextResponse.json(
       {
         success: true,
         message: "Form submitted successfully",
       },
-      { status: 200 }
+      {
+        status: 200,
+        headers: {
+          "X-RateLimit-Remaining": String(remaining),
+          "X-RateLimit-Reset": String(reset),
+        },
+      }
     );
   } catch (error) {
     // Handle validation errors

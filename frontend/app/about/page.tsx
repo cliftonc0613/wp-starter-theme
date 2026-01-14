@@ -13,6 +13,7 @@ import { BreadcrumbSchema } from "@/components/JsonLd";
 import { StakesSection } from "@/components/storybrand/StakesSection";
 import { AboutSection } from "@/components/AboutSection";
 import { BodyClass } from "@/components/BodyClass";
+import { WordPressContent } from "@/components/WordPressContent";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME || "Starter WP Theme";
@@ -109,11 +110,11 @@ export default async function AboutPage() {
               {title}
             </h1>
 
-            {/* WordPress content or fallback */}
+            {/* WordPress content or fallback - uses sanitized WordPressContent */}
             {content ? (
-              <div
+              <WordPressContent
+                html={content}
                 className="prose prose-lg mx-auto max-w-2xl text-muted-foreground prose-p:text-muted-foreground"
-                dangerouslySetInnerHTML={{ __html: content }}
               />
             ) : (
               <p className="mx-auto max-w-2xl text-lg text-muted-foreground md:text-xl">
