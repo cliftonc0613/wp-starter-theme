@@ -975,3 +975,74 @@ ol.wp-block-list {
 .search-shortcut {
   @apply hidden rounded border bg-muted px-1.5 py-0.5 text-xs font-mono text-muted-foreground md:inline-block;
 }
+
+/* --------------------------------------------------------------------------
+   PWA Loading Screen
+   Splash screen displayed when PWA launches in standalone mode
+   -------------------------------------------------------------------------- */
+.pwa-load-screen {
+  @apply fixed inset-0 z-[9999];
+  background-color: var(--background);
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+}
+
+.pwa-load-screen--loaded {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.pwa-load-screen__content {
+  @apply relative w-full h-full;
+}
+
+.pwa-load-screen__image {
+  @apply object-contain object-center;
+}
+
+.pwa-load-screen__overlay {
+  @apply absolute inset-0 flex items-end justify-center pb-24;
+  background: linear-gradient(
+    to top,
+    oklch(0 0 0 / 60%) 0%,
+    oklch(0 0 0 / 0%) 40%
+  );
+}
+
+.pwa-load-screen__spinner {
+  @apply w-10 h-10;
+}
+
+.pwa-load-screen__spinner-svg {
+  @apply w-full h-full;
+  animation: pwa-spinner-rotate 1.4s linear infinite;
+}
+
+.pwa-load-screen__spinner-circle {
+  stroke: oklch(1 0 0 / 90%);
+  stroke-linecap: round;
+  animation: pwa-spinner-dash 1.4s ease-in-out infinite;
+}
+
+@keyframes pwa-spinner-rotate {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pwa-spinner-dash {
+  0% {
+    stroke-dasharray: 1, 150;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -35;
+  }
+  100% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -124;
+  }
+}
