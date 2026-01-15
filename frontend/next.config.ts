@@ -17,9 +17,14 @@ const isDev = process.env.NODE_ENV === 'development';
  * - Uses a dedicated sw.ts file in app/ directory
  * - Works with webpack (required for service worker generation)
  * - Service worker is automatically registered
+ *
+ * Enhanced service worker features:
+ * - App shell precaching for instant navigation
+ * - Versioned caching for controlled updates
+ * - Broadcast channel for UI notifications
  */
 const withPWA = withSerwistInit({
-  swSrc: "app/sw.ts",
+  swSrc: "app/sw.enhanced.ts",
   swDest: "public/sw.js",
   disable: isDev,
   reloadOnOnline: true,
@@ -70,8 +75,11 @@ const sentryConfig = withSentryConfig(withBundleAnalyzer(withPWA(nextConfig)), {
   // Only upload source maps if auth token is provided
   authToken: process.env.SENTRY_AUTH_TOKEN,
 
-  // Suppresses source map upload logs during build
-  silent: !process.env.CI,
+  // Suppresses source map upload logs during build (silent when no auth token)
+  silent: true,
+
+  // Disable telemetry collection
+  telemetry: false,
 
   // Upload a larger set of source maps for prettier stack traces (increases build time)
   widenClientFileUpload: true,
