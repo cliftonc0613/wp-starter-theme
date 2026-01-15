@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.0] - 2026-01-14
+
+### Added
+- Phase 3 engagement features for improved user interaction
+- Phase 2 PWA enhancements for better app experience
+- Performance and UX quick wins for faster load times
+
+### Fixed
+- Dark mode support for cards and links
+- Dark mode text visibility in testimonials section
+- UI improvements for navigation and CTA dark mode styling
+- Header light gray background maintained in dark mode
+
+### Changed
+- Navigation link text styling with black color and subtle hover effects
+
+## [1.6.1] - 2026-01-13
+
+### Changed
+- Synchronized package-lock.json after branch merge
+
 ## [1.4.0] - 2026-01-12
 
 ### Added
