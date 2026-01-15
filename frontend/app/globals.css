@@ -1101,3 +1101,116 @@ ol.wp-block-list {
     stroke-dashoffset: -124;
   }
 }
+
+/* Enhanced PWA Loading Screen - Progress Bar & Text */
+.pwa-load-screen__progress-container {
+  @apply w-48 h-1 rounded-full overflow-hidden mb-4;
+  background: oklch(1 0 0 / 20%);
+}
+
+.pwa-load-screen__progress-bar {
+  @apply h-full rounded-full;
+  background: oklch(1 0 0 / 90%);
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.pwa-load-screen__text {
+  @apply text-sm font-medium mb-6;
+  color: oklch(1 0 0 / 80%);
+  text-shadow: 0 1px 2px oklch(0 0 0 / 50%);
+}
+
+/* --------------------------------------------------------------------------
+   Skeleton Loading Components
+   Content placeholders for async data loading
+   -------------------------------------------------------------------------- */
+.skeleton {
+  @apply relative overflow-hidden rounded;
+  background: oklch(from var(--muted) l c h / 60%);
+}
+
+.skeleton::after {
+  content: "";
+  @apply absolute inset-0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    oklch(1 0 0 / 8%) 50%,
+    transparent 100%
+  );
+  animation: skeleton-shimmer 1.5s ease-in-out infinite;
+}
+
+@keyframes skeleton-shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Skeleton variants */
+.skeleton-text {
+  @apply skeleton h-4 w-full;
+}
+
+.skeleton-text-sm {
+  @apply skeleton h-3 w-full;
+}
+
+.skeleton-text-lg {
+  @apply skeleton h-6 w-full;
+}
+
+.skeleton-title {
+  @apply skeleton h-8 w-3/4;
+}
+
+.skeleton-avatar {
+  @apply skeleton rounded-full;
+}
+
+.skeleton-image {
+  @apply skeleton aspect-video w-full;
+}
+
+.skeleton-card {
+  @apply skeleton rounded-lg p-4;
+}
+
+/* --------------------------------------------------------------------------
+   Route Transition Indicator
+   Top progress bar for page navigation
+   -------------------------------------------------------------------------- */
+.route-progress {
+  @apply fixed top-0 left-0 right-0 z-[9998] h-0.5;
+  pointer-events: none;
+}
+
+.route-progress__bar {
+  @apply h-full;
+  background: linear-gradient(
+    90deg,
+    var(--primary) 0%,
+    oklch(from var(--primary) calc(l + 0.1) c h) 100%
+  );
+  transform-origin: left;
+  transition: transform 0.2s ease-out;
+}
+
+.route-progress--active .route-progress__bar {
+  animation: route-progress-indeterminate 1.5s ease-in-out infinite;
+}
+
+@keyframes route-progress-indeterminate {
+  0% {
+    transform: scaleX(0) translateX(0);
+  }
+  50% {
+    transform: scaleX(0.4) translateX(50%);
+  }
+  100% {
+    transform: scaleX(0) translateX(100%);
+  }
+}
