@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 
 interface BackgroundSyncMessage {
   type: 'BACKGROUND_SYNC_SUCCESS';

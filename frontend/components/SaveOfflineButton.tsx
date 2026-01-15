@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Download, Check, Loader2, Trash2 } from 'lucide-react';
+import { Download, Check, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 
@@ -218,9 +218,14 @@ export function useSavedArticles() {
 export function SaveOfflineIconButton({ url, title, className }: SaveOfflineButtonProps) {
   const [isSaved, setIsSaved] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isSupported, setIsSupported] = useState(true);
 
   useEffect(() => {
-    if (!('caches' in window)) return;
+    // Check if Cache API is supported (SSR-safe)
+    if (!('caches' in window)) {
+      setIsSupported(false);
+      return;
+    }
 
     const check = async () => {
       try {
@@ -235,7 +240,7 @@ export function SaveOfflineIconButton({ url, title, className }: SaveOfflineButt
   }, [url]);
 
   const handleClick = async () => {
-    if (!('caches' in window)) return;
+    if (!isSupported) return;
 
     setIsLoading(true);
     try {
@@ -263,7 +268,8 @@ export function SaveOfflineIconButton({ url, title, className }: SaveOfflineButt
     }
   };
 
-  if (typeof window !== 'undefined' && !('caches' in window)) {
+  // Don't render if Cache API isn't supported
+  if (!isSupported) {
     return null;
   }
 
